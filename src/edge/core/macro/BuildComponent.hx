@@ -16,8 +16,7 @@ class BuildComponent {
   }
 
   static function injectConstructor(fields : Array<Field>) {
-    var field = findField(fields, "new");
-    if(null != field) return;
+    if(hasField(fields, "new")) return;
     var args = getVarAsFunctionArgs(fields),
         init = args
           .map(function(arg) return arg.name)
@@ -26,7 +25,7 @@ class BuildComponent {
   }
 
   static function injectToString(fields : Array<Field>) {
-    if(null != findField(fields, "toString")) return;
+    if(hasField(fields, "toString")) return;
     var cls  = clsName().split(".").pop(),
         args = getVarAsFunctionArgs(fields),
         params = args

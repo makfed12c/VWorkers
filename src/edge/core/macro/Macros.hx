@@ -65,6 +65,9 @@ class Macros {
     return false;
   }
 
+  public static function hasField(fields : Array<Field>, name : String)
+    return null != findField(fields, name);
+
   public static function findField(fields : Array<Field>, name : String) {
     for(field in fields)
       if(field.name == name)

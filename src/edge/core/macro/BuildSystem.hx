@@ -40,12 +40,11 @@ class BuildSystem {
   static function injectToString(type : ClassType, fields : Array<Field>) {
     if(isFieldInHirearchy(type, "toString")) return;
     var cls = clsName();
-    fields.push(createFunctionField( "toString", [], macro : String, macro return $v{cls}));
+    fields.push(createFunctionField("toString", [], macro : String, macro return $v{cls}));
   }
 
   static function injectConstructor(type : ClassType, fields : Array<Field>) {
-    var field = findField(fields, "new");
-    if(null != field) return;
+    if(hasField(fields, "new")) return;
     fields.push({
       name: "new",
       doc: null,
