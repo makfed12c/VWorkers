@@ -172,19 +172,6 @@ class BuildSystemProcess {
         Context.parse(expr, Context.currentPos())
       );
 
-/*
-      appendExprToFieldFunction(
-        findField(fields, "removeEntity"),
-        macro updateItems.tryRemove(entity));
-*/
-      // inject constructor init
-/*
-      var sexpr = 'updateItems = new edge.View(';
-      sexpr += hasFunField(systemFields, 'updateAdded') ? 'system.updateAdded' : 'null';
-      sexpr += ',';
-      sexpr += hasFunField(systemFields, 'updateRemoved') ? 'system.updateRemoved' : 'null';
-      sexpr += ')';
-*/
       appendExprToFieldFunction(
         constructor,
         macro updateItems = new edge.View()
