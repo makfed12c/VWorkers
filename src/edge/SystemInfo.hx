@@ -9,7 +9,7 @@ class SystemInfo {
 //  public var before(default, null) : Dynamic;
   public var update(default, null) : Dynamic;
   public var components(default, null) : Map<Entity, Array<Dynamic>>;
-  public var system(default, null) : ISystem;
+//  public var system(default, null) : ISystem;
   public var process(default, null) : ISystemProcess;
 
   public var collections(default, null) : Map<String, {
@@ -20,7 +20,7 @@ class SystemInfo {
 
   public function new(system : ISystem, process : ISystemProcess) {
     this.process = process;
-    this.system        = system;
+//    this.system        = system;
     this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
 //    this.hasEntity     = hasField(system, "entity");
 //    this.hasBefore     = hasField(system, "before");

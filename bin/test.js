@@ -1094,7 +1094,6 @@ edge.NodeSystemIterator.prototype = {
 };
 edge.SystemInfo = function(system,process) {
 	this.process = process;
-	this.system = system;
 	this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
 	this.update = Reflect.field(system,"update");
 	this.components = new haxe.ds.ObjectMap();
@@ -1115,7 +1114,6 @@ edge.SystemInfo.prototype = {
 	hasComponents: null
 	,update: null
 	,components: null
-	,system: null
 	,process: null
 	,collections: null
 	,__class__: edge.SystemInfo
