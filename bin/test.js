@@ -9,8 +9,7 @@ var edge = {};
 edge.ISystemProcess = function() { };
 edge.ISystemProcess.__name__ = ["edge","ISystemProcess"];
 edge.ISystemProcess.prototype = {
-	before: null
-	,update: null
+	update: null
 	,setEntity: null
 	,__class__: edge.ISystemProcess
 };
@@ -21,8 +20,6 @@ Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
 Components1System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components1System_SystemProcess.prototype = {
 	system: null
-	,before: function() {
-	}
 	,update: function(engine,delta) {
 		this.system.engine = engine;
 	}
@@ -38,8 +35,6 @@ Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
 Components2System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components2System_SystemProcess.prototype = {
 	system: null
-	,before: function() {
-	}
 	,update: function(engine,delta) {
 	}
 	,setEntity: function(entity) {
@@ -53,8 +48,6 @@ ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_Sys
 ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 ComponentsEntitiesSystem_SystemProcess.prototype = {
 	system: null
-	,before: function() {
-	}
 	,update: function(engine,delta) {
 	}
 	,setEntity: function(entity) {
@@ -247,8 +240,6 @@ NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"]
 NoComponentsSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 NoComponentsSystem_SystemProcess.prototype = {
 	system: null
-	,before: function() {
-	}
 	,update: function(engine,delta) {
 	}
 	,setEntity: function(entity) {
@@ -799,7 +790,6 @@ edge.Engine.prototype = {
 		if(info == null) return;
 		var process = info.process;
 		process.update(this,t);
-		process.before();
 		if(info.hasComponents) {
 			var $it0 = info.components.keys();
 			while( $it0.hasNext() ) {

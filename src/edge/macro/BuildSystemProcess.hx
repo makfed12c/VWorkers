@@ -23,8 +23,7 @@ class BuildSystemProcess {
 
     injectConstructor(system, fields);
     injectSystemField(system, fields);
-    injectBefore(systemFields, fields);
-    injectSetEngine(systemFields, fields);
+    injectUpdate(systemFields, fields);
     injectSetEntity(systemFields, fields);
 
     Context.defineType({
@@ -39,30 +38,14 @@ class BuildSystemProcess {
     });
   }
 
-  static function injectBefore(systemFields : Array<Field>, fields : Array<Field>) {
-    var exprs = [];
-    if(BuildSystem.hasFunField(systemFields, "before"))
-      exprs.push(macro system.before());
-
-    fields.push({
-      name : "before",
-      access: [APublic],
-      kind: FFun({
-        ret : macro : Void,
-        params : null,
-        expr : macro $b{exprs},
-        args : []
-      }),
-      pos: Context.currentPos()
-    });
-  }
-
-  static function injectSetEngine(systemFields : Array<Field>, fields : Array<Field>) {
+  static function injectUpdate(systemFields : Array<Field>, fields : Array<Field>) {
     var exprs = [];
     if(BuildSystem.hasVarField(systemFields, "engine"))
       exprs.push(macro system.engine = engine);
     if(BuildSystem.hasVarField(systemFields, "timeDelta"))
       exprs.push(macro system.timeDelta = delta);
+    if(BuildSystem.hasFunField(systemFields, "before"))
+      exprs.push(macro system.before());
 
     fields.push({
       name : "update",

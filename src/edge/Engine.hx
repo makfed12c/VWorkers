@@ -80,7 +80,7 @@ class Engine {
 //      Reflect.setField(system, "engine", this);
 //    if(info.hasDelta)
 //      Reflect.setField(system, "timeDelta", t);
-    process.before();
+//    process.before();
     if(info.hasComponents) {
 //      if(info.hasBefore)
 //        Reflect.callMethod(system, info.before, emptyArgs);
