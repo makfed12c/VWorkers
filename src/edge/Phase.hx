@@ -95,7 +95,7 @@ class Phase {
       first = node.next;
       node.next.prev = null;
     } else if(node == last) {
-      first = node.prev;
+      last = node.prev;
       node.prev.next = null;
     } else {
       node.prev.next = node.next;
