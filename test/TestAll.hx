@@ -6,6 +6,30 @@ using thx.core.Iterators;
 import edge.*;
 
 class TestAll {
+  public function testMultipleViews() {
+    var engine = new Engine(),
+        phase = engine.createPhase(),
+        system = new HasAandBSystem();
+
+    Assert.equals(0, system.viewA.count);
+    Assert.equals(0, system.viewB.count);
+    phase.add(system);
+    Assert.equals(0, system.viewA.count);
+    Assert.equals(0, system.viewB.count);
+
+    var e = engine.create([new A()]);
+    Assert.equals(1, system.viewA.count);
+    Assert.equals(0, system.viewB.count);
+
+    e.add(new B());
+    Assert.equals(1, system.viewA.count);
+    Assert.equals(1, system.viewB.count);
+
+    engine.create([new B()]);
+    Assert.equals(1, system.viewA.count);
+    Assert.equals(2, system.viewB.count);
+  }
+
   public function testPhaseNodes() {
     var phase = new Phase(null),
         it = phase.systems();
@@ -213,6 +237,15 @@ class ComponentsEntitiesSystem implements ISystem {
   public function update(b : B) {
     Assert.is(b, B);
     count++;
+  }
+}
+
+class HasAandBSystem implements ISystem {
+  public var viewA : View<{ a : A }>;
+  public var viewB : View<{ b : B }>;
+
+  public function update() {
+
   }
 }
 
