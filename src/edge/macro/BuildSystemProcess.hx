@@ -22,7 +22,7 @@ class BuildSystemProcess {
         );
 
     injectConstructor(system, fields);
-    injectHasUpdateItems(fields);
+//    injectHasUpdateItems(fields);
     injectRemoveEntity(fields);
     injectAddEntity(fields);
     injectSystemField(system, fields);
@@ -139,9 +139,9 @@ class BuildSystemProcess {
         constructor = BuildSystem.findField(fields, "new");
 
     if(fieldFunctionHasArguments(update)) {
-      appendExprToFieldFunction(
-        constructor,
-        macro hasUpdateItems = true);
+    //   appendExprToFieldFunction(
+    //     constructor,
+    //     macro hasUpdateItems = true);
 
       var args = fieldFunctionArguments(update),
           fieldTypes = args.map(function(arg) : Field {
@@ -190,9 +190,9 @@ class BuildSystemProcess {
 //      trace(expr);
       exprs.push(Context.parse(expr, Context.currentPos()));
     } else {
-      appendExprToFieldFunction(
-        constructor,
-        macro hasUpdateItems = false);
+      // appendExprToFieldFunction(
+      //   constructor,
+      //   macro hasUpdateItems = false);
       exprs.push(macro system.update());
     }
 
@@ -322,14 +322,14 @@ class BuildSystemProcess {
     });
   }
 
-  static function injectHasUpdateItems(fields : Array<Field>) {
-    fields.push({
-      name : "hasUpdateItems",
-      access : [APublic],
-      kind: FVar(macro : Bool, null),
-      pos: Context.currentPos()
-    });
-  }
+  // static function injectHasUpdateItems(fields : Array<Field>) {
+  //   fields.push({
+  //     name : "hasUpdateItems",
+  //     access : [APublic],
+  //     kind: FVar(macro : Bool, null),
+  //     pos: Context.currentPos()
+  //   });
+  // }
 
   static function injectConstructor(system : ComplexType, fields : Array<Field>) {
     fields.push({
