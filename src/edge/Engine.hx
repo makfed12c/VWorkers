@@ -48,7 +48,7 @@ class Engine {
   }
 
   // private methods
-  function addSystem(phase : Phase, system : ISystem) {
+  function addSystem(system : ISystem) {
     eachSystem(
       function(s)
         if(s == system)

@@ -130,7 +130,7 @@ class Phase {
     var node = new NodeSystem(system);
     mapSystem.set(system, node);
     mapType.set(key(system), system);
-    engine.addSystem(this, system);
+    engine.addSystem(system);
     return node;
   }
 
