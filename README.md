@@ -1,4 +1,4 @@
-# Spore
+# VWorkers
 
 Entity system for Haxe
 
