@@ -7,6 +7,19 @@ using thx.macro.MacroFields;
 import Type in RType;
 
 class Macros {
+  public static function createFunctionField(name : String, args : Array<FunctionArg>, ret : ComplexType, expr : Expr) : Field {
+    return {
+      name: name,
+      access: [APublic],
+      kind: FFun({
+        ret : ret,
+        expr : expr,
+        args : args
+      }),
+      pos: Context.currentPos()
+    };
+  }
+
   public static function makeVarsPublic(fields : Array<Field>) {
     fields.map(function(field) switch field.kind {
       case FVar(_, _) if(!field.isPublic()):
