@@ -6,7 +6,7 @@ class SystemInfo {
   public var hasComponents(default, null) : Bool;
 //  public var hasEntity(default, null) : Bool;
 //  public var hasBefore(default, null) : Bool;
-  public var before(default, null) : Dynamic;
+//  public var before(default, null) : Dynamic;
   public var update(default, null) : Dynamic;
   public var components(default, null) : Map<Entity, Array<Dynamic>>;
   public var system(default, null) : ISystem;
@@ -25,7 +25,7 @@ class SystemInfo {
 //    this.hasEntity     = hasField(system, "entity");
 //    this.hasBefore     = hasField(system, "before");
     this.update        = Reflect.field(system, "update");
-    this.before        = null;
+//    this.before        = null;
     this.components    = new Map();
     this.collections = new Map();
     if(null != system.entityRequirements) {

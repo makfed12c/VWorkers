@@ -1097,7 +1097,6 @@ edge.SystemInfo = function(system,process) {
 	this.system = system;
 	this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
 	this.update = Reflect.field(system,"update");
-	this.before = null;
 	this.components = new haxe.ds.ObjectMap();
 	this.collections = new haxe.ds.StringMap();
 	if(null != system.entityRequirements) {
@@ -1114,7 +1113,6 @@ edge.SystemInfo = function(system,process) {
 edge.SystemInfo.__name__ = ["edge","SystemInfo"];
 edge.SystemInfo.prototype = {
 	hasComponents: null
-	,before: null
 	,update: null
 	,components: null
 	,system: null
