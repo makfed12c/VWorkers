@@ -30,7 +30,7 @@ class Engine {
   function remove(entity : Entity) {
     for(info in mapInfo) {
       info.process.removeEntity(entity);
-      info.components.remove(entity);
+//      info.components.remove(entity);
     }
     for(info in mapInfo)
       for(collection in info.process.collections)
@@ -60,7 +60,7 @@ class Engine {
       throw 'System "$system" already exists in Engine';
     var info = new SystemInfo(system, system.__getSystemProcess(this));
     mapInfo.set(system, info);
-    if(info.hasComponents)
+    if(info.process.hasUpdateItems)
       for(entity in mapEntities.keys())
         matchSystem(entity, system);
     if(info.process.collections.iterator().hasNext())
@@ -110,12 +110,15 @@ class Engine {
 
   function matchSystem(entity : Entity, system : ISystem) {
     var info = mapInfo.get(system);
+
+/*
     info.components.remove(entity);
     if(info.hasComponents) {
       var components = matchRequirements(entity, system.componentRequirements);
       if(null != components)
         info.components.set(entity, components);
     }
+*/
     info.process.addEntity(entity);
   }
 

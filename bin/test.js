@@ -9,7 +9,8 @@ var edge = {};
 edge.ISystemProcess = function() { };
 edge.ISystemProcess.__name__ = ["edge","ISystemProcess"];
 edge.ISystemProcess.prototype = {
-	update: null
+	hasUpdateItems: null
+	,update: null
 	,addEntity: null
 	,removeEntity: null
 	,setEntity: null
@@ -18,13 +19,15 @@ edge.ISystemProcess.prototype = {
 };
 var Components1System_SystemProcess = function(system) {
 	this.system = system;
+	this.hasUpdateItems = true;
 	this.updateItems = new edge.View();
 	this.collections = new haxe.ds.StringMap();
 };
 Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
 Components1System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components1System_SystemProcess.prototype = {
-	removeEntity: function(entity) {
+	hasUpdateItems: null
+	,removeEntity: function(entity) {
 		this.updateItems.remove(entity);
 	}
 	,addEntity: function(entity) {
@@ -65,13 +68,15 @@ Components1System_SystemProcess.prototype = {
 };
 var Components2System_SystemProcess = function(system) {
 	this.system = system;
+	this.hasUpdateItems = true;
 	this.updateItems = new edge.View();
 	this.collections = new haxe.ds.StringMap();
 };
 Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
 Components2System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components2System_SystemProcess.prototype = {
-	removeEntity: function(entity) {
+	hasUpdateItems: null
+	,removeEntity: function(entity) {
 		this.updateItems.remove(entity);
 	}
 	,addEntity: function(entity) {
@@ -113,13 +118,15 @@ Components2System_SystemProcess.prototype = {
 };
 var ComponentsEntitiesSystem_SystemProcess = function(system) {
 	this.system = system;
+	this.hasUpdateItems = true;
 	this.updateItems = new edge.View();
 	this.collections = new haxe.ds.StringMap();
 };
 ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_SystemProcess"];
 ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 ComponentsEntitiesSystem_SystemProcess.prototype = {
-	removeEntity: function(entity) {
+	hasUpdateItems: null
+	,removeEntity: function(entity) {
 		this.updateItems.remove(entity);
 	}
 	,addEntity: function(entity) {
@@ -336,12 +343,14 @@ _List.ListIterator.prototype = {
 Math.__name__ = ["Math"];
 var NoComponentsSystem_SystemProcess = function(system) {
 	this.system = system;
+	this.hasUpdateItems = false;
 	this.collections = new haxe.ds.StringMap();
 };
 NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"];
 NoComponentsSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 NoComponentsSystem_SystemProcess.prototype = {
-	removeEntity: function(entity) {
+	hasUpdateItems: null
+	,removeEntity: function(entity) {
 	}
 	,addEntity: function(entity) {
 	}
@@ -615,7 +624,6 @@ edge.ISystem = function() { };
 edge.ISystem.__name__ = ["edge","ISystem"];
 edge.ISystem.prototype = {
 	__getSystemProcess: null
-	,componentRequirements: null
 	,entityRequirements: null
 	,__class__: edge.ISystem
 };
@@ -837,7 +845,6 @@ edge.Engine.prototype = {
 		while( $it0.hasNext() ) {
 			var info = $it0.next();
 			info.process.removeEntity(entity);
-			info.components.remove(entity);
 		}
 		var $it1 = this.mapInfo.iterator();
 		while( $it1.hasNext() ) {
@@ -869,7 +876,7 @@ edge.Engine.prototype = {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
 		var info = new edge.SystemInfo(system,system.__getSystemProcess(this));
 		this.mapInfo.set(system,info);
-		if(info.hasComponents) {
+		if(info.process.hasUpdateItems) {
 			var $it0 = this.mapEntities.keys();
 			while( $it0.hasNext() ) {
 				var entity = $it0.next();
@@ -910,11 +917,6 @@ edge.Engine.prototype = {
 	}
 	,matchSystem: function(entity,system) {
 		var info = this.mapInfo.h[system.__id__];
-		info.components.remove(entity);
-		if(info.hasComponents) {
-			var components = this.matchRequirements(entity,system.componentRequirements);
-			if(null != components) info.components.set(entity,components);
-		}
 		info.process.addEntity(entity);
 	}
 	,matchEntity: function(entity,system) {
@@ -1180,9 +1182,7 @@ edge.NodeSystemIterator.prototype = {
 };
 edge.SystemInfo = function(system,process) {
 	this.process = process;
-	this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
 	this.update = Reflect.field(system,"update");
-	this.components = new haxe.ds.ObjectMap();
 	if(null != system.entityRequirements) {
 		var view = new edge.View();
 		var value = { classes : system.entityRequirements.map(function(_) {
@@ -1196,9 +1196,7 @@ edge.SystemInfo = function(system,process) {
 };
 edge.SystemInfo.__name__ = ["edge","SystemInfo"];
 edge.SystemInfo.prototype = {
-	hasComponents: null
-	,update: null
-	,components: null
+	update: null
 	,process: null
 	,__class__: edge.SystemInfo
 };
