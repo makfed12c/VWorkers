@@ -3,12 +3,8 @@ package edge.core.macro;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
-import Type in RType;
-using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 using thx.macro.MacroFields;
-using thx.macro.MacroTypes;
-
 import edge.core.macro.Macros.*;
 
 class BuildSystem {

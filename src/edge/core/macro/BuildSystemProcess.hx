@@ -2,13 +2,8 @@ package edge.core.macro;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
-import haxe.macro.Type;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
-using thx.macro.MacroFields;
-using thx.macro.MacroTypes;
-using thx.core.Strings;
-
 import edge.core.macro.Macros.*;
 
 class BuildSystemProcess {
