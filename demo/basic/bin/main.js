@@ -1,5 +1,4 @@
 (function (console) { "use strict";
-var $estr = function() { return js.Boot.__string_rec(this,''); };
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
@@ -42,7 +41,6 @@ Game.main = function() {
 		world.engine.create([new Position(Math.random() * Game.width,Math.random() * Game.height)]);
 	}
 	world.physics.add(new UpdateMovement());
-	world.render.add(new RenderBackground(mini));
 	world.render.add(new RenderDots(mini));
 	world.start();
 };
@@ -79,22 +77,13 @@ var RenderDots = function(mini) {
 RenderDots.__name__ = ["RenderDots"];
 RenderDots.__interfaces__ = [edge.ISystem];
 RenderDots.prototype = {
-	update: function(pos) {
+	before: function() {
+		this.mini.clear();
+	}
+	,update: function(pos) {
 		this.mini.dot(pos.x,pos.y,2,255);
 	}
 	,__class__: RenderDots
-};
-var RenderBackground = function(mini) {
-	this.mini = mini;
-	this.__process__ = new RenderBackground_SystemProcess(this);
-};
-RenderBackground.__name__ = ["RenderBackground"];
-RenderBackground.__interfaces__ = [edge.ISystem];
-RenderBackground.prototype = {
-	update: function() {
-		this.mini.clear();
-	}
-	,__class__: RenderBackground
 };
 var UpdateMovement = function() {
 	this.__process__ = new UpdateMovement_SystemProcess(this);
@@ -140,21 +129,6 @@ edge.core.ISystemProcess.__name__ = ["edge","core","ISystemProcess"];
 edge.core.ISystemProcess.prototype = {
 	__class__: edge.core.ISystemProcess
 };
-var RenderBackground_SystemProcess = function(system) {
-	this.system = system;
-};
-RenderBackground_SystemProcess.__name__ = ["RenderBackground_SystemProcess"];
-RenderBackground_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
-RenderBackground_SystemProcess.prototype = {
-	removeEntity: function(entity) {
-	}
-	,addEntity: function(entity) {
-	}
-	,update: function(engine,delta) {
-		this.system.update();
-	}
-	,__class__: RenderBackground_SystemProcess
-};
 var RenderDots_SystemProcess = function(system) {
 	this.system = system;
 	this.updateItems = new edge.View();
@@ -169,6 +143,7 @@ RenderDots_SystemProcess.prototype = {
 		this.updateMatchRequirements(entity);
 	}
 	,update: function(engine,delta) {
+		if(this.updateItems.count > 0) this.system.before();
 		var data;
 		var $it0 = this.updateItems.iterator();
 		while( $it0.hasNext() ) {
@@ -211,10 +186,6 @@ StringTools.replace = function(s,sub,by) {
 };
 var Type = function() { };
 Type.__name__ = ["Type"];
-Type.getClass = function(o) {
-	if(o == null) return null;
-	return js.Boot.getClass(o);
-};
 Type.getClassName = function(c) {
 	var a = c.__name__;
 	if(a == null) return null;
@@ -341,12 +312,12 @@ edge.Entity.prototype = {
 		this.engine.matchSystems(this);
 	}
 	,_add: function(component) {
-		var type = Type.getClassName(Type.getClass(component));
+		var type = Type.getClassName(component == null?null:js.Boot.getClass(component));
 		if(this.map.exists(type)) this.remove(this.map.get(type));
 		this.map.set(type,component);
 	}
 	,_remove: function(component) {
-		var type = Type.getClassName(Type.getClass(component));
+		var type = Type.getClassName(component == null?null:js.Boot.getClass(component));
 		this._removeTypeName(type);
 	}
 	,_removeTypeName: function(type) {
@@ -411,7 +382,7 @@ edge.Phase.prototype = {
 		return node;
 	}
 	,key: function(system) {
-		return Type.getClassName(Type.getClass(system));
+		return Type.getClassName(system == null?null:js.Boot.getClass(system));
 	}
 	,__class__: edge.Phase
 };
@@ -441,10 +412,11 @@ edge.View.prototype = {
 		return true;
 	}
 	,tryRemove: function(entity) {
-		if(!(this.map.h.__keys__[entity.__id__] != null)) return false;
+		var o = this.map.h[entity.__id__];
+		if(null == o) return null;
 		this.map.remove(entity);
 		this.count--;
-		return true;
+		return o;
 	}
 	,__class__: edge.View
 };
@@ -813,12 +785,10 @@ minicanvas.MiniCanvas.prototype = {
 };
 minicanvas.ScaleMode = { __ename__ : true, __constructs__ : ["NoScale","Auto","Scaled"] };
 minicanvas.ScaleMode.NoScale = ["NoScale",0];
-minicanvas.ScaleMode.NoScale.toString = $estr;
 minicanvas.ScaleMode.NoScale.__enum__ = minicanvas.ScaleMode;
 minicanvas.ScaleMode.Auto = ["Auto",1];
-minicanvas.ScaleMode.Auto.toString = $estr;
 minicanvas.ScaleMode.Auto.__enum__ = minicanvas.ScaleMode;
-minicanvas.ScaleMode.Scaled = function(v) { var $x = ["Scaled",2,v]; $x.__enum__ = minicanvas.ScaleMode; $x.toString = $estr; return $x; };
+minicanvas.ScaleMode.Scaled = function(v) { var $x = ["Scaled",2,v]; $x.__enum__ = minicanvas.ScaleMode; return $x; };
 minicanvas.BrowserCanvas = function(width,height,scaleMode) {
 	this.isNode = false;
 	this.isBrowser = true;
@@ -1193,12 +1163,12 @@ thx.color.parse.ColorInfo.prototype = {
 	__class__: thx.color.parse.ColorInfo
 };
 thx.color.parse.ChannelInfo = { __ename__ : true, __constructs__ : ["CIPercent","CIFloat","CIDegree","CIInt8","CIInt","CIBool"] };
-thx.color.parse.ChannelInfo.CIPercent = function(value) { var $x = ["CIPercent",0,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
-thx.color.parse.ChannelInfo.CIFloat = function(value) { var $x = ["CIFloat",1,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
-thx.color.parse.ChannelInfo.CIDegree = function(value) { var $x = ["CIDegree",2,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
-thx.color.parse.ChannelInfo.CIInt8 = function(value) { var $x = ["CIInt8",3,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
-thx.color.parse.ChannelInfo.CIInt = function(value) { var $x = ["CIInt",4,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
-thx.color.parse.ChannelInfo.CIBool = function(value) { var $x = ["CIBool",5,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
+thx.color.parse.ChannelInfo.CIPercent = function(value) { var $x = ["CIPercent",0,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
+thx.color.parse.ChannelInfo.CIFloat = function(value) { var $x = ["CIFloat",1,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
+thx.color.parse.ChannelInfo.CIDegree = function(value) { var $x = ["CIDegree",2,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
+thx.color.parse.ChannelInfo.CIInt8 = function(value) { var $x = ["CIInt8",3,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
+thx.color.parse.ChannelInfo.CIInt = function(value) { var $x = ["CIInt",4,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
+thx.color.parse.ChannelInfo.CIBool = function(value) { var $x = ["CIBool",5,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
 thx.core = {};
 thx.core.ArrayInts = function() { };
 thx.core.ArrayInts.__name__ = ["thx","core","ArrayInts"];

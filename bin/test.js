@@ -994,8 +994,7 @@ ValueType.TUnknown.__enum__ = ValueType;
 var Type = function() { };
 Type.__name__ = ["Type"];
 Type.getClass = function(o) {
-	if(o == null) return null;
-	return js.Boot.getClass(o);
+	if(o == null) return null; else return js.Boot.getClass(o);
 };
 Type.getEnum = function(o) {
 	if(o == null) return null;
@@ -1293,7 +1292,7 @@ edge.Entity.prototype = {
 		this.map = new haxe.ds.StringMap();
 	}
 	,exists: function(component) {
-		return this.existsType(Type.getClassName(Type.getClass(component)));
+		return this.existsType(Type.getClassName(component == null?null:js.Boot.getClass(component)));
 	}
 	,existsType: function(type) {
 		return this.map.exists(type);
@@ -1326,19 +1325,19 @@ edge.Entity.prototype = {
 		return this.map.iterator();
 	}
 	,_add: function(component) {
-		var type = Type.getClassName(Type.getClass(component));
+		var type = Type.getClassName(component == null?null:js.Boot.getClass(component));
 		if(this.map.exists(type)) this.remove(this.map.get(type));
 		this.map.set(type,component);
 	}
 	,_remove: function(component) {
-		var type = Type.getClassName(Type.getClass(component));
+		var type = Type.getClassName(component == null?null:js.Boot.getClass(component));
 		this._removeTypeName(type);
 	}
 	,_removeTypeName: function(type) {
 		this.map.remove(type);
 	}
 	,key: function(component) {
-		return Type.getClassName(Type.getClass(component));
+		return Type.getClassName(component == null?null:js.Boot.getClass(component));
 	}
 	,__class__: edge.Entity
 };
@@ -1451,7 +1450,7 @@ edge.Phase.prototype = {
 		return node;
 	}
 	,key: function(system) {
-		return Type.getClassName(Type.getClass(system));
+		return Type.getClassName(system == null?null:js.Boot.getClass(system));
 	}
 	,__class__: edge.Phase
 };
@@ -1947,7 +1946,16 @@ js.html.compat.ArrayBuffer = function(a) {
 	if((a instanceof Array) && a.__enum__ == null) {
 		this.a = a;
 		this.byteLength = a.length;
-	} else throw "TODO";
+	} else {
+		var len = a;
+		this.a = [];
+		var _g = 0;
+		while(_g < len) {
+			var i = _g++;
+			this.a[i] = 0;
+		}
+		this.byteLength = len;
+	}
 };
 js.html.compat.ArrayBuffer.__name__ = ["js","html","compat","ArrayBuffer"];
 js.html.compat.ArrayBuffer.sliceImpl = function(begin,end) {
@@ -1992,7 +2000,7 @@ js.html.compat.Uint8Array._new = function(arg1,offset,length) {
 		arr.byteLength = arr.length;
 		arr.byteOffset = 0;
 		arr.buffer = new js.html.compat.ArrayBuffer(arr);
-	} else throw "TODO";
+	} else throw "TODO " + Std.string(arg1);
 	arr.subarray = js.html.compat.Uint8Array._subarray;
 	arr.set = js.html.compat.Uint8Array._set;
 	return arr;
@@ -2021,7 +2029,9 @@ js.html.compat.Uint8Array._set = function(arg,offset) {
 };
 js.html.compat.Uint8Array._subarray = function(start,end) {
 	var t = this;
-	return js.html.compat.Uint8Array._new(t.buffer,start + t.byteOffset,end == null?null:end - start);
+	var a = js.html.compat.Uint8Array._new(t.slice(start,end));
+	a.byteOffset = start;
+	return a;
 };
 var thx = {};
 thx.core = {};
@@ -5034,9 +5044,9 @@ if(Array.prototype.filter == null) Array.prototype.filter = function(f1) {
 	return a1;
 };
 var __map_reserved = {}
-var ArrayBuffer = typeof(window) != "undefined" && window.ArrayBuffer || js.html.compat.ArrayBuffer;
+var ArrayBuffer = typeof(window) != "undefined" && window.ArrayBuffer || typeof(global) != "undefined" && global.ArrayBuffer || js.html.compat.ArrayBuffer;
 if(ArrayBuffer.prototype.slice == null) ArrayBuffer.prototype.slice = js.html.compat.ArrayBuffer.sliceImpl;
-var Uint8Array = typeof(window) != "undefined" && window.Uint8Array || js.html.compat.Uint8Array._new;
+var Uint8Array = typeof(window) != "undefined" && window.Uint8Array || typeof(global) != "undefined" && global.Uint8Array || js.html.compat.Uint8Array._new;
 
       // Production steps of ECMA-262, Edition 5, 15.4.4.21
       // Reference: http://es5.github.io/#x15.4.4.21
