@@ -20,19 +20,15 @@ class BuildSystem {
     makePublic(fields, "engine");
     makePublic(fields, "entity");
     makePublic(fields, "timeDelta");
-    var cls = Context.getLocalClass();
-    injectSystemProcess(fields, cls);
+    injectSystemProcess(fields, Context.getLocalClass());
     return fields;
   }
 
   static function injectSystemProcess(fields : Array<Field>, cls : Ref<ClassType>) {
-    var field = findField(fields, "__process__"),
-        s = cls.toString(),
-        type = Context.getType(s),
-        system = type.toComplexType(),
-        p = '$s${PROCESS_SUFFIX}';
+    var system = cls.toString(),
+        process = '$system${PROCESS_SUFFIX}';
 
-    BuildSystemProcess.createProcessType(s, p, fields);
+    BuildSystemProcess.createProcessType(system, process, fields);
 
     fields.push({
       name: "__process__",
@@ -42,7 +38,7 @@ class BuildSystem {
 
     appendExprToFieldFunction(
       findField(fields, "new"),
-      Context.parse('__process__ = new $p(this)', Context.currentPos())
+      Context.parse('__process__ = new $process(this)', Context.currentPos())
     );
   }
 
