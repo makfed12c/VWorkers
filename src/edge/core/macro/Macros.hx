@@ -2,6 +2,7 @@ package edge.core.macro;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import haxe.macro.Type;
 using thx.macro.MacroFields;
 import Type in RType;
 
@@ -37,6 +38,31 @@ class Macros {
       if(field.name == name)
         return field;
     return null;
+  }
+
+  public static function findClassField(fields : Array<ClassField>, name : String) {
+    for(field in fields) {
+      if(field.name == name)
+        return field;
+    }
+    return null;
+  }
+
+  public static function isFieldInHirearchy(type : ClassType, name : String) : Bool {
+    if(name == "new") {
+      if(null != type.constructor)
+        return true;
+    } else {
+      var field = findClassField(type.fields.get(), name);
+      if(null != field) {
+        return true;
+      }
+    }
+    var superClass = type.superClass;
+    if(null == superClass) {
+      return false;
+    }
+    return isFieldInHirearchy(superClass.t.get(), name);
   }
 
   public static function hasVarField(fields : Array<Field>, fieldName : String) {
