@@ -30,11 +30,7 @@ class BuildSystem {
 
     BuildSystemProcess.createProcessType(system, process, fields);
 
-    fields.push({
-      name: "__process__",
-      kind: FVar(macro : edge.core.ISystemProcess, null),
-      pos: Context.currentPos()
-    });
+    fields.push(createVarField("__process__", macro : edge.core.ISystemProcess));
 
     appendExprToFieldFunction(
       findField(fields, "new"),
