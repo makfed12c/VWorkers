@@ -31,7 +31,7 @@ class Engine {
     for(system in mapInfo.keys())
       mapInfo.get(system).components.remove(entity);
     for(system in mapInfo.keys())
-      for(collection in mapInfo.get(system).collections)
+      for(collection in mapInfo.get(system).process.collections)
         collection.view.remove(entity);
     mapEntities.remove(entity);
     entity.engine = null;
@@ -61,7 +61,7 @@ class Engine {
     if(info.hasComponents)
       for(entity in mapEntities.keys())
         matchSystem(entity, system);
-    if(info.collections.iterator().hasNext())
+    if(info.process.collections.iterator().hasNext())
       for(entity in mapEntities.keys())
         matchEntity(entity, system);
   }
@@ -116,9 +116,9 @@ class Engine {
 
   function matchEntity(entity : Entity, system : ISystem) {
     var info = mapInfo.get(system);
-    if(!info.collections.iterator().hasNext()) return;
-    for(name in info.collections.keys()) {
-      var collection = info.collections.get(name);
+    if(!info.process.collections.iterator().hasNext()) return;
+    for(name in info.process.collections.keys()) {
+      var collection = info.process.collections.get(name);
       collection.view.remove(entity);
       var componentRequirements = collection.classes,
           components = matchRequirements(entity, componentRequirements),

@@ -25,6 +25,7 @@ class BuildSystemProcess {
     injectSystemField(system, fields);
     injectUpdate(systemFields, fields);
     injectSetEntity(systemFields, fields);
+    injectFeatureCollections(fields);
 
     Context.defineType({
       pos : Context.currentPos(),
@@ -110,5 +111,35 @@ class BuildSystemProcess {
       }),
       pos: Context.currentPos()
     });
+  }
+
+  static function injectFeatureCollections(fields : Array<Field>) {
+    // public var collections : Map<String, ViewInfo>;
+    injectViewCollection(fields);
+  }
+
+  static function injectViewCollection(fields : Array<Field>) {
+    var constructor = BuildSystem.findField(fields, "new");
+
+    appendExprToFieldFunction(
+      BuildSystem.findField(fields, "new"),
+      macro this.collections = new Map()
+    );
+
+    fields.push({
+      access : [APublic],
+      name : "collections",
+      kind: FVar(macro : Map<String, edge.ViewInfo>, null),
+      pos: Context.currentPos()
+    });
+  }
+
+  static function appendExprToFieldFunction(field : Field, expr : Expr) {
+    switch field.kind {
+      case FFun(o):
+        var exprs = [o.expr, expr];
+        o.expr = macro $b{exprs};
+      case _:
+    }
   }
 }

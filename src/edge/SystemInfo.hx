@@ -12,12 +12,13 @@ class SystemInfo {
 //  public var system(default, null) : ISystem;
   public var process(default, null) : ISystemProcess;
 
+/*
   public var collections(default, null) : Map<String, {
     classes : Array<Class<Dynamic>>,
     fields : Array<String>,
     view : View<Dynamic>
   }>;
-
+*/
   public function new(system : ISystem, process : ISystemProcess) {
     this.process = process;
 //    this.system        = system;
@@ -27,10 +28,10 @@ class SystemInfo {
     this.update        = Reflect.field(system, "update");
 //    this.before        = null;
     this.components    = new Map();
-    this.collections = new Map();
+//    this.collections = new Map();
     if(null != system.entityRequirements) {
       var view = new View();
-      this.collections.set("entities", {
+      this.process.collections.set("entities", {
         classes : system.entityRequirements.pluck(_.cls),
         fields : system.entityRequirements.pluck(_.name),
         view : view
