@@ -28,6 +28,7 @@ Components1System_SystemProcess.prototype = {
 		this.updateItems.remove(entity);
 	}
 	,addEntity: function(entity) {
+		this.updateMatchRequirements(entity);
 	}
 	,system: null
 	,updateItems: null
@@ -41,6 +42,20 @@ Components1System_SystemProcess.prototype = {
 			data = item.data;
 			this.system.update(data.b);
 		}
+	}
+	,updateMatchRequirements: function(entity) {
+		this.updateItems.remove(entity);
+		var count = 1;
+		var o = { b : null};
+		var $it0 = entity.map.iterator();
+		while( $it0.hasNext() ) {
+			var component = $it0.next();
+			if(js.Boot.__instanceof(component,B)) {
+				o.b = component;
+				if(--count == 0) break; else continue;
+			}
+		}
+		if(count == 0) this.updateItems.add(entity,o);
 	}
 	,setEntity: function(entity) {
 		this.system.entity = entity;
@@ -60,6 +75,7 @@ Components2System_SystemProcess.prototype = {
 		this.updateItems.remove(entity);
 	}
 	,addEntity: function(entity) {
+		this.updateMatchRequirements(entity);
 	}
 	,system: null
 	,updateItems: null
@@ -71,6 +87,24 @@ Components2System_SystemProcess.prototype = {
 			data = item.data;
 			this.system.update(data.b,data.a);
 		}
+	}
+	,updateMatchRequirements: function(entity) {
+		this.updateItems.remove(entity);
+		var count = 2;
+		var o = { b : null, a : null};
+		var $it0 = entity.map.iterator();
+		while( $it0.hasNext() ) {
+			var component = $it0.next();
+			if(js.Boot.__instanceof(component,B)) {
+				o.b = component;
+				if(--count == 0) break; else continue;
+			}
+			if(js.Boot.__instanceof(component,A)) {
+				o.a = component;
+				if(--count == 0) break; else continue;
+			}
+		}
+		if(count == 0) this.updateItems.add(entity,o);
 	}
 	,setEntity: function(entity) {
 	}
@@ -89,6 +123,7 @@ ComponentsEntitiesSystem_SystemProcess.prototype = {
 		this.updateItems.remove(entity);
 	}
 	,addEntity: function(entity) {
+		this.updateMatchRequirements(entity);
 	}
 	,system: null
 	,updateItems: null
@@ -100,6 +135,20 @@ ComponentsEntitiesSystem_SystemProcess.prototype = {
 			data = item.data;
 			this.system.update(data.b);
 		}
+	}
+	,updateMatchRequirements: function(entity) {
+		this.updateItems.remove(entity);
+		var count = 1;
+		var o = { b : null};
+		var $it0 = entity.map.iterator();
+		while( $it0.hasNext() ) {
+			var component = $it0.next();
+			if(js.Boot.__instanceof(component,B)) {
+				o.b = component;
+				if(--count == 0) break; else continue;
+			}
+		}
+		if(count == 0) this.updateItems.add(entity,o);
 	}
 	,setEntity: function(entity) {
 	}
@@ -844,15 +893,6 @@ edge.Engine.prototype = {
 		if(info == null) return;
 		var process = info.process;
 		process.update(this,t);
-		if(info.hasComponents) {
-			var $it0 = info.components.keys();
-			while( $it0.hasNext() ) {
-				var entity = $it0.next();
-				var components = info.components.h[entity.__id__];
-				process.setEntity(entity);
-				Reflect.callMethod(system,info.update,components);
-			}
-		}
 	}
 	,matchSystems: function(entity) {
 		var $it0 = this.mapInfo.keys();
@@ -875,6 +915,7 @@ edge.Engine.prototype = {
 			var components = this.matchRequirements(entity,system.componentRequirements);
 			if(null != components) info.components.set(entity,components);
 		}
+		info.process.addEntity(entity);
 	}
 	,matchEntity: function(entity,system) {
 		var info = this.mapInfo.h[system.__id__];
@@ -899,6 +940,7 @@ edge.Engine.prototype = {
 				collection.view.add(entity,o);
 			}
 		}
+		info.process.addEntity(entity);
 	}
 	,matchRequirements: function(entity,requirements) {
 		var comps = [];

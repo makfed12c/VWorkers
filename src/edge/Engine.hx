@@ -83,6 +83,7 @@ class Engine {
 //    if(info.hasDelta)
 //      Reflect.setField(system, "timeDelta", t);
 //    process.before();
+/*
     if(info.hasComponents) {
 //      if(info.hasBefore)
 //        Reflect.callMethod(system, info.before, emptyArgs);
@@ -96,6 +97,7 @@ class Engine {
 //    } else {
 //      Reflect.callMethod(system, info.update, emptyArgs);
     }
+*/
   }
 
   function matchSystems(entity : Entity)
@@ -114,6 +116,7 @@ class Engine {
       if(null != components)
         info.components.set(entity, components);
     }
+    info.process.addEntity(entity);
   }
 
   function matchEntity(entity : Entity, system : ISystem) {
@@ -134,6 +137,7 @@ class Engine {
         collection.view.add(entity, o);
       }
     }
+    info.process.addEntity(entity);
   }
 
   function matchRequirements(entity : Entity, requirements : Array<Class<Dynamic>>) {

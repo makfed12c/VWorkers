@@ -26,6 +26,7 @@ class BuildSystemProcess {
     injectAddEntity(fields);
     injectSystemField(system, fields);
     injectUpdate(systemFields, fields);
+    injectUpdateMatchRequirements(systemFields, fields);
     injectSetEntity(systemFields, fields);
     injectFeatureCollections(fields);
 
@@ -125,6 +126,50 @@ class BuildSystemProcess {
       }),
       pos: Context.currentPos()
     });
+  }
+
+  static function injectUpdateMatchRequirements(systemFields : Array<Field>, fields : Array<Field>) {
+    var args = fieldFunctionArguments(BuildSystem.findField(systemFields, "update"));
+    if(args.length == 0) return;
+
+    var sexprs = [];
+    sexprs.push('updateItems.remove(entity)');
+    sexprs.push('var count = ' + args.length);
+    sexprs.push('var o : {' + args.map(function(arg) return '${arg.name} : ${Context.follow(arg.type.toType()).toComplexType().toString()}').join(", ") + '} = {' + args.map(function(arg) return '${arg.name} : null').join(", ") + '}');
+
+    var expr = 'for(component in entity.components()) {\n';
+    for(arg in args) {
+      var t = Context.follow(arg.type.toType()).toComplexType().toString();
+      expr += '  if(Std.is(component, $t)) {\n';
+      expr += '    o.${arg.name} = cast component;\n';
+      expr += '    if(--count == 0) break; else continue;\n';
+      expr += '  }\n';
+    }
+    expr += '}';
+    sexprs.push(expr);
+
+    sexprs.push('if(count == 0) updateItems.add(entity, o)');
+
+    trace(sexprs.join(";\n"));
+    var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos()));
+    fields.push({
+      name : "updateMatchRequirements",
+      access: [],
+      kind: FFun({
+        ret : macro : Void,
+        params : null,
+        expr : macro $b{exprs},
+        args : [{
+          name : "entity",
+          type : macro : edge.Entity
+        }]
+      }),
+      pos: Context.currentPos()
+    });
+
+    appendExprToFieldFunction(
+      BuildSystem.findField(fields, "addEntity"),
+      macro updateMatchRequirements(entity));
   }
 
   static function injectSetEntity(systemFields : Array<Field>, fields : Array<Field>) {
