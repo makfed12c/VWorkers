@@ -623,7 +623,7 @@ TestAll.prototype = {
 edge.ISystem = function() { };
 edge.ISystem.__name__ = ["edge","ISystem"];
 edge.ISystem.prototype = {
-	__getSystemProcess: null
+	__systemProcess: null
 	,entityRequirements: null
 	,__class__: edge.ISystem
 };
@@ -631,6 +631,7 @@ var NoComponentsSystem = function() {
 	this.entityRequirements = null;
 	this.componentRequirements = [];
 	this.count = 0;
+	this.__systemProcess = new NoComponentsSystem_SystemProcess(this);
 };
 NoComponentsSystem.__name__ = ["NoComponentsSystem"];
 NoComponentsSystem.__interfaces__ = [edge.ISystem];
@@ -644,15 +645,14 @@ NoComponentsSystem.prototype = {
 	,toString: function() {
 		return "NoComponentsSystem";
 	}
-	,__getSystemProcess: function(engine) {
-		return new NoComponentsSystem_SystemProcess(this);
-	}
+	,__systemProcess: null
 	,__class__: NoComponentsSystem
 };
 var Components2System = function() {
 	this.entityRequirements = null;
 	this.componentRequirements = [B,A];
 	this.count = 0;
+	this.__systemProcess = new Components2System_SystemProcess(this);
 };
 Components2System.__name__ = ["Components2System"];
 Components2System.__interfaces__ = [edge.ISystem];
@@ -668,15 +668,14 @@ Components2System.prototype = {
 	,toString: function() {
 		return "Components2System";
 	}
-	,__getSystemProcess: function(engine) {
-		return new Components2System_SystemProcess(this);
-	}
+	,__systemProcess: null
 	,__class__: Components2System
 };
 var Components1System = function() {
 	this.entityRequirements = null;
 	this.componentRequirements = [B];
 	this.count = 0;
+	this.__systemProcess = new Components1System_SystemProcess(this);
 };
 Components1System.__name__ = ["Components1System"];
 Components1System.__interfaces__ = [edge.ISystem];
@@ -693,15 +692,14 @@ Components1System.prototype = {
 	,toString: function() {
 		return "Components1System";
 	}
-	,__getSystemProcess: function(engine) {
-		return new Components1System_SystemProcess(this);
-	}
+	,__systemProcess: null
 	,__class__: Components1System
 };
 var ComponentsEntitiesSystem = function() {
 	this.entityRequirements = [{ name : "a", cls : A}];
 	this.componentRequirements = [B];
 	this.count = 0;
+	this.__systemProcess = new ComponentsEntitiesSystem_SystemProcess(this);
 };
 ComponentsEntitiesSystem.__name__ = ["ComponentsEntitiesSystem"];
 ComponentsEntitiesSystem.__interfaces__ = [edge.ISystem];
@@ -717,9 +715,7 @@ ComponentsEntitiesSystem.prototype = {
 	,toString: function() {
 		return "ComponentsEntitiesSystem";
 	}
-	,__getSystemProcess: function(engine) {
-		return new ComponentsEntitiesSystem_SystemProcess(this);
-	}
+	,__systemProcess: null
 	,__class__: ComponentsEntitiesSystem
 };
 var A = function() {
@@ -874,7 +870,7 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = new edge.SystemInfo(system,system.__getSystemProcess(this));
+		var info = new edge.SystemInfo(system,system.__systemProcess);
 		this.mapInfo.set(system,info);
 		if(info.process.hasUpdateItems) {
 			var $it0 = this.mapEntities.keys();
@@ -1182,7 +1178,6 @@ edge.NodeSystemIterator.prototype = {
 };
 edge.SystemInfo = function(system,process) {
 	this.process = process;
-	this.update = Reflect.field(system,"update");
 	if(null != system.entityRequirements) {
 		var view = new edge.View();
 		var value = { classes : system.entityRequirements.map(function(_) {
@@ -1196,8 +1191,7 @@ edge.SystemInfo = function(system,process) {
 };
 edge.SystemInfo.__name__ = ["edge","SystemInfo"];
 edge.SystemInfo.prototype = {
-	update: null
-	,process: null
+	process: null
 	,__class__: edge.SystemInfo
 };
 edge.View = function() {

@@ -16,7 +16,8 @@ TODO
 */
 @:autoBuild(edge.macro.BuildSystem.complete())
 interface ISystem {
-  private function __getSystemProcess(engine : Engine) : ISystemProcess;
+  private var __systemProcess : ISystemProcess;
+//  private function __getSystemProcess(engine : Engine) : ISystemProcess;
 //  var componentRequirements(default, null) : Array<Class<Dynamic>>;
   var entityRequirements(default, null) : Array<{ name : String , cls : Class<Dynamic> }>;
 }

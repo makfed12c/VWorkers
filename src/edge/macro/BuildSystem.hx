@@ -28,15 +28,31 @@ class BuildSystem {
   }
 
   static function injectSystemProcess(fields : Array<Field>, cls : Ref<ClassType>) {
-    var field = findField(fields, "__getSystemProcess");
-    if(null != field) return;
-
-    var s = cls.toString(),
+    var field = findField(fields, "__systemProcess"),
+        s = cls.toString(),
         type = Context.getType(s),
         system = type.toComplexType(),
         p = '$s${PROCESS_SUFFIX}';
 
     BuildSystemProcess.createProcessType(s, p, fields);
+
+    fields.push({
+      name: "__systemProcess",
+      kind: FVar(macro : edge.ISystemProcess, null),
+      pos: Context.currentPos()
+    });
+
+    BuildSystemProcess.appendExprToFieldFunction(
+      findField(fields, "new"),
+      Context.parse('__systemProcess = new $p(this)', Context.currentPos())
+    );
+
+/*
+    var field = findField(fields, "__getSystemProcess");
+    if(null != field) return;
+
+
+    //BuildSystemProcess.createProcessType(s, p, fields);
 
     var exprs = [Context.parse('return new $p(this)', Context.currentPos())];
 
@@ -54,6 +70,7 @@ class BuildSystem {
       }),
       pos: Context.currentPos()
     });
+*/
   }
 
   public static function hasVarField(fields : Array<Field>, fieldName : String) {

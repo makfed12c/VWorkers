@@ -6,6 +6,7 @@ import edge.Entity;
 @:access(edge.View)
 @:access(edge.ISystem)
 class Engine {
+  // TODO remove
   var mapInfo : Map<ISystem, SystemInfo>;
   var mapEntities : Map<Entity, Bool>;
   var listPhases : Array<Phase>;
@@ -58,7 +59,7 @@ class Engine {
   function addSystem(phase : Phase, system : ISystem) {
     if(mapInfo.exists(system))
       throw 'System "$system" already exists in Engine';
-    var info = new SystemInfo(system, system.__getSystemProcess(this));
+    var info = new SystemInfo(system, system.__systemProcess);
     mapInfo.set(system, info);
     if(info.process.hasUpdateItems)
       for(entity in mapEntities.keys())
@@ -110,7 +111,6 @@ class Engine {
 
   function matchSystem(entity : Entity, system : ISystem) {
     var info = mapInfo.get(system);
-
 /*
     info.components.remove(entity);
     if(info.hasComponents) {

@@ -290,7 +290,7 @@ class BuildSystemProcess {
     });
   }
 
-  static function appendExprToFieldFunction(field : Field, expr : Expr) {
+  public static function appendExprToFieldFunction(field : Field, expr : Expr) {
     switch field.kind {
       case FFun(o):
         var exprs = [o.expr, expr];
