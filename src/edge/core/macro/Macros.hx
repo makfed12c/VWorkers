@@ -18,6 +18,14 @@ class Macros {
       .filter(function(field) return field != null);
   }
 
+  public static function createVarField(name : String, type : ComplexType) : Field {
+    return {
+      name: name,
+      kind: FVar(type, null),
+      pos: Context.currentPos()
+    };
+  }
+
   public static function createFunctionField(name : String, args : Array<FunctionArg>, ret : ComplexType, expr : Expr) : Field {
     return {
       name: name,
