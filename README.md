@@ -131,6 +131,59 @@ And you get an iterator of all the entities that match the `Position` requiremen
 
 Note: In the future this might be changed to a more flexible view system that will allow to have multiple entity collections in the same system.
 
+### ISystem
+
+Systems must implement ISystem. System classes do not have to implement the required `__systemProcess` because this field is automatically built.
+
+A system must at least define a method `update()`. The method can take 0 or more arguments. If arguments are defined, they must be components; a component is an instance of a Class.
+
+The `update()` method will be invoked when the corresponding phase is updated. `update()` will be called only once if it takes no arguments, or once for every entity that matches the function requirements. An entity matches the `update` requirements if it has a matching component for each of the function arguments.
+
+Optionally a System can expose the following members:
+
+  * `function before() : Void`
+
+    Executes before each cycle of `update(/*...*/)`. It only makes sense when `update` takes at least one argument.
+
+  * `var engine : Engine`
+
+    Gets a reference to engine. Useful to dynamically create more entities.
+
+  * `var entity : Entity`
+
+    To only use when `update(/*...*/)` takes at least one argument. `entity` will reference the container of the components that are currently processed by the `update` method.
+
+  * `var timeDelta : Float`
+
+    Brings a value (in millisecond) defining the time elapsed since the latest iteration.
+
+If the System exposes any of these members, they will be automatically populated at the right time. So no initialization is required or desired. Also they will be automatically changed to `public` if they are not already.
+
+Some times you want to be able to iterate over collections of entities that satisfy certain requirements. For example, it can be extremely useful for collisions. In that case you can define one (or more) fields of type `edge.View(T)`. Where `T` is the type of an anonymous object where every field must be the type of a component.
+
+```haxe
+var targets : View<{ position : Position, life : Life }>;
+var entity : Entity;
+
+function update(position : Position, bullet : Bullet) {
+  for(item in targets) {
+    var target = item.data; // item.data stores the components
+    // hit the target?
+    if(areNear(position, target.position)) {
+      // assign damage
+      life.hitPoints -= bullet.damage;
+
+      // remove bullet
+      entity.destroy();
+
+      // life is zero remove target
+      if(life <= 0)
+        item.entity.destroy(); // item.entity references the target entity
+    }
+  }
+}
+```
+
 ### IComponent
 
 Even if not required, your components can implement `IComponent`. Doing so your components will gain the following super-powers for free:
@@ -138,5 +191,3 @@ Even if not required, your components can implement `IComponent`. Doing so your 
   * you don't need to setup a constructor, if it doesn't exist, one will be created for you and it will take the same arguments as the variable fields declared in the component.
   * all variables are automatically made public.
   * a method `toString` is also created to simplify the debugging of your code.
-
-Also implementing `ISystem` does something similar: it provides an automatic constructor, it makes `update` public and creates a couple of methods used internally from the engine to pair your entities/components with the systems.
