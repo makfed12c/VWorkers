@@ -7,20 +7,22 @@ using haxe.macro.ComplexTypeTools;
 using thx.macro.MacroFields;
 using thx.macro.MacroTypes;
 
+import edge.core.macro.Macros.*;
+
 class BuildComponent {
   macro public static function complete() : Array<Field> {
     var fields = Context.getBuildFields();
-    Macros.makeVarsPublic(fields);
+    makeVarsPublic(fields);
     injectToString(fields);
     injectConstructor(fields);
     return fields;
   }
 
   static function injectConstructor(fields : Array<Field>) {
-    var field = BuildSystem.findField(fields, "new");
+    var field = findField(fields, "new");
     if(null != field) return;
     var info = getVarInfo(fields),
-        cls  = BuildSystem.clsName().split(".").pop(),
+        cls  = clsName().split(".").pop(),
         init = info
           .map(function(arg) return arg.name)
           .map(function(name) return macro this.$name = $i{name});
@@ -45,9 +47,9 @@ class BuildComponent {
   }
 
   static function injectToString(fields : Array<Field>) {
-    var field = BuildSystem.findField(fields, "toString");
+    var field = findField(fields, "toString");
     if(null != field) return;
-    var cls  = BuildSystem.clsName().split(".").pop(),
+    var cls  = clsName().split(".").pop(),
         info = getVarInfo(fields),
         args = info
           .map(function(arg) return '${arg.name}=$' + arg.name)

@@ -9,6 +9,8 @@ using thx.macro.MacroFields;
 using thx.macro.MacroTypes;
 using thx.core.Strings;
 
+import edge.core.macro.Macros.*;
+
 class BuildSystemProcess {
   public static function createProcessType(systemName : String, processName : String, systemFields : Array<Field>) {
     var pack = processName.split('.'),
@@ -56,9 +58,9 @@ class BuildSystemProcess {
 
   static function injectView(info : { name : String, types : Array<Field>, field : Field }, fields : Array<Field>) {
     var name = info.name;
-    BuildSystem.makeFieldPublic(info.field);
+    makeFieldPublic(info.field);
     appendExprToFieldFunction(
-      BuildSystem.findField(fields, "new"),
+      findField(fields, "new"),
       macro system.$name = new edge.View()
     );
 
@@ -116,27 +118,27 @@ class BuildSystemProcess {
     });
 
     appendExprToFieldFunction(
-      BuildSystem.findField(fields, "addEntity"),
+      findField(fields, "addEntity"),
       Context.parse('$methodName(entity)', Context.currentPos())
     );
 
     appendExprToFieldFunction(
-      BuildSystem.findField(fields, "removeEntity"),
+      findField(fields, "removeEntity"),
       Context.parse('system.$name.remove(entity)', Context.currentPos())
     );
   }
 
   static function injectUpdate(systemFields : Array<Field>, fields : Array<Field>) {
     var exprs = [];
-    if(BuildSystem.hasVarField(systemFields, "engine"))
+    if(hasVarField(systemFields, "engine"))
       exprs.push(macro system.engine = engine);
-    if(BuildSystem.hasVarField(systemFields, "timeDelta"))
+    if(hasVarField(systemFields, "timeDelta"))
       exprs.push(macro system.timeDelta = delta);
-    if(BuildSystem.hasFunField(systemFields, "before"))
+    if(hasFunField(systemFields, "before"))
       exprs.push(macro system.before());
 
-    var update = BuildSystem.findField(systemFields, "update"),
-        constructor = BuildSystem.findField(fields, "new");
+    var update = findField(systemFields, "update"),
+        constructor = findField(fields, "new");
 
     if(fieldFunctionHasArguments(update)) {
     //   appendExprToFieldFunction(
@@ -171,7 +173,7 @@ class BuildSystemProcess {
 //      trace(args);
       // inject remove entity
       appendExprToFieldFunction(
-        BuildSystem.findField(fields, "removeEntity"),
+        findField(fields, "removeEntity"),
         macro updateItems.remove(entity));
       // inject constructor init
       appendExprToFieldFunction(constructor, macro updateItems = new edge.View());
@@ -179,7 +181,7 @@ class BuildSystemProcess {
       exprs.push(macro var data);
       var expr = '\nfor(item in updateItems) {\n';
       // set entity if required
-      if(BuildSystem.hasVarField(systemFields, "entity"))
+      if(hasVarField(systemFields, "entity"))
         expr += '  system.entity = item.entity;\n';
       // call update
       expr += '  data = item.data;\n';
@@ -216,7 +218,7 @@ class BuildSystemProcess {
   }
 
   static function injectUpdateMatchRequirements(systemFields : Array<Field>, fields : Array<Field>) {
-    var args = fieldFunctionArguments(BuildSystem.findField(systemFields, "update"));
+    var args = fieldFunctionArguments(findField(systemFields, "update"));
     if(args.length == 0) return;
 
     var sexprs = [];
@@ -255,13 +257,13 @@ class BuildSystemProcess {
     });
 
     appendExprToFieldFunction(
-      BuildSystem.findField(fields, "addEntity"),
+      findField(fields, "addEntity"),
       macro updateMatchRequirements(entity));
   }
 /*
   static function injectSetEntity(systemFields : Array<Field>, fields : Array<Field>) {
     var exprs = [];
-    if(BuildSystem.hasVarField(systemFields, "entity"))
+    if(hasVarField(systemFields, "entity"))
       exprs.push(macro system.entity = entity);
 
     fields.push({
@@ -354,10 +356,10 @@ class BuildSystemProcess {
   }
 
   static function injectViewCollection(fields : Array<Field>) {
-    var constructor = BuildSystem.findField(fields, "new");
+    var constructor = findField(fields, "new");
 
     appendExprToFieldFunction(
-      BuildSystem.findField(fields, "new"),
+      findField(fields, "new"),
       macro this.collections = new Map()
     );
 
@@ -369,32 +371,6 @@ class BuildSystemProcess {
     });
   }
 */
-  public static function appendExprToFieldFunction(field : Field, expr : Expr) {
-    switch field.kind {
-      case FFun(o):
-        var exprs = [o.expr, expr];
-        o.expr = macro $b{exprs};
-      case _:
-    }
-  }
-
-  static function fieldFunctionHasArguments(field : Field) {
-    switch field.kind {
-      case FFun(o):
-        return o.args.length > 0;
-      case _:
-        return false;
-    }
-  }
-
-  static function fieldFunctionArguments(field : Field) {
-    switch field.kind {
-      case FFun(o):
-        return o.args;
-      case _:
-        return null;
-    }
-  }
 
   static function collectViewFields(fields : Array<Field>) : Array<{ name : String, types : Array<Field>, field : Field }> {
     var results = [];

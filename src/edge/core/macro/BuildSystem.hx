@@ -9,6 +9,8 @@ using haxe.macro.TypeTools;
 using thx.macro.MacroFields;
 using thx.macro.MacroTypes;
 
+import edge.core.macro.Macros.*;
+
 class BuildSystem {
   public inline static var PROCESS_SUFFIX = "_SystemProcess";
 
@@ -41,30 +43,10 @@ class BuildSystem {
       pos: Context.currentPos()
     });
 
-    BuildSystemProcess.appendExprToFieldFunction(
+    appendExprToFieldFunction(
       findField(fields, "new"),
       Context.parse('__systemProcess = new $p(this)', Context.currentPos())
     );
-  }
-
-  public static function hasVarField(fields : Array<Field>, fieldName : String) {
-    for(field in fields)
-      if(field.name == fieldName && switch field.kind {
-        case FVar(_, _): true;
-        case _: false;
-      })
-        return true;
-    return false;
-  }
-
-  public static function hasFunField(fields : Array<Field>, fieldName : String) {
-    for(field in fields)
-      if(field.name == fieldName && switch field.kind {
-        case FFun(_): true;
-        case _: false;
-      })
-        return true;
-    return false;
   }
 
   static function injectComponentRequirements(fields : Array<Field>) {
@@ -169,41 +151,5 @@ class BuildSystem {
         params : [],
         pos : Context.currentPos()
       });
-  }
-
-  static function fieldHasMeta(field : Field, name : String) {
-    if(field.meta == null) return false;
-    for(meta in field.meta)
-      if(meta.name == name)
-        return true;
-    return false;
-  }
-
-  public static function clsName()
-    return Context.getLocalClass().toString();
-
-  public static function makePublic(fields : Array<Field>, name : String) {
-    var field = findField(fields, name);
-    if(null == field) return;
-    makeFieldPublic(field);
-  }
-
-  public static function makeFieldPublic(field : Field) {
-    if(isPublic(field)) return;
-    field.access.push(APublic);
-  }
-
-  public static function isPublic(field : Field) {
-    for(a in field.access)
-      if(RType.enumEq(a, APublic))
-        return true;
-    return false;
-  }
-
-  public static function findField(fields : Array<Field>, name : String) {
-    for(field in fields)
-      if(field.name == name)
-        return field;
-    return null;
   }
 }
