@@ -24,7 +24,7 @@ class Engine {
       remove(entity);
 
   function remove(entity : Entity) {
-    eachSystem(function(system) system.__systemProcess.removeEntity(entity));
+    eachSystem(function(system) system.__process__.removeEntity(entity));
     mapEntities.remove(entity);
     entity.engine = null;
   }
@@ -60,15 +60,15 @@ class Engine {
   // TODO, remove all together, not one at the time
   function removeSystem(system : ISystem)
     for(entity in mapEntities.keys())
-      system.__systemProcess.removeEntity(entity);
+      system.__process__.removeEntity(entity);
 
   function updateSystem(system : ISystem, t : Float) {
-    system.__systemProcess.update(this, t);
+    system.__process__.update(this, t);
   }
 
   function matchSystems(entity : Entity)
     eachSystem(function(system) match(entity, system));
 
   inline function match(entity : Entity, system : ISystem)
-    system.__systemProcess.addEntity(entity);
+    system.__process__.addEntity(entity);
 }
