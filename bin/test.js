@@ -605,7 +605,11 @@ TestAll.prototype = {
 		utest.Assert.equals(qt,thx.core.Iterators.toArray(engine.entities()).length,null,pos);
 	}
 	,assertNumberOfSystems: function(engine,qt,pos) {
-		utest.Assert.equals(qt,thx.core.Iterators.toArray(engine.systems()).length,null,pos);
+		var count = 0;
+		engine.eachSystem(function(_) {
+			count++;
+		});
+		utest.Assert.equals(qt,count,null,pos);
 	}
 	,__class__: TestAll
 };
@@ -644,8 +648,8 @@ Components2System.__interfaces__ = [edge.ISystem];
 Components2System.prototype = {
 	count: null
 	,update: function(b,a) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 191, className : "Components2System", methodName : "update"});
-		utest.Assert["is"](a,A,null,{ fileName : "TestAll.hx", lineNumber : 192, className : "Components2System", methodName : "update"});
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 194, className : "Components2System", methodName : "update"});
+		utest.Assert["is"](a,A,null,{ fileName : "TestAll.hx", lineNumber : 195, className : "Components2System", methodName : "update"});
 		this.count++;
 	}
 	,componentRequirements: null
@@ -667,7 +671,7 @@ Components1System.prototype = {
 	,entity: null
 	,engine: null
 	,update: function(b) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 202, className : "Components1System", methodName : "update"});
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 205, className : "Components1System", methodName : "update"});
 		this.count++;
 	}
 	,componentRequirements: null
@@ -688,7 +692,7 @@ ComponentsEntitiesSystem.prototype = {
 	count: null
 	,entities: null
 	,update: function(b) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 211, className : "ComponentsEntitiesSystem", methodName : "update"});
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 214, className : "ComponentsEntitiesSystem", methodName : "update"});
 		this.count++;
 	}
 	,componentRequirements: null
@@ -835,8 +839,18 @@ edge.Engine.prototype = {
 	,phases: function() {
 		return HxOverrides.iter(this.listPhases);
 	}
-	,systems: function() {
-		return this.mapProcess.keys();
+	,eachSystem: function(f) {
+		var _g = 0;
+		var _g1 = this.listPhases;
+		while(_g < _g1.length) {
+			var phase = _g1[_g];
+			++_g;
+			var $it0 = phase.systems();
+			while( $it0.hasNext() ) {
+				var system = $it0.next();
+				f(system);
+			}
+		}
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapProcess.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
@@ -857,11 +871,10 @@ edge.Engine.prototype = {
 		process.update(this,t);
 	}
 	,matchSystems: function(entity) {
-		var $it0 = this.mapProcess.keys();
-		while( $it0.hasNext() ) {
-			var system = $it0.next();
+		var _g = this;
+		this.eachSystem(function(system) {
 			system.__systemProcess.addEntity(entity);
-		}
+		});
 	}
 	,match: function(entity,system) {
 		system.__systemProcess.addEntity(entity);

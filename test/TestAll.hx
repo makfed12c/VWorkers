@@ -163,8 +163,11 @@ class TestAll {
   public function assertNumberOfEntities(engine : Engine, qt : Int, ?pos : haxe.PosInfos)
     Assert.equals(qt, engine.entities().toArray().length, pos);
 
-  public function assertNumberOfSystems(engine : Engine, qt : Int, ?pos : haxe.PosInfos)
-    Assert.equals(qt, engine.systems().toArray().length, pos);
+  public function assertNumberOfSystems(engine : Engine, qt : Int, ?pos : haxe.PosInfos) {
+    var count = 0;
+    engine.eachSystem(function(_) count++);
+    Assert.equals(qt, count, pos);
+  }
 
   public static function main() {
     var runner = new Runner();

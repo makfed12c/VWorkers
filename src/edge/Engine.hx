@@ -52,8 +52,11 @@ class Engine {
   public function phases()
     return listPhases.iterator();
 
-  public function systems() : Iterator<ISystem>
-    return mapProcess.keys();
+  public function eachSystem(f : ISystem -> Void) {
+    for(phase in listPhases)
+      for(system in phase.systems())
+        f(system);
+  }
 
   // private methods
   function addSystem(phase : Phase, system : ISystem) {
@@ -106,9 +109,11 @@ class Engine {
   }
 
   function matchSystems(entity : Entity)
-    for(system in mapProcess.keys())
+    eachSystem(function(system) match(entity, system));
+//    for(system in systems())
+//      match(entity, system);
+//    for(system in mapProcess.keys())
 //      matchSystem(entity, system);
-      match(entity, system);
 
 /*
   function matchEntities(entity : Entity)
