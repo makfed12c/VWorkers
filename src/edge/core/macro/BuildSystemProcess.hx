@@ -44,16 +44,21 @@ class BuildSystemProcess {
 
   static function injectViews(systemFields : Array<Field>, fields : Array<Field>) {
     for(field in collectViewFields(systemFields)) {
-      injectView(field, fields);
+      injectView(field, systemFields, fields);
     }
   }
 
-  static function injectView(info : { name : String, types : Array<Field>, field : Field }, fields : Array<Field>) {
+  static function injectView(info : { name : String, types : Array<Field>, field : Field }, systemFields : Array<Field>, fields : Array<Field>) {
     var name = info.name;
     makeFieldPublic(info.field);
+    var sexpr = 'system.$name = new edge.View(';
+    sexpr += hasFunField(systemFields, '${name}Added') ? 'system.${name}Added' : 'null';
+    sexpr += ',';
+    sexpr += hasFunField(systemFields, '${name}Removed') ? 'system.${name}Removed' : 'null';
+    sexpr += ')';
     appendExprToFieldFunction(
       findField(fields, "new"),
-      macro system.$name = new edge.View()
+      Context.parse(sexpr, Context.currentPos())
     );
 
     injectViewMatchRequirements(info, fields);
@@ -155,7 +160,16 @@ class BuildSystemProcess {
         findField(fields, "removeEntity"),
         macro updateItems.remove(entity));
       // inject constructor init
-      appendExprToFieldFunction(constructor, macro updateItems = new edge.View());
+      var sexpr = 'updateItems = new edge.View(';
+      sexpr += hasFunField(systemFields, 'system.updateAdded') ? 'system.updateAdded' : 'null';
+      sexpr += ',';
+      sexpr += hasFunField(systemFields, 'system.updateRemoved') ? 'system.updateRemoved' : 'null';
+      sexpr += ')';
+      appendExprToFieldFunction(
+        constructor,
+        Context.parse(sexpr, Context.currentPos())
+      );
+
       // create loop expression
       exprs.push(macro var data);
       var expr = '\nfor(item in updateItems) {\n';
