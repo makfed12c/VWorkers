@@ -1077,8 +1077,6 @@ edge.SystemInfo = function(system,process) {
 	this.process = process;
 	this.system = system;
 	this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
-	this.hasDelta = edge.SystemInfo.hasField(system,"timeDelta");
-	this.hasEngine = edge.SystemInfo.hasField(system,"engine");
 	this.hasEntity = edge.SystemInfo.hasField(system,"entity");
 	this.hasBefore = edge.SystemInfo.hasField(system,"before");
 	this.update = Reflect.field(system,"update");
@@ -1103,8 +1101,6 @@ edge.SystemInfo.hasField = function(o,field) {
 };
 edge.SystemInfo.prototype = {
 	hasComponents: null
-	,hasDelta: null
-	,hasEngine: null
 	,hasEntity: null
 	,hasBefore: null
 	,before: null

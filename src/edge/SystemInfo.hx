@@ -4,8 +4,6 @@ using thx.core.Arrays;
 
 class SystemInfo {
   public var hasComponents(default, null) : Bool;
-  public var hasDelta(default, null) : Bool;
-  public var hasEngine(default, null) : Bool;
   public var hasEntity(default, null) : Bool;
   public var hasBefore(default, null) : Bool;
   public var before(default, null) : Dynamic;
@@ -24,8 +22,6 @@ class SystemInfo {
     this.process = process;
     this.system        = system;
     this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
-    this.hasDelta      = hasField(system, "timeDelta");
-    this.hasEngine     = hasField(system, "engine");
     this.hasEntity     = hasField(system, "entity");
     this.hasBefore     = hasField(system, "before");
     this.update        = Reflect.field(system, "update");
