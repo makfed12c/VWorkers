@@ -74,7 +74,7 @@ edge.ISystem.prototype = {
 };
 var RenderDots = function(mini) {
 	this.mini = mini;
-	this.__systemProcess = new RenderDots_SystemProcess(this);
+	this.__process__ = new RenderDots_SystemProcess(this);
 };
 RenderDots.__name__ = ["RenderDots"];
 RenderDots.__interfaces__ = [edge.ISystem];
@@ -86,7 +86,7 @@ RenderDots.prototype = {
 };
 var RenderBackground = function(mini) {
 	this.mini = mini;
-	this.__systemProcess = new RenderBackground_SystemProcess(this);
+	this.__process__ = new RenderBackground_SystemProcess(this);
 };
 RenderBackground.__name__ = ["RenderBackground"];
 RenderBackground.__interfaces__ = [edge.ISystem];
@@ -97,7 +97,7 @@ RenderBackground.prototype = {
 	,__class__: RenderBackground
 };
 var UpdateMovement = function() {
-	this.__systemProcess = new UpdateMovement_SystemProcess(this);
+	this.__process__ = new UpdateMovement_SystemProcess(this);
 };
 UpdateMovement.__name__ = ["UpdateMovement"];
 UpdateMovement.__interfaces__ = [edge.ISystem];
@@ -163,7 +163,7 @@ RenderDots_SystemProcess.__name__ = ["RenderDots_SystemProcess"];
 RenderDots_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
 RenderDots_SystemProcess.prototype = {
 	removeEntity: function(entity) {
-		this.updateItems.remove(entity);
+		this.updateItems.tryRemove(entity);
 	}
 	,addEntity: function(entity) {
 		this.updateMatchRequirements(entity);
@@ -178,7 +178,7 @@ RenderDots_SystemProcess.prototype = {
 		}
 	}
 	,updateMatchRequirements: function(entity) {
-		this.updateItems.remove(entity);
+		var removed = this.updateItems.tryRemove(entity);
 		var count = 1;
 		var o = { pos : null};
 		var $it0 = entity.map.iterator();
@@ -189,7 +189,7 @@ RenderDots_SystemProcess.prototype = {
 				if(--count == 0) break; else continue;
 			}
 		}
-		if(count == 0) this.updateItems.add(entity,o);
+		var added = count == 0 && this.updateItems.tryAdd(entity,o);
 	}
 	,__class__: RenderDots_SystemProcess
 };
@@ -228,7 +228,7 @@ UpdateMovement_SystemProcess.__name__ = ["UpdateMovement_SystemProcess"];
 UpdateMovement_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
 UpdateMovement_SystemProcess.prototype = {
 	removeEntity: function(entity) {
-		this.updateItems.remove(entity);
+		this.updateItems.tryRemove(entity);
 	}
 	,addEntity: function(entity) {
 		this.updateMatchRequirements(entity);
@@ -243,7 +243,7 @@ UpdateMovement_SystemProcess.prototype = {
 		}
 	}
 	,updateMatchRequirements: function(entity) {
-		this.updateItems.remove(entity);
+		var removed = this.updateItems.tryRemove(entity);
 		var count = 2;
 		var o = { pos : null, vel : null};
 		var $it0 = entity.map.iterator();
@@ -258,7 +258,7 @@ UpdateMovement_SystemProcess.prototype = {
 				if(--count == 0) break; else continue;
 			}
 		}
-		if(count == 0) this.updateItems.add(entity,o);
+		var added = count == 0 && this.updateItems.tryAdd(entity,o);
 	}
 	,__class__: UpdateMovement_SystemProcess
 };
@@ -299,23 +299,23 @@ edge.Engine.prototype = {
 		var $it0 = this.mapEntities.keys();
 		while( $it0.hasNext() ) {
 			var entity = $it0.next();
-			system.__systemProcess.addEntity(entity);
+			system.__process__.addEntity(entity);
 		}
 	}
 	,removeSystem: function(system) {
 		var $it0 = this.mapEntities.keys();
 		while( $it0.hasNext() ) {
 			var entity = $it0.next();
-			system.__systemProcess.removeEntity(entity);
+			system.__process__.removeEntity(entity);
 		}
 	}
 	,updateSystem: function(system,t) {
-		system.__systemProcess.update(this,t);
+		system.__process__.update(this,t);
 	}
 	,matchSystems: function(entity) {
 		var _g = this;
 		this.eachSystem(function(system) {
-			system.__systemProcess.addEntity(entity);
+			system.__process__.addEntity(entity);
 		});
 	}
 	,__class__: edge.Engine
@@ -434,15 +434,17 @@ edge.View.prototype = {
 			return holder;
 		}};
 	}
-	,add: function(entity,data) {
-		if(this.map.h.__keys__[entity.__id__] != null) return;
+	,tryAdd: function(entity,data) {
+		if(this.map.h.__keys__[entity.__id__] != null) return false;
 		this.map.set(entity,data);
 		this.count++;
+		return true;
 	}
-	,remove: function(entity) {
-		if(!(this.map.h.__keys__[entity.__id__] != null)) return;
+	,tryRemove: function(entity) {
+		if(!(this.map.h.__keys__[entity.__id__] != null)) return false;
 		this.map.remove(entity);
 		this.count--;
+		return true;
 	}
 	,__class__: edge.View
 };
