@@ -28,7 +28,6 @@ class BuildSystemProcess {
 
     Context.defineType({
       pos : Context.currentPos(),
-      params : [],
       pack : pack,
       name : name,
       meta : [{
@@ -37,16 +36,13 @@ class BuildSystemProcess {
           params : [macro edge.View]
         }],
       kind : kind,
-      isExtern : false,
       fields : fields
     });
   }
 
-  static function injectViews(systemFields : Array<Field>, fields : Array<Field>) {
-    for(field in collectViewFields(systemFields)) {
+  static function injectViews(systemFields : Array<Field>, fields : Array<Field>)
+    for(field in collectViewFields(systemFields))
       injectView(field, systemFields, fields);
-    }
-  }
 
   static function injectView(info : { name : String, types : Array<Field>, field : Field }, systemFields : Array<Field>, fields : Array<Field>) {
     var name = info.name;
@@ -62,28 +58,26 @@ class BuildSystemProcess {
   static function injectViewMatchRequirements(info : { name : String, types : Array<Field>, field : Field }, systemFields : Array<Field>, fields : Array<Field>) {
     var name   = info.name,
         types  = info.types,
-        sexprs = [],
-        expr;
+        sexprs = [];
 
     sexprs.push('var removed = system.$name.tryRemove(entity)');
     sexprs.push('var count = ' + types.length);
     sexprs.push('var o : {' +
       types.map(function(type) {
-          var t = switch type.kind {
-            case FVar(t, _): Context.follow(t.toType()).toComplexType();
-            case _: null;
+          return type.name + " : " + switch type.kind {
+            case FVar(t, _): Context.follow(t.toType()).toComplexType().toString();
+            case _: "";
           };
-          return '${type.name} : ${t.toString()}';
         }).join(", ") +
       '} = {' +
       types.map(function(type) return '${type.name} : null').join(", ") + '}');
     var expr = 'for(component in entity.components()) {\n';
     for(type in types) {
       var t = switch type.kind {
-          case FVar(t, _): Context.follow(t.toType()).toComplexType();
-          case _: null;
+          case FVar(t, _): Context.follow(t.toType()).toComplexType().toString();
+          case _: "";
         };
-      expr += '  if(Std.is(component, ${t.toString()})) {\n';
+      expr += '  if(Std.is(component, $t)) {\n';
       expr += '    o.${type.name} = cast component;\n';
       expr += '    if(--count == 0) break; else continue;\n';
       expr += '  }\n';
@@ -101,20 +95,12 @@ class BuildSystemProcess {
 
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos())),
         methodName = '${name}MatchRequirements';
-    fields.push({
-      name : methodName,
-      access: [],
-      kind: FFun({
-        ret : macro : Void,
-        params : null,
-        expr : macro $b{exprs},
-        args : [{
-          name : "entity",
-          type : macro : edge.Entity
-        }]
-      }),
-      pos: Context.currentPos()
-    });
+    fields.push(createFunctionField(
+        methodName,
+        [{ name : "entity", type : macro : edge.Entity }],
+        macro : Void,
+        macro $b{exprs}
+      ));
 
     appendExprToFieldFunction(
       findField(fields, "addEntity"),
@@ -156,11 +142,7 @@ class BuildSystemProcess {
               name : "View",
               params : [TPType(TAnonymous(fieldTypes))]
             });
-      fields.push({
-        name : "updateItems",
-        kind: FVar(type, null),
-        pos: Context.currentPos()
-      });
+      fields.push(createVarField("updateItems", type));
 
       var expr = hasFunField(systemFields, 'updateRemoved') ?
         '{ var removed = updateItems.tryRemove(entity); if(removed != null) system.updateRemoved(entity, removed); }' :
@@ -196,23 +178,13 @@ class BuildSystemProcess {
       exprs.push(macro system.update());
     }
 
-    fields.push({
-      name : "update",
-      access: [APublic],
-      kind: FFun({
-        ret : macro : Void,
-        params : null,
-        expr : macro $b{exprs},
-        args : [{
-          name : "engine",
-          type : macro : edge.Engine
-        }, {
-          name : "delta",
-          type : macro : Float
-        }]
-      }),
-      pos: Context.currentPos()
-    });
+    fields.push(createFunctionField(
+        "update",
+        [{ name : "engine", type : macro : edge.Engine },
+         { name : "delta", type : macro : Float }],
+        macro : Void,
+        macro $b{exprs}
+      ));
   }
 
   static function injectUpdateMatchRequirements(systemFields : Array<Field>, fields : Array<Field>) {
@@ -245,84 +217,44 @@ class BuildSystemProcess {
     }
 
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos()));
-    fields.push({
-      name : "updateMatchRequirements",
-      access: [],
-      kind: FFun({
-        ret : macro : Void,
-        params : null,
-        expr : macro $b{exprs},
-        args : [{
-          name : "entity",
-          type : macro : edge.Entity
-        }]
-      }),
-      pos: Context.currentPos()
-    });
+    fields.push(createFunctionField(
+        "updateMatchRequirements",
+        [{ name : "entity", type : macro : edge.Entity }],
+        macro : Void,
+        macro $b{exprs}
+      ));
 
     appendExprToFieldFunction(
       findField(fields, "addEntity"),
       macro updateMatchRequirements(entity));
   }
 
-  static function injectRemoveEntity(fields : Array<Field>) {
-    fields.push({
-      name : "removeEntity",
-      access: [APublic],
-      kind: FFun({
-        ret : macro : Void,
-        params : null,
-        expr : macro {},
-        args : [{
-          name : "entity",
-          type : macro : edge.Entity
-        }]
-      }),
-      pos: Context.currentPos()
-    });
-  }
+  static function injectRemoveEntity(fields : Array<Field>)
+    fields.push(createFunctionField(
+        "removeEntity",
+        [{ name : "entity", type : macro : edge.Entity }],
+        macro : Void,
+        macro {}
+      ));
 
-  static function injectAddEntity(fields : Array<Field>) {
-    fields.push({
-      name : "addEntity",
-      access: [APublic],
-      kind: FFun({
-        ret : macro : Void,
-        params : null,
-        expr : macro {},
-        args : [{
-          name : "entity",
-          type : macro : edge.Entity
-        }]
-      }),
-      pos: Context.currentPos()
-    });
-  }
+  static function injectAddEntity(fields : Array<Field>)
+    fields.push(createFunctionField(
+        "addEntity",
+        [{ name : "entity", type : macro : edge.Entity }],
+        macro : Void,
+        macro {}
+      ));
 
-  static function injectSystemField(system : ComplexType, fields : Array<Field>) {
-    fields.push({
-      name : "system",
-      kind: FVar(system, null),
-      pos: Context.currentPos()
-    });
-  }
+  static function injectSystemField(system : ComplexType, fields : Array<Field>)
+    fields.push(createVarField("system", system));
 
-  static function injectConstructor(system : ComplexType, fields : Array<Field>) {
-    fields.push({
-      name: "new",
-      access: [APublic],
-      kind: FFun({
-        ret : macro : Void,
-        params : null,
-        expr : macro this.system = system,
-        args : [{
-          name : "system",
-          type : system
-        }]
-      }),
-      pos: Context.currentPos()
-    });
-  }
+  static function injectConstructor(system : ComplexType, fields : Array<Field>)
+    fields.push(createFunctionField(
+        "new",
+        [{ name : "system", type : system }],
+        macro : Void,
+        macro this.system = system
+      ));
 
   static function collectViewFields(fields : Array<Field>) : Array<{ name : String, types : Array<Field>, field : Field }> {
     var results = [];
