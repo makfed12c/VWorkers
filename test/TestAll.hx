@@ -231,6 +231,14 @@ class TestAll {
     assertNumberOfComponents(entity, 0);
   }
 
+  public function testUpdateReturn() {
+    var engine = new Engine(),
+        phase  = engine.createPhase(),
+        system = new ReturnSystem();
+    phase.add(system);
+    Assert.equals(0, system.count);
+  }
+
   public function assertNumberOfComponents(entity : Entity, qt : Int, ?pos : haxe.PosInfos)
     Assert.equals(qt, entity.components().toArray().length, pos);
 
@@ -361,4 +369,16 @@ class A {
 
 class B {
   public function new(){}
+}
+
+
+
+class ReturnSystem implements ISystem {
+  public var count(default, null) = 0;
+  public var entity : Entity;
+  var engine : Engine;
+  public function update() {
+    return;
+    count++;
+  }
 }

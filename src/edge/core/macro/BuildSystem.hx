@@ -2,6 +2,7 @@ package edge.core.macro;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import haxe.macro.ExprTools;
 import haxe.macro.Type;
 using haxe.macro.TypeTools;
 using thx.macro.MacroFields;
@@ -79,6 +80,31 @@ class BuildSystem {
             case _:
               Context.error('argument `${arg.name}` of ${clsName()}.update() is not a class instance', Context.currentPos());
           }
+        }
+        var ret = f.ret;
+        if(null == ret) {
+          ret = macro : Void;
+          //trace(f.expr);
+          //trace(Context.typeof(f.expr));
+          //ret = Context.toComplexType(Context.follow(Context.typeof(f.expr)));
+        }
+        switch ret {
+        case macro : Void: // change return type to Bool
+          var exprs = [ExprTools.map(f.expr, function(e) {
+                  switch e {
+                  case macro return:
+                    trace(e);
+                    return macro return true;
+                  case _:
+                  }
+                  return e;
+                }),
+                macro return true
+              ];
+          f.expr = macro $b{exprs};
+          f.ret = macro : Bool;
+        case macro : Bool: // you are good to go
+        case _: Context.error('${clsName()}.update() return type is invalid: ${ret}', Context.currentPos());
         }
       case _:
     }
