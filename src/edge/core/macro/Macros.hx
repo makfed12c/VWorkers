@@ -83,15 +83,16 @@ class Macros {
     return null;
   }
 
+  public static function hasClassField(fields : Array<ClassField>, name : String)
+    return findClassField(fields, name) != null;
+
   public static function isFieldInHirearchy(type : ClassType, name : String) : Bool {
     if(name == "new") {
       if(null != type.constructor)
         return true;
     } else {
-      var field = findClassField(type.fields.get(), name);
-      if(null != field) {
+      if(hasClassField(type.fields.get(), name))
         return true;
-      }
     }
     var superClass = type.superClass;
     if(null == superClass) {
