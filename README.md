@@ -70,7 +70,6 @@ class Game {
 
     world.physics.add(new UpdateMovement());
 
-    world.render.add(new RenderBackground(mini));
     world.render.add(new RenderDots(mini));
 
     world.start();
@@ -92,17 +91,11 @@ class RenderDots implements ISystem {
   public function new(mini : MiniCanvas)
     this.mini = mini;
 
+  function before()
+    mini.clear();
+
   function update(pos : Position)
     mini.dot(pos.x, pos.y, 2, 0x000000FF);
-}
-
-class RenderBackground implements ISystem {
-  var mini : MiniCanvas;
-  public function new(mini : MiniCanvas)
-    this.mini = mini;
-
-  function update()
-    mini.clear();
 }
 
 class UpdateMovement implements ISystem {
