@@ -17,7 +17,7 @@ class BuildSystemProcess {
         fields = [],
         kind = TDClass(
           null,
-          [{ pack : ['edge'], name : 'ISystemProcess' }],
+          [{ pack : ['edge', 'core'], name : 'ISystemProcess' }],
           false
         );
 

@@ -1,4 +1,4 @@
-package edge;
+package edge.core;
 
 interface ISystemProcess {
   public function update(engine : Engine, delta : Float) : Void;

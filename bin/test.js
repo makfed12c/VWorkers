@@ -6,20 +6,21 @@ function $extend(from, fields) {
 	return proto;
 }
 var edge = {};
-edge.ISystemProcess = function() { };
-edge.ISystemProcess.__name__ = ["edge","ISystemProcess"];
-edge.ISystemProcess.prototype = {
+edge.core = {};
+edge.core.ISystemProcess = function() { };
+edge.core.ISystemProcess.__name__ = ["edge","core","ISystemProcess"];
+edge.core.ISystemProcess.prototype = {
 	update: null
 	,addEntity: null
 	,removeEntity: null
-	,__class__: edge.ISystemProcess
+	,__class__: edge.core.ISystemProcess
 };
 var Components1System_SystemProcess = function(system) {
 	this.system = system;
 	this.updateItems = new edge.View();
 };
 Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
-Components1System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
+Components1System_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
 Components1System_SystemProcess.prototype = {
 	removeEntity: function(entity) {
 		this.updateItems.remove(entity);
@@ -61,7 +62,7 @@ var Components2System_SystemProcess = function(system) {
 	this.updateItems = new edge.View();
 };
 Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
-Components2System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
+Components2System_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
 Components2System_SystemProcess.prototype = {
 	removeEntity: function(entity) {
 		this.updateItems.remove(entity);
@@ -106,7 +107,7 @@ var ComponentsEntitiesSystem_SystemProcess = function(system) {
 	system.entities = new edge.View();
 };
 ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_SystemProcess"];
-ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
+ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
 ComponentsEntitiesSystem_SystemProcess.prototype = {
 	removeEntity: function(entity) {
 		this.updateItems.remove(entity);
@@ -340,7 +341,7 @@ var NoComponentsSystem_SystemProcess = function(system) {
 	this.system = system;
 };
 NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"];
-NoComponentsSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
+NoComponentsSystem_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
 NoComponentsSystem_SystemProcess.prototype = {
 	removeEntity: function(entity) {
 	}

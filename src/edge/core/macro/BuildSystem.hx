@@ -38,7 +38,7 @@ class BuildSystem {
 
     fields.push({
       name: "__systemProcess",
-      kind: FVar(macro : edge.ISystemProcess, null),
+      kind: FVar(macro : edge.core.ISystemProcess, null),
       pos: Context.currentPos()
     });
 
@@ -60,7 +60,7 @@ class BuildSystem {
       name: "__getSystemProcess",
       access: [],
       kind: FFun({
-        ret : macro : edge.ISystemProcess,
+        ret : macro : edge.core.ISystemProcess,
         params : null,
         expr : macro $b{exprs},
         args : [{
