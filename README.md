@@ -124,6 +124,10 @@ The `update()` method will be invoked when the corresponding phase is updated. `
 
 Optionally a System can expose the following members:
 
+  * `function after() : Void`
+
+    Executes after each cycle of `update(/*...*/)`. It only makes sense when `update` takes at least one argument.
+
   * `function before() : Void`
 
     Executes before each cycle of `update(/*...*/)`. It only makes sense when `update` takes at least one argument.
