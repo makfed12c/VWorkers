@@ -121,35 +121,11 @@ class UpdateMovement implements ISystem {
 }
 ```
 
-## more
-
-Sometimes your systems need a reference to the `Engine` to add/remove entities when needed. Just add the following and you will have a reference to the `Engine` to use inside your `update(...)` cycle.
-
-```haxe
-var engine : edge.Engine;
-```
-
-The same can be done for the current entity being processed.
-
-```haxe
-var entity : edge.Entity;
-```
-
-What if you want to process multiple entities in a single update? Aclassic example would be collisions of course. Just add the following:
-
-```haxe
-var entities : Iterator<{ pos : Position, entity : edge.Entity }>;
-```
-
-And you get an iterator of all the entities that match the `Position` requirement.
-
-Note: In the future this might be changed to a more flexible view system that will allow to have multiple entity collections in the same system.
-
 ### ISystem
 
 Systems must implement ISystem. System classes do not have to implement the required `__process__` because this field is automatically built.
 
-A system must at least define a method `update()`. The method can take 0 or more arguments. If arguments are defined, they must be components; a component is an instance of a Class.
+A system must at least define a method `update()`. The method can take 0 or more arguments. If arguments are defined, they must be components; a component is an instance of any `Class<Dynamic>`.
 
 The `update()` method will be invoked when the corresponding phase is updated. `update()` will be called only once if it takes no arguments, or once for every entity that matches the function requirements. An entity matches the `update` requirements if it has a matching component for each of the function arguments.
 
@@ -165,7 +141,7 @@ Optionally a System can expose the following members:
 
   * `var entity : Entity`
 
-    To only use when `update(/*...*/)` takes at least one argument. `entity` will reference the container of the components that are currently processed by the `update` method.
+    To only be declared when `update(/*...*/)` takes at least one argument. `entity` will reference the container of the components that are currently processed by the `update` method.
 
   * `var timeDelta : Float`
 
@@ -173,7 +149,7 @@ Optionally a System can expose the following members:
 
 If the System exposes any of these members, they will be automatically populated at the right time. So no initialization is required or desired. Also they will be automatically changed to `public` if they are not already.
 
-Some times you want to be able to iterate over collections of entities that satisfy certain requirements. For example, it can be extremely useful for collisions. In that case you can define one (or more) fields of type `edge.View(T)`. Where `T` is the type of an anonymous object where every field must be the type of a component.
+Sometimes you want to be able to iterate over collections of entities that satisfy certain requirements. For example, it can be extremely useful for collisions. In that case you can define one (or more) fields of type `edge.View(T)`. Where `T` is the type of an anonymous object where each field must be have the type of a component.
 
 ```haxe
 var targets : View<{ position : Position, life : Life }>;
@@ -196,6 +172,40 @@ function update(position : Position, bullet : Bullet) {
     }
   }
 }
+```
+
+System can also receive notifications when an entity has been added or removed from a `View`.
+
+From the example above, if you want to perform a special operation when a new target is paired with your system you can define the following method:
+
+```haxe
+function targetsAdded(entity : Entity, data { position : Position, life : Life }) {
+  // do something with the newly added entity/components
+}
+```
+
+The magic here is in the name of the method that needs to follow the format:
+
+```
+${viewFieldName}Added
+```
+
+The same signature with `Removed` can be used to define a method that does some cleanup when an entity is unpaired from a view.
+
+A special `View` is created for the method `update`. For that you can define either, both or neither of `updateAdded`/`updateRemoved` methods.
+
+For this `update` function:
+
+```haxe
+function update(position : Position, bullet : Bullet)
+```
+
+The added/removed methods will look like:
+
+```haxe
+function updateAdded(entity : Entity, data : { position : Position, bullet : Bullet }) {}
+
+function updateRemoved(entity : Entity, data : { position : Position, bullet : Bullet }) {}
 ```
 
 ### IComponent
