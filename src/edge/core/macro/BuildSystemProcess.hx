@@ -136,8 +136,6 @@ class BuildSystemProcess {
       exprs.push(macro system.engine = engine);
     if(hasVarField(systemFields, "timeDelta"))
       exprs.push(macro system.timeDelta = delta);
-    if(hasFunField(systemFields, "before"))
-      exprs.push(macro system.before());
 
     var update = findField(systemFields, "update"),
         constructor = findField(fields, "new");
@@ -177,6 +175,8 @@ class BuildSystemProcess {
         macro updateItems = new edge.View()
       );
 
+      if(hasFunField(systemFields, "before"))
+        exprs.push(macro if(updateItems.count > 0) system.before());
       // create loop expression
       exprs.push(macro var data);
       var expr = '\nfor(item in updateItems) {\n';
@@ -191,6 +191,8 @@ class BuildSystemProcess {
       expr += '}';
       exprs.push(Context.parse(expr, Context.currentPos()));
     } else {
+      if(hasFunField(systemFields, "before"))
+        exprs.push(macro system.before());
       exprs.push(macro system.update());
     }
 
