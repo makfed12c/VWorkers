@@ -147,7 +147,7 @@ Note: In the future this might be changed to a more flexible view system that wi
 
 ### ISystem
 
-Systems must implement ISystem. System classes do not have to implement the required `__systemProcess` because this field is automatically built.
+Systems must implement ISystem. System classes do not have to implement the required `__process__` because this field is automatically built.
 
 A system must at least define a method `update()`. The method can take 0 or more arguments. If arguments are defined, they must be components; a component is an instance of a Class.
 

@@ -25,7 +25,7 @@ class BuildSystem {
   }
 
   static function injectSystemProcess(fields : Array<Field>, cls : Ref<ClassType>) {
-    var field = findField(fields, "__systemProcess"),
+    var field = findField(fields, "__process__"),
         s = cls.toString(),
         type = Context.getType(s),
         system = type.toComplexType(),
@@ -34,14 +34,14 @@ class BuildSystem {
     BuildSystemProcess.createProcessType(s, p, fields);
 
     fields.push({
-      name: "__systemProcess",
+      name: "__process__",
       kind: FVar(macro : edge.core.ISystemProcess, null),
       pos: Context.currentPos()
     });
 
     appendExprToFieldFunction(
       findField(fields, "new"),
-      Context.parse('__systemProcess = new $p(this)', Context.currentPos())
+      Context.parse('__process__ = new $p(this)', Context.currentPos())
     );
   }
 
