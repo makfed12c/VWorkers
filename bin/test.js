@@ -622,11 +622,9 @@ edge.ISystem = function() { };
 edge.ISystem.__name__ = ["edge","ISystem"];
 edge.ISystem.prototype = {
 	__systemProcess: null
-	,entityRequirements: null
 	,__class__: edge.ISystem
 };
 var NoComponentsSystem = function() {
-	this.entityRequirements = null;
 	this.componentRequirements = [];
 	this.count = 0;
 	this.__systemProcess = new NoComponentsSystem_SystemProcess(this);
@@ -639,7 +637,6 @@ NoComponentsSystem.prototype = {
 		this.count++;
 	}
 	,componentRequirements: null
-	,entityRequirements: null
 	,toString: function() {
 		return "NoComponentsSystem";
 	}
@@ -647,7 +644,6 @@ NoComponentsSystem.prototype = {
 	,__class__: NoComponentsSystem
 };
 var Components2System = function() {
-	this.entityRequirements = null;
 	this.componentRequirements = [B,A];
 	this.count = 0;
 	this.__systemProcess = new Components2System_SystemProcess(this);
@@ -662,7 +658,6 @@ Components2System.prototype = {
 		this.count++;
 	}
 	,componentRequirements: null
-	,entityRequirements: null
 	,toString: function() {
 		return "Components2System";
 	}
@@ -670,7 +665,6 @@ Components2System.prototype = {
 	,__class__: Components2System
 };
 var Components1System = function() {
-	this.entityRequirements = null;
 	this.componentRequirements = [B];
 	this.count = 0;
 	this.__systemProcess = new Components1System_SystemProcess(this);
@@ -686,7 +680,6 @@ Components1System.prototype = {
 		this.count++;
 	}
 	,componentRequirements: null
-	,entityRequirements: null
 	,toString: function() {
 		return "Components1System";
 	}
@@ -694,7 +687,6 @@ Components1System.prototype = {
 	,__class__: Components1System
 };
 var ComponentsEntitiesSystem = function() {
-	this.entityRequirements = [{ name : "a", cls : A}];
 	this.componentRequirements = [B];
 	this.count = 0;
 	this.__systemProcess = new ComponentsEntitiesSystem_SystemProcess(this);
@@ -709,7 +701,6 @@ ComponentsEntitiesSystem.prototype = {
 		this.count++;
 	}
 	,componentRequirements: null
-	,entityRequirements: null
 	,toString: function() {
 		return "ComponentsEntitiesSystem";
 	}

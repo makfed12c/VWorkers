@@ -16,7 +16,7 @@ class BuildSystem {
     var fields = Context.getBuildFields();
     checkUpdate(fields);
     injectComponentRequirements(fields);
-    injectEntityRequirements(fields);
+//    injectEntityRequirements(fields);
     injectToString(fields);
     injectConstructor(fields);
     makePublic(fields, "engine");
@@ -93,6 +93,7 @@ class BuildSystem {
     return false;
   }
 
+/*
   static function injectEntityRequirements(fields : Array<Field>) {
     var field = findField(fields, "entityRequirements");
     if(null != field) return;
@@ -152,7 +153,7 @@ class BuildSystem {
       pos: Context.currentPos()
     });
   }
-
+*/
   static function injectComponentRequirements(fields : Array<Field>) {
     var field = findField(fields, "componentRequirements");
     if(null != field) return;

@@ -19,5 +19,5 @@ interface ISystem {
   private var __systemProcess : ISystemProcess;
 //  private function __getSystemProcess(engine : Engine) : ISystemProcess;
 //  var componentRequirements(default, null) : Array<Class<Dynamic>>;
-  var entityRequirements(default, null) : Array<{ name : String , cls : Class<Dynamic> }>;
+//  var entityRequirements(default, null) : Array<{ name : String , cls : Class<Dynamic> }>;
 }
