@@ -24,15 +24,12 @@ class BuildSystemProcess {
         );
 
     injectConstructor(system, fields);
-//    injectHasUpdateItems(fields);
     injectRemoveEntity(fields);
     injectAddEntity(fields);
     injectSystemField(system, fields);
     injectUpdate(systemFields, fields);
     injectViews(systemFields, fields);
     injectUpdateMatchRequirements(systemFields, fields);
-//    injectSetEntity(systemFields, fields);
-//    injectFeatureCollections(fields);
 
     Context.defineType({
       pos : Context.currentPos(),
@@ -98,8 +95,6 @@ class BuildSystemProcess {
     sexprs.push(expr);
     sexprs.push('if(count == 0) system.$name.add(entity, o)');
 
-//    trace(sexprs.join(";\n") +";");
-
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos())),
         methodName = '${name}MatchRequirements';
     fields.push({
@@ -141,10 +136,6 @@ class BuildSystemProcess {
         constructor = findField(fields, "new");
 
     if(fieldFunctionHasArguments(update)) {
-    //   appendExprToFieldFunction(
-    //     constructor,
-    //     macro hasUpdateItems = true);
-
       var args = fieldFunctionArguments(update),
           fieldTypes = args.map(function(arg) : Field {
               var t = Context.follow(arg.type.toType()).toComplexType(),
@@ -152,26 +143,19 @@ class BuildSystemProcess {
               return {
                 pos  : Context.currentPos(),
                 name : arg.name,
-                //access : null, //[APublic],
-                //meta : null,
-                kind : kind//,
-                //doc : null
+                kind : kind
               };
             }),
           type = TPath({
               pack : ["edge"],
               name : "View",
-              params : [TPType(TAnonymous(fieldTypes))] //[TPType(TAnonymous(fieldTypes))]
+              params : [TPType(TAnonymous(fieldTypes))]
             });
-//      $type(args);
-//      $type(fieldTypes);
       fields.push({
         name : "updateItems",
         kind: FVar(type, null),
         pos: Context.currentPos()
       });
-//      trace(args);
-      // inject remove entity
       appendExprToFieldFunction(
         findField(fields, "removeEntity"),
         macro updateItems.remove(entity));
@@ -189,12 +173,8 @@ class BuildSystemProcess {
           return 'data.${arg.name}';
         }).join(", ") + ');\n';
       expr += '}';
-//      trace(expr);
       exprs.push(Context.parse(expr, Context.currentPos()));
     } else {
-      // appendExprToFieldFunction(
-      //   constructor,
-      //   macro hasUpdateItems = false);
       exprs.push(macro system.update());
     }
 
@@ -239,7 +219,6 @@ class BuildSystemProcess {
 
     sexprs.push('if(count == 0) updateItems.add(entity, o)');
 
-//    trace(sexprs.join(";\n"));
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos()));
     fields.push({
       name : "updateMatchRequirements",
@@ -260,28 +239,7 @@ class BuildSystemProcess {
       findField(fields, "addEntity"),
       macro updateMatchRequirements(entity));
   }
-/*
-  static function injectSetEntity(systemFields : Array<Field>, fields : Array<Field>) {
-    var exprs = [];
-    if(hasVarField(systemFields, "entity"))
-      exprs.push(macro system.entity = entity);
 
-    fields.push({
-      name : "setEntity",
-      access: [APublic],
-      kind: FFun({
-        ret : macro : Void,
-        params : null,
-        expr : macro $b{exprs},
-        args : [{
-          name : "entity",
-          type : macro : edge.Entity
-        }]
-      }),
-      pos: Context.currentPos()
-    });
-  }
-*/
   static function injectRemoveEntity(fields : Array<Field>) {
     fields.push({
       name : "removeEntity",
@@ -324,15 +282,6 @@ class BuildSystemProcess {
     });
   }
 
-  // static function injectHasUpdateItems(fields : Array<Field>) {
-  //   fields.push({
-  //     name : "hasUpdateItems",
-  //     access : [APublic],
-  //     kind: FVar(macro : Bool, null),
-  //     pos: Context.currentPos()
-  //   });
-  // }
-
   static function injectConstructor(system : ComplexType, fields : Array<Field>) {
     fields.push({
       name: "new",
@@ -349,28 +298,6 @@ class BuildSystemProcess {
       pos: Context.currentPos()
     });
   }
-/*
-  static function injectFeatureCollections(fields : Array<Field>) {
-    // public var collections : Map<String, ViewInfo>;
-    injectViewCollection(fields);
-  }
-
-  static function injectViewCollection(fields : Array<Field>) {
-    var constructor = findField(fields, "new");
-
-    appendExprToFieldFunction(
-      findField(fields, "new"),
-      macro this.collections = new Map()
-    );
-
-    fields.push({
-      access : [APublic],
-      name : "collections",
-      kind: FVar(macro : Map<String, edge.ViewInfo>, null),
-      pos: Context.currentPos()
-    });
-  }
-*/
 
   static function collectViewFields(fields : Array<Field>) : Array<{ name : String, types : Array<Field>, field : Field }> {
     var results = [];
