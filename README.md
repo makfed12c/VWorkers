@@ -16,6 +16,20 @@ Entity system for Haxe
   * when a `Phase` is updated, `Engine` invokes the `update()` method of each `System` included in `Phase`. Only systems that are paired with at least one entity will be triggered, and once for each entity that matches `update`. A System whose `update` method has no arguments will be invoked on each update once.
   * `World` is a general case implementation to add a scheduler based on the concept of frame with the `rendering` and `physics` phases. If you plan to do sophisticated things with your loops/phases, you might consider writing an alternative implementation of `World`.
 
+## install
+
+For the official release:
+
+```bash
+haxelib install edge
+```
+
+For the cutting-edge/dev-version:
+
+```bash
+haxelib git edge https://github.com/fponticelli/edge.git
+```
+
 ## example
 
 In the example below we create a bunch of entities some with both `Position` and `Velocity` and some with only `Position`. The system `UpdateMovement` will only affect the entities with both components, while `RenderingDots` will be applied to all the entities in this context.
