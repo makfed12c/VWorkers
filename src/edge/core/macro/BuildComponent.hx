@@ -10,18 +10,10 @@ using thx.macro.MacroTypes;
 class BuildComponent {
   macro public static function complete() : Array<Field> {
     var fields = Context.getBuildFields();
-    makePublic(fields);
+    Macros.makeVarsPublic(fields);
     injectToString(fields);
     injectConstructor(fields);
     return fields;
-  }
-
-  static function makePublic(fields : Array<Field>) {
-    fields.map(function(field) switch field.kind {
-      case FVar(_, _) if(!field.isPublic()):
-        field.access.push(APublic);
-      case _:
-    });
   }
 
   static function injectConstructor(fields : Array<Field>) {
