@@ -797,14 +797,12 @@ Type.enumIndex = function(e) {
 };
 edge.Engine = function() {
 	this.emptyArgs = [];
-	this.mapProcess = new haxe.ds.ObjectMap();
 	this.mapEntities = new haxe.ds.ObjectMap();
 	this.listPhases = [];
 };
 edge.Engine.__name__ = ["edge","Engine"];
 edge.Engine.prototype = {
-	mapProcess: null
-	,mapEntities: null
+	mapEntities: null
 	,listPhases: null
 	,create: function(components) {
 		var entity = new edge.Entity(this,components);
@@ -820,11 +818,9 @@ edge.Engine.prototype = {
 		}
 	}
 	,remove: function(entity) {
-		var $it0 = this.mapProcess.iterator();
-		while( $it0.hasNext() ) {
-			var process = $it0.next();
-			process.removeEntity(entity);
-		}
+		this.eachSystem(function(system) {
+			system.__systemProcess.removeEntity(entity);
+		});
 		this.mapEntities.remove(entity);
 		entity.engine = null;
 	}
@@ -853,8 +849,9 @@ edge.Engine.prototype = {
 		}
 	}
 	,addSystem: function(phase,system) {
-		if(this.mapProcess.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		this.mapProcess.set(system,system.__systemProcess);
+		this.eachSystem(function(s) {
+			if(s == system) throw "System \"" + Std.string(system) + "\" already exists in Engine";
+		});
 		var $it0 = this.mapEntities.keys();
 		while( $it0.hasNext() ) {
 			var entity = $it0.next();
@@ -862,13 +859,15 @@ edge.Engine.prototype = {
 		}
 	}
 	,removeSystem: function(system) {
-		this.mapProcess.remove(system);
+		var $it0 = this.mapEntities.keys();
+		while( $it0.hasNext() ) {
+			var entity = $it0.next();
+			system.__systemProcess.removeEntity(entity);
+		}
 	}
 	,emptyArgs: null
 	,updateSystem: function(system,t) {
-		var process = this.mapProcess.h[system.__id__];
-		if(process == null) return;
-		process.update(this,t);
+		system.__systemProcess.update(this,t);
 	}
 	,matchSystems: function(entity) {
 		var _g = this;
@@ -1303,14 +1302,6 @@ haxe.ds.ObjectMap.prototype = {
 		if(this.h.hasOwnProperty(key)) a.push(this.h.__keys__[key]);
 		}
 		return HxOverrides.iter(a);
-	}
-	,iterator: function() {
-		return { ref : this.h, it : this.keys(), hasNext : function() {
-			return this.it.hasNext();
-		}, next : function() {
-			var i = this.it.next();
-			return this.ref[i.__id__];
-		}};
 	}
 	,__class__: haxe.ds.ObjectMap
 };

@@ -6,11 +6,11 @@ import edge.Entity;
 @:access(edge.ISystem)
 class Engine {
   // TODO remove
-  var mapProcess : Map<ISystem, ISystemProcess>;
+//  var mapProcess : Map<ISystem, ISystemProcess>;
   var mapEntities : Map<Entity, Bool>;
   var listPhases : Array<Phase>;
   public function new() {
-    mapProcess = new Map();
+//    mapProcess = new Map();
     mapEntities = new Map();
     listPhases = [];
   }
@@ -28,8 +28,9 @@ class Engine {
       remove(entity);
 
   function remove(entity : Entity) {
-    for(process in mapProcess)
-      process.removeEntity(entity);
+    eachSystem(function(system) system.__systemProcess.removeEntity(entity));
+//    for(process in mapProcess)
+//      process.removeEntity(entity);
 //      info.components.remove(entity);
 /*
     for(info in mapProcess)
@@ -60,10 +61,14 @@ class Engine {
 
   // private methods
   function addSystem(phase : Phase, system : ISystem) {
-    if(mapProcess.exists(system))
-      throw 'System "$system" already exists in Engine';
+    eachSystem(
+      function(s)
+        if(s == system)
+          throw 'System "$system" already exists in Engine');
+//    if(mapProcess.exists(system))
+//      throw 'System "$system" already exists in Engine';
 //    var process = new SystemInfo(system, system.__systemProcess);
-    mapProcess.set(system, system.__systemProcess);
+//    mapProcess.set(system, system.__systemProcess);
 /*
     if(info.process.hasUpdateItems)
       for(entity in mapEntities.keys())
@@ -76,16 +81,23 @@ class Engine {
       match(entity, system);
   }
 
+  // TODO, remove all together, not one at the time
   function removeSystem(system : ISystem)
-    mapProcess.remove(system);
+    for(entity in mapEntities.keys())
+      system.__systemProcess.removeEntity(entity);
+//    eachSystem(function(system) system.__systemProcess.r(this, t));
 
   var emptyArgs = [];
   function updateSystem(system : ISystem, t : Float) {
+    system.__systemProcess.update(this, t);
+/*
     var process = mapProcess.get(system);
     if(process == null)
       return;
-//    var process = info.process;
     process.update(this, t);
+*/
+
+//    var process = info.process;
 //    if(info.hasEngine)
 //      Reflect.setField(system, "engine", this);
 //    if(info.hasDelta)
