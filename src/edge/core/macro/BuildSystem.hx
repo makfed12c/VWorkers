@@ -19,6 +19,7 @@ class BuildSystem {
     makePublic(fields, "engine");
     makePublic(fields, "entity");
     makePublic(fields, "timeDelta");
+    makePublic(fields, "before");
     injectSystemProcess(fields, Context.getLocalClass());
     return fields;
   }

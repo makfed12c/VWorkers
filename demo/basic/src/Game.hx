@@ -50,7 +50,7 @@ class RenderDots implements ISystem {
   public function new(mini : MiniCanvas)
     this.mini = mini;
 
-  public function before()
+  function before()
     mini.clear();
 
   function update(pos : Position)
