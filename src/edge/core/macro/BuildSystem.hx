@@ -16,7 +16,6 @@ class BuildSystem {
     var fields = Context.getBuildFields();
     checkUpdate(fields);
     injectComponentRequirements(fields);
-//    injectEntityRequirements(fields);
     injectToString(fields);
     injectConstructor(fields);
     makePublic(fields, "engine");
@@ -46,31 +45,6 @@ class BuildSystem {
       findField(fields, "new"),
       Context.parse('__systemProcess = new $p(this)', Context.currentPos())
     );
-
-/*
-    var field = findField(fields, "__getSystemProcess");
-    if(null != field) return;
-
-
-    //BuildSystemProcess.createProcessType(s, p, fields);
-
-    var exprs = [Context.parse('return new $p(this)', Context.currentPos())];
-
-    fields.push({
-      name: "__getSystemProcess",
-      access: [],
-      kind: FFun({
-        ret : macro : edge.core.ISystemProcess,
-        params : null,
-        expr : macro $b{exprs},
-        args : [{
-          name : "engine",
-          type : macro : edge.Engine
-        }]
-      }),
-      pos: Context.currentPos()
-    });
-*/
   }
 
   public static function hasVarField(fields : Array<Field>, fieldName : String) {
@@ -93,67 +67,6 @@ class BuildSystem {
     return false;
   }
 
-/*
-  static function injectEntityRequirements(fields : Array<Field>) {
-    var field = findField(fields, "entityRequirements");
-    if(null != field) return;
-    var entities = findField(fields, "entities");
-    if(entities == null) {
-      fields.push({
-        name: "entityRequirements",
-        doc: null,
-        meta: [],
-        access: [APublic],
-        kind: FVar(
-          macro : Array<{ name : String, cls : Class<Dynamic> }>,
-          macro null
-        ),
-        pos: Context.currentPos()
-      });
-      return;
-    }
-
-    var types = switch entities.kind {
-          case FVar(t, _):
-            var tt = t.toType();
-            switch [t, tt] {
-              case [TPath(p), TInst(t, _)] if(t.toString() == "edge.View"):
-                var param = p.params[0];
-                switch param {
-                  case TPType(TAnonymous(a)):
-                    "[" + a.map(function(f) {
-                      var t = switch f.kind { case FVar(TPath(o), _): Context.getType(o.name).toString(); case _: null; };
-                      return t == "edge.Entity" ? null : '{ name : "${f.name}", cls : $t }';
-                    })
-                    .filter(function(s) return s != null)
-                    .join(",") + "]";
-                  case _:
-                    null;
-                }
-              case _:
-                null;
-            };
-          case _:
-            null;
-        };
-
-    if(types == null) {
-      Context.error('entities is not of type View<T: {}>', entities.pos);
-    }
-
-    fields.push({
-      name: "entityRequirements",
-      doc: null,
-      meta: [],
-      access: [APublic],
-      kind: FVar(
-        macro : Array<{ name : String, cls : Class<Dynamic> }>,
-        Context.parse(types, Context.currentPos())
-      ),
-      pos: Context.currentPos()
-    });
-  }
-*/
   static function injectComponentRequirements(fields : Array<Field>) {
     var field = findField(fields, "componentRequirements");
     if(null != field) return;
@@ -293,15 +206,4 @@ class BuildSystem {
         return field;
     return null;
   }
-
-/*
-TODO
- - move SystemInfo to a class
- - create a new ${systemName}SystemInfo type for each System
- - move ISystem fields to SystemInfo
- - collect every FVar of type : View<T: {}>
- - for each create a field _${name}Requirements
- - add @:noCompletion to both component and system requirements
- - change componentsRequirements to _component_Requirements
-*/
 }
