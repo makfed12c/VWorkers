@@ -68,7 +68,7 @@ class BuildSystemProcess {
     var name   = info.name,
         types  = info.types,
         sexprs = [];
-    sexprs.push('system.$name.remove(entity)');
+    sexprs.push('system.$name.tryRemove(entity)');
     sexprs.push('var count = ' + types.length);
     sexprs.push('var o : {' +
       types.map(function(type) {
@@ -93,7 +93,7 @@ class BuildSystemProcess {
     }
     expr += '}';
     sexprs.push(expr);
-    sexprs.push('if(count == 0) system.$name.add(entity, o)');
+    sexprs.push('if(count == 0) system.$name.tryAdd(entity, o)');
 
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos())),
         methodName = '${name}MatchRequirements';
@@ -119,7 +119,7 @@ class BuildSystemProcess {
 
     appendExprToFieldFunction(
       findField(fields, "removeEntity"),
-      Context.parse('system.$name.remove(entity)', Context.currentPos())
+      Context.parse('system.$name.tryRemove(entity)', Context.currentPos())
     );
   }
 
@@ -158,7 +158,7 @@ class BuildSystemProcess {
       });
       appendExprToFieldFunction(
         findField(fields, "removeEntity"),
-        macro updateItems.remove(entity));
+        macro updateItems.tryRemove(entity));
       // inject constructor init
       var sexpr = 'updateItems = new edge.View(';
       sexpr += hasFunField(systemFields, 'system.updateAdded') ? 'system.updateAdded' : 'null';
@@ -211,7 +211,7 @@ class BuildSystemProcess {
     if(args.length == 0) return;
 
     var sexprs = [];
-    sexprs.push('updateItems.remove(entity)');
+    sexprs.push('updateItems.tryRemove(entity)');
     sexprs.push('var count = ' + args.length);
     sexprs.push('var o : {' + args.map(function(arg) return '${arg.name} : ${Context.follow(arg.type.toType()).toComplexType().toString()}').join(", ") + '} = {' + args.map(function(arg) return '${arg.name} : null').join(", ") + '}');
 
@@ -226,7 +226,7 @@ class BuildSystemProcess {
     expr += '}';
     sexprs.push(expr);
 
-    sexprs.push('if(count == 0) updateItems.add(entity, o)');
+    sexprs.push('if(count == 0) updateItems.tryAdd(entity, o)');
 
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos()));
     fields.push({

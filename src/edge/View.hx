@@ -31,8 +31,8 @@ class View<T : {}> {
     };
   }
 
-  function add(entity : Entity, data : T) {
     if(map.exists(entity)) return;
+  function tryAdd(entity : Entity, data : T) {
     map.set(entity, data);
     count++;
     holder.entity = entity;
@@ -40,8 +40,8 @@ class View<T : {}> {
     added(holder);
   }
 
-  function remove(entity : Entity) {
     if(!map.exists(entity)) return;
+  function tryRemove(entity : Entity) {
     map.remove(entity);
     count--;
     removed(entity);
