@@ -931,7 +931,7 @@ UpdateRemovedSystem.__name__ = ["UpdateRemovedSystem"];
 UpdateRemovedSystem.__interfaces__ = [edge.ISystem];
 UpdateRemovedSystem.prototype = {
 	results: null
-	,updateRemoved: function(entity) {
+	,updateRemoved: function(entity,_) {
 		utest.Assert["is"](entity,edge.Entity,null,{ fileName : "TestAll.hx", lineNumber : 331, className : "UpdateRemovedSystem", methodName : "updateRemoved"});
 		this.results.push(1);
 	}
@@ -958,7 +958,7 @@ UpdateAddedRemovedSystem.prototype = {
 		utest.Assert["is"](entity,edge.Entity,null,{ fileName : "TestAll.hx", lineNumber : 344, className : "UpdateAddedRemovedSystem", methodName : "updateAdded"});
 		this.results.push(1);
 	}
-	,updateRemoved: function(entity) {
+	,updateRemoved: function(entity,_) {
 		utest.Assert["is"](entity,edge.Entity,null,{ fileName : "TestAll.hx", lineNumber : 349, className : "UpdateAddedRemovedSystem", methodName : "updateRemoved"});
 		this.results.push(2);
 	}
@@ -1073,7 +1073,8 @@ UpdateAddedRemovedSystem_SystemProcess.__name__ = ["UpdateAddedRemovedSystem_Sys
 UpdateAddedRemovedSystem_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
 UpdateAddedRemovedSystem_SystemProcess.prototype = {
 	removeEntity: function(entity) {
-		if(this.updateItems.tryRemove(entity)) this.system.updateRemoved(entity);
+		var removed = this.updateItems.tryRemove(entity);
+		if(removed != null) this.system.updateRemoved(entity,removed);
 	}
 	,addEntity: function(entity) {
 		this.updateMatchRequirements(entity);
@@ -1102,8 +1103,8 @@ UpdateAddedRemovedSystem_SystemProcess.prototype = {
 			}
 		}
 		var added = count == 0 && this.updateItems.tryAdd(entity,o);
-		if(removed && !added) this.system.updateRemoved(entity);
-		if(added && !removed) this.system.updateAdded(entity,o);
+		if(null != removed && !added) this.system.updateRemoved(entity,removed);
+		if(added && null == removed) this.system.updateAdded(entity,o);
 	}
 	,__class__: UpdateAddedRemovedSystem_SystemProcess
 };
@@ -1144,7 +1145,7 @@ UpdateAddedSystem_SystemProcess.prototype = {
 			}
 		}
 		var added = count == 0 && this.updateItems.tryAdd(entity,o);
-		if(added && !removed) this.system.updateAdded(entity,o);
+		if(added && null == removed) this.system.updateAdded(entity,o);
 	}
 	,__class__: UpdateAddedSystem_SystemProcess
 };
@@ -1156,7 +1157,8 @@ UpdateRemovedSystem_SystemProcess.__name__ = ["UpdateRemovedSystem_SystemProcess
 UpdateRemovedSystem_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
 UpdateRemovedSystem_SystemProcess.prototype = {
 	removeEntity: function(entity) {
-		if(this.updateItems.tryRemove(entity)) this.system.updateRemoved(entity);
+		var removed = this.updateItems.tryRemove(entity);
+		if(removed != null) this.system.updateRemoved(entity,removed);
 	}
 	,addEntity: function(entity) {
 		this.updateMatchRequirements(entity);
@@ -1185,7 +1187,7 @@ UpdateRemovedSystem_SystemProcess.prototype = {
 			}
 		}
 		var added = count == 0 && this.updateItems.tryAdd(entity,o);
-		if(removed && !added) this.system.updateRemoved(entity);
+		if(null != removed && !added) this.system.updateRemoved(entity,removed);
 	}
 	,__class__: UpdateRemovedSystem_SystemProcess
 };
@@ -1491,10 +1493,11 @@ edge.View.prototype = {
 		return true;
 	}
 	,tryRemove: function(entity) {
-		if(!(this.map.h.__keys__[entity.__id__] != null)) return false;
+		var o = this.map.h[entity.__id__];
+		if(null == o) return null;
 		this.map.remove(entity);
 		this.count--;
-		return true;
+		return o;
 	}
 	,__class__: edge.View
 };

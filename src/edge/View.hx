@@ -32,10 +32,11 @@ class View<T : {}> {
     return true;
   }
 
-  function tryRemove(entity : Entity) {
-    if(!map.exists(entity)) return false;
+  function tryRemove(entity : Entity) : T {
+    var o = map.get(entity);
+    if(null == o) return null;
     map.remove(entity);
     count--;
-    return true;
+    return o;
   }
 }

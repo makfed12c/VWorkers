@@ -327,7 +327,7 @@ class UpdateAddedSystem implements ISystem {
 class UpdateRemovedSystem implements ISystem {
   public var results : Array<Int> = [];
 
-  public function updateRemoved(entity : Entity) {
+  public function updateRemoved(entity : Entity, _) {
     Assert.is(entity, Entity);
     results.push(1);
   }
@@ -345,7 +345,7 @@ class UpdateAddedRemovedSystem implements ISystem {
     results.push(1);
   }
 
-  public function updateRemoved(entity : Entity) {
+  public function updateRemoved(entity : Entity, _) {
     Assert.is(entity, Entity);
     results.push(2);
   }

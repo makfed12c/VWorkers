@@ -93,10 +93,10 @@ class BuildSystemProcess {
     sexprs.push('var added = count == 0 && system.$name.tryAdd(entity, o)');
 
     if(hasFunField(systemFields, '${name}Removed')) {
-      sexprs.push('if(removed && !added) system.${name}Removed(entity)');
+      sexprs.push('if((null != removed) && !added) system.${name}Removed(entity, removed)');
     }
     if(hasFunField(systemFields, '${name}Added')) {
-      sexprs.push('if(added && !removed) system.${name}Added(entity, o)');
+      sexprs.push('if(added && (null == removed)) system.${name}Added(entity, o)');
     }
 
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos())),
@@ -122,7 +122,7 @@ class BuildSystemProcess {
     );
 
     expr = hasFunField(systemFields, '${name}Removed') ?
-      'if(system.$name.tryRemove(entity)) system.${name}Removed(entity)' :
+      '{ var removed = system.$name.tryRemove(entity); if(removed != null) system.${name}Removed(entity, removed); }' :
       'system.$name.tryRemove(entity)';
     appendExprToFieldFunction(
       findField(fields, "removeEntity"),
@@ -163,7 +163,7 @@ class BuildSystemProcess {
       });
 
       var expr = hasFunField(systemFields, 'updateRemoved') ?
-        'if(updateItems.tryRemove(entity)) system.updateRemoved(entity)' :
+        '{ var removed = updateItems.tryRemove(entity); if(removed != null) system.updateRemoved(entity, removed); }' :
         'updateItems.tryRemove(entity)';
       appendExprToFieldFunction(
         findField(fields, "removeEntity"),
@@ -238,10 +238,10 @@ class BuildSystemProcess {
     sexprs.push('var added = count == 0 && updateItems.tryAdd(entity, o)');
 
     if(hasFunField(systemFields, 'updateRemoved')) {
-      sexprs.push('if(removed && !added) system.updateRemoved(entity)');
+      sexprs.push('if((null != removed) && !added) system.updateRemoved(entity, removed)');
     }
     if(hasFunField(systemFields, 'updateAdded')) {
-      sexprs.push('if(added && !removed) system.updateAdded(entity, o)');
+      sexprs.push('if(added && (null == removed)) system.updateAdded(entity, o)');
     }
 
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos()));
