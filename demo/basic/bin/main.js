@@ -1,4 +1,5 @@
 (function (console) { "use strict";
+var $estr = function() { return js.Boot.__string_rec(this,''); };
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
@@ -11,8 +12,7 @@ var EReg = function(r,opt) {
 };
 EReg.__name__ = ["EReg"];
 EReg.prototype = {
-	r: null
-	,match: function(s) {
+	match: function(s) {
 		if(this.r.global) this.r.lastIndex = 0;
 		this.r.m = this.r.exec(s);
 		this.r.s = s;
@@ -56,9 +56,7 @@ var Position = function(x,y) {
 Position.__name__ = ["Position"];
 Position.__interfaces__ = [edge.IComponent];
 Position.prototype = {
-	x: null
-	,y: null
-	,__class__: Position
+	__class__: Position
 };
 var Velocity = function(vx,vy) {
 	this.vx = vx;
@@ -67,52 +65,39 @@ var Velocity = function(vx,vy) {
 Velocity.__name__ = ["Velocity"];
 Velocity.__interfaces__ = [edge.IComponent];
 Velocity.prototype = {
-	vx: null
-	,vy: null
-	,__class__: Velocity
+	__class__: Velocity
 };
 edge.ISystem = function() { };
 edge.ISystem.__name__ = ["edge","ISystem"];
 edge.ISystem.prototype = {
-	componentRequirements: null
-	,entityRequirements: null
-	,__class__: edge.ISystem
+	__class__: edge.ISystem
 };
 var RenderDots = function(mini) {
-	this.entityRequirements = null;
-	this.componentRequirements = [Position];
 	this.mini = mini;
+	this.__systemProcess = new RenderDots_SystemProcess(this);
 };
 RenderDots.__name__ = ["RenderDots"];
 RenderDots.__interfaces__ = [edge.ISystem];
 RenderDots.prototype = {
-	mini: null
-	,update: function(pos) {
+	update: function(pos) {
 		this.mini.dot(pos.x,pos.y,2,255);
 	}
-	,componentRequirements: null
-	,entityRequirements: null
 	,__class__: RenderDots
 };
 var RenderBackground = function(mini) {
-	this.entityRequirements = null;
-	this.componentRequirements = [];
 	this.mini = mini;
+	this.__systemProcess = new RenderBackground_SystemProcess(this);
 };
 RenderBackground.__name__ = ["RenderBackground"];
 RenderBackground.__interfaces__ = [edge.ISystem];
 RenderBackground.prototype = {
-	mini: null
-	,update: function() {
+	update: function() {
 		this.mini.clear();
 	}
-	,componentRequirements: null
-	,entityRequirements: null
 	,__class__: RenderBackground
 };
 var UpdateMovement = function() {
-	this.entityRequirements = null;
-	this.componentRequirements = [Position,Velocity];
+	this.__systemProcess = new UpdateMovement_SystemProcess(this);
 };
 UpdateMovement.__name__ = ["UpdateMovement"];
 UpdateMovement.__interfaces__ = [edge.ISystem];
@@ -123,8 +108,6 @@ UpdateMovement.prototype = {
 		if(dx <= 0 && vel.vx < 0 || dx >= Game.width && vel.vx > 0) vel.vx = -vel.vx; else pos.x = dx;
 		if(dy <= 0 && vel.vy < 0 || dy >= Game.height && vel.vy > 0) vel.vy = -vel.vy; else pos.y = dy;
 	}
-	,componentRequirements: null
-	,entityRequirements: null
 	,__class__: UpdateMovement
 };
 var HxOverrides = function() { };
@@ -143,24 +126,6 @@ HxOverrides.substr = function(s,pos,len) {
 	} else if(len < 0) len = s.length + len - pos;
 	return s.substr(pos,len);
 };
-HxOverrides.indexOf = function(a,obj,i) {
-	var len = a.length;
-	if(i < 0) {
-		i += len;
-		if(i < 0) i = 0;
-	}
-	while(i < len) {
-		if(a[i] === obj) return i;
-		i++;
-	}
-	return -1;
-};
-HxOverrides.remove = function(a,obj) {
-	var i = HxOverrides.indexOf(a,obj,0);
-	if(i == -1) return false;
-	a.splice(i,1);
-	return true;
-};
 HxOverrides.iter = function(a) {
 	return { cur : 0, arr : a, hasNext : function() {
 		return this.cur < this.arr.length;
@@ -169,17 +134,64 @@ HxOverrides.iter = function(a) {
 	}};
 };
 Math.__name__ = ["Math"];
-var Reflect = function() { };
-Reflect.__name__ = ["Reflect"];
-Reflect.field = function(o,field) {
-	try {
-		return o[field];
-	} catch( e ) {
-		return null;
-	}
+edge.core = {};
+edge.core.ISystemProcess = function() { };
+edge.core.ISystemProcess.__name__ = ["edge","core","ISystemProcess"];
+edge.core.ISystemProcess.prototype = {
+	__class__: edge.core.ISystemProcess
 };
-Reflect.callMethod = function(o,func,args) {
-	return func.apply(o,args);
+var RenderBackground_SystemProcess = function(system) {
+	this.system = system;
+};
+RenderBackground_SystemProcess.__name__ = ["RenderBackground_SystemProcess"];
+RenderBackground_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
+RenderBackground_SystemProcess.prototype = {
+	removeEntity: function(entity) {
+	}
+	,addEntity: function(entity) {
+	}
+	,update: function(engine,delta) {
+		this.system.update();
+	}
+	,__class__: RenderBackground_SystemProcess
+};
+var RenderDots_SystemProcess = function(system) {
+	this.system = system;
+	this.updateItems = new edge.View();
+};
+RenderDots_SystemProcess.__name__ = ["RenderDots_SystemProcess"];
+RenderDots_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
+RenderDots_SystemProcess.prototype = {
+	removeEntity: function(entity) {
+		this.updateItems.remove(entity);
+	}
+	,addEntity: function(entity) {
+		this.updateMatchRequirements(entity);
+	}
+	,update: function(engine,delta) {
+		var data;
+		var $it0 = this.updateItems.iterator();
+		while( $it0.hasNext() ) {
+			var item = $it0.next();
+			data = item.data;
+			this.system.update(data.pos);
+		}
+	}
+	,updateMatchRequirements: function(entity) {
+		this.updateItems.remove(entity);
+		var count = 1;
+		var o = { pos : null};
+		var $it0 = entity.map.iterator();
+		while( $it0.hasNext() ) {
+			var component = $it0.next();
+			if(js.Boot.__instanceof(component,Position)) {
+				o.pos = component;
+				if(--count == 0) break; else continue;
+			}
+		}
+		if(count == 0) this.updateItems.add(entity,o);
+	}
+	,__class__: RenderDots_SystemProcess
 };
 var Std = function() { };
 Std.__name__ = ["Std"];
@@ -208,29 +220,58 @@ Type.getClassName = function(c) {
 	if(a == null) return null;
 	return a.join(".");
 };
-Type.getInstanceFields = function(c) {
-	var a = [];
-	for(var i in c.prototype) a.push(i);
-	HxOverrides.remove(a,"__class__");
-	HxOverrides.remove(a,"__properties__");
-	return a;
+var UpdateMovement_SystemProcess = function(system) {
+	this.system = system;
+	this.updateItems = new edge.View();
+};
+UpdateMovement_SystemProcess.__name__ = ["UpdateMovement_SystemProcess"];
+UpdateMovement_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
+UpdateMovement_SystemProcess.prototype = {
+	removeEntity: function(entity) {
+		this.updateItems.remove(entity);
+	}
+	,addEntity: function(entity) {
+		this.updateMatchRequirements(entity);
+	}
+	,update: function(engine,delta) {
+		var data;
+		var $it0 = this.updateItems.iterator();
+		while( $it0.hasNext() ) {
+			var item = $it0.next();
+			data = item.data;
+			this.system.update(data.pos,data.vel);
+		}
+	}
+	,updateMatchRequirements: function(entity) {
+		this.updateItems.remove(entity);
+		var count = 2;
+		var o = { pos : null, vel : null};
+		var $it0 = entity.map.iterator();
+		while( $it0.hasNext() ) {
+			var component = $it0.next();
+			if(js.Boot.__instanceof(component,Position)) {
+				o.pos = component;
+				if(--count == 0) break; else continue;
+			}
+			if(js.Boot.__instanceof(component,Velocity)) {
+				o.vel = component;
+				if(--count == 0) break; else continue;
+			}
+		}
+		if(count == 0) this.updateItems.add(entity,o);
+	}
+	,__class__: UpdateMovement_SystemProcess
 };
 edge.Engine = function() {
-	this.emptyArgs = [];
-	this.mapInfo = new haxe.ds.ObjectMap();
 	this.mapEntities = new haxe.ds.ObjectMap();
 	this.listPhases = [];
 };
 edge.Engine.__name__ = ["edge","Engine"];
 edge.Engine.prototype = {
-	mapInfo: null
-	,mapEntities: null
-	,listPhases: null
-	,create: function(components) {
+	create: function(components) {
 		var entity = new edge.Entity(this,components);
 		this.mapEntities.set(entity,true);
 		this.matchSystems(entity);
-		this.matchEntities(entity);
 		return entity;
 	}
 	,createPhase: function() {
@@ -238,107 +279,44 @@ edge.Engine.prototype = {
 		this.listPhases.push(phase);
 		return phase;
 	}
-	,addSystem: function(phase,system) {
-		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = new edge.SystemInfo(system,phase);
-		this.mapInfo.set(system,info);
-		if(info.hasComponents) {
-			var $it0 = this.mapEntities.keys();
+	,eachSystem: function(f) {
+		var _g = 0;
+		var _g1 = this.listPhases;
+		while(_g < _g1.length) {
+			var phase = _g1[_g];
+			++_g;
+			var $it0 = phase.systems();
 			while( $it0.hasNext() ) {
-				var entity = $it0.next();
-				this.matchSystem(entity,system);
+				var system = $it0.next();
+				f(system);
 			}
 		}
-		if(info.collections.iterator().hasNext()) {
-			var $it1 = this.mapEntities.keys();
-			while( $it1.hasNext() ) {
-				var entity1 = $it1.next();
-				this.matchEntity(entity1,system);
-			}
+	}
+	,addSystem: function(phase,system) {
+		this.eachSystem(function(s) {
+			if(s == system) throw "System \"" + Std.string(system) + "\" already exists in Engine";
+		});
+		var $it0 = this.mapEntities.keys();
+		while( $it0.hasNext() ) {
+			var entity = $it0.next();
+			system.__systemProcess.addEntity(entity);
 		}
 	}
 	,removeSystem: function(system) {
-		this.mapInfo.remove(system);
+		var $it0 = this.mapEntities.keys();
+		while( $it0.hasNext() ) {
+			var entity = $it0.next();
+			system.__systemProcess.removeEntity(entity);
+		}
 	}
-	,emptyArgs: null
 	,updateSystem: function(system,t) {
-		var info = this.mapInfo.h[system.__id__];
-		if(info == null) return;
-		if(info.hasEngine) system.engine = this;
-		if(info.hasDelta) system.timeDelta = t;
-		if(info.hasComponents) {
-			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);
-			var $it0 = info.components.keys();
-			while( $it0.hasNext() ) {
-				var entity = $it0.next();
-				var components = info.components.h[entity.__id__];
-				if(info.hasEntity) system.entity = entity;
-				Reflect.callMethod(system,info.update,components);
-			}
-		} else Reflect.callMethod(system,info.update,this.emptyArgs);
+		system.__systemProcess.update(this,t);
 	}
 	,matchSystems: function(entity) {
-		var $it0 = this.mapInfo.keys();
-		while( $it0.hasNext() ) {
-			var system = $it0.next();
-			this.matchSystem(entity,system);
-		}
-	}
-	,matchEntities: function(entity) {
-		var $it0 = this.mapInfo.keys();
-		while( $it0.hasNext() ) {
-			var system = $it0.next();
-			this.matchEntity(entity,system);
-		}
-	}
-	,matchSystem: function(entity,system) {
-		var info = this.mapInfo.h[system.__id__];
-		info.components.remove(entity);
-		if(info.hasComponents) {
-			var components = this.matchRequirements(entity,system.componentRequirements);
-			if(null != components) info.components.set(entity,components);
-		}
-	}
-	,matchEntity: function(entity,system) {
-		var info = this.mapInfo.h[system.__id__];
-		if(!info.collections.iterator().hasNext()) return;
-		var $it0 = info.collections.keys();
-		while( $it0.hasNext() ) {
-			var name = $it0.next();
-			var collection = info.collections.get(name);
-			collection.view.remove(entity);
-			var componentRequirements = collection.classes;
-			var components = this.matchRequirements(entity,componentRequirements);
-			var o;
-			if(null != components) {
-				o = { };
-				var _g1 = 0;
-				var _g = components.length;
-				while(_g1 < _g) {
-					var i = _g1++;
-					o[collection.fields[i]] = components[i];
-				}
-				o.entity = entity;
-				collection.view.add(entity,o);
-			}
-		}
-	}
-	,matchRequirements: function(entity,requirements) {
-		var comps = [];
-		var _g = 0;
-		while(_g < requirements.length) {
-			var req = requirements[_g];
-			++_g;
-			var $it0 = entity.map.iterator();
-			while( $it0.hasNext() ) {
-				var component = $it0.next();
-				if(Type.getClass(component) == req) {
-					comps.push(component);
-					break;
-				}
-			}
-		}
-		if(comps.length == requirements.length) return comps; else return null;
+		var _g = this;
+		this.eachSystem(function(system) {
+			system.__systemProcess.addEntity(entity);
+		});
 	}
 	,__class__: edge.Engine
 };
@@ -349,9 +327,7 @@ edge.Entity = function(engine,components) {
 };
 edge.Entity.__name__ = ["edge","Entity"];
 edge.Entity.prototype = {
-	map: null
-	,engine: null
-	,addMany: function(components) {
+	addMany: function(components) {
 		var _g = this;
 		if(null == this.engine) return;
 		components.map(function(_) {
@@ -385,12 +361,7 @@ edge.Phase = function(engine) {
 };
 edge.Phase.__name__ = ["edge","Phase"];
 edge.Phase.prototype = {
-	first: null
-	,last: null
-	,mapSystem: null
-	,mapType: null
-	,engine: null
-	,add: function(system) {
+	add: function(system) {
 		this.remove(system);
 		var node = this.createNode(system);
 		if(null == this.first) {
@@ -421,7 +392,7 @@ edge.Phase.prototype = {
 		}
 	}
 	,systems: function() {
-		return new edge.NodeSystemIterator(this.first);
+		return new edge.core.NodeSystemIterator(this.first);
 	}
 	,update: function(t) {
 		if(null == this.engine) return;
@@ -432,7 +403,7 @@ edge.Phase.prototype = {
 		}
 	}
 	,createNode: function(system) {
-		var node = new edge.NodeSystem(system);
+		var node = new edge.core.NodeSystem(system);
 		this.mapSystem.set(system,node);
 		var key = this.key(system);
 		this.mapType.set(key,system);
@@ -444,80 +415,25 @@ edge.Phase.prototype = {
 	}
 	,__class__: edge.Phase
 };
-edge.NodeSystem = function(system) {
-	this.system = system;
-};
-edge.NodeSystem.__name__ = ["edge","NodeSystem"];
-edge.NodeSystem.prototype = {
-	system: null
-	,next: null
-	,prev: null
-	,__class__: edge.NodeSystem
-};
-edge.NodeSystemIterator = function(node) {
-	this.node = node;
-};
-edge.NodeSystemIterator.__name__ = ["edge","NodeSystemIterator"];
-edge.NodeSystemIterator.prototype = {
-	node: null
-	,hasNext: function() {
-		return null != this.node;
-	}
-	,next: function() {
-		var system = this.node.system;
-		this.node = this.node.next;
-		return system;
-	}
-	,__class__: edge.NodeSystemIterator
-};
-edge.SystemInfo = function(system,phase) {
-	this.system = system;
-	this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
-	this.hasDelta = edge.SystemInfo.hasField(system,"timeDelta");
-	this.hasEngine = edge.SystemInfo.hasField(system,"engine");
-	this.hasEntity = edge.SystemInfo.hasField(system,"entity");
-	this.hasBefore = edge.SystemInfo.hasField(system,"before");
-	this.update = Reflect.field(system,"update");
-	this.before = null;
-	this.components = new haxe.ds.ObjectMap();
-	this.collections = new haxe.ds.StringMap();
-	if(null != system.entityRequirements) {
-		var view = new edge.View();
-		var value = { classes : system.entityRequirements.map(function(_) {
-			return _.cls;
-		}), fields : system.entityRequirements.map(function(_1) {
-			return _1.name;
-		}), view : view};
-		this.collections.set("entities",value);
-		system.entities = view;
-	}
-	if(this.hasBefore) this.before = Reflect.field(system,"before");
-};
-edge.SystemInfo.__name__ = ["edge","SystemInfo"];
-edge.SystemInfo.hasField = function(o,field) {
-	return thx.core.Arrays.contains(Type.getInstanceFields(Type.getClass(o)),field);
-};
-edge.SystemInfo.prototype = {
-	hasComponents: null
-	,hasDelta: null
-	,hasEngine: null
-	,hasEntity: null
-	,hasBefore: null
-	,before: null
-	,update: null
-	,components: null
-	,system: null
-	,collections: null
-	,__class__: edge.SystemInfo
-};
 edge.View = function() {
 	this.map = new haxe.ds.ObjectMap();
 	this.count = 0;
 };
 edge.View.__name__ = ["edge","View"];
 edge.View.prototype = {
-	count: null
-	,map: null
+	iterator: function() {
+		var _g = this;
+		var keys = this.map.keys();
+		var holder = { entity : null, data : null};
+		return { hasNext : function() {
+			return keys.hasNext();
+		}, next : function() {
+			var key = keys.next();
+			holder.entity = key;
+			holder.data = _g.map.h[key.__id__];
+			return holder;
+		}};
+	}
 	,add: function(entity,data) {
 		if(this.map.h.__keys__[entity.__id__] != null) return;
 		this.map.set(entity,data);
@@ -543,16 +459,7 @@ edge.World = function(delta,schedule) {
 };
 edge.World.__name__ = ["edge","World"];
 edge.World.prototype = {
-	frame: null
-	,physics: null
-	,render: null
-	,engine: null
-	,delta: null
-	,running: null
-	,schedule: null
-	,cancel: null
-	,remainder: null
-	,start: function() {
+	start: function() {
 		if(this.running) return;
 		this.running = true;
 		this.cancel = this.schedule($bind(this,this.run));
@@ -569,6 +476,28 @@ edge.World.prototype = {
 	}
 	,__class__: edge.World
 };
+edge.core.NodeSystem = function(system) {
+	this.system = system;
+};
+edge.core.NodeSystem.__name__ = ["edge","core","NodeSystem"];
+edge.core.NodeSystem.prototype = {
+	__class__: edge.core.NodeSystem
+};
+edge.core.NodeSystemIterator = function(node) {
+	this.node = node;
+};
+edge.core.NodeSystemIterator.__name__ = ["edge","core","NodeSystemIterator"];
+edge.core.NodeSystemIterator.prototype = {
+	hasNext: function() {
+		return null != this.node;
+	}
+	,next: function() {
+		var system = this.node.system;
+		this.node = this.node.next;
+		return system;
+	}
+	,__class__: edge.core.NodeSystemIterator
+};
 var haxe = {};
 haxe.IMap = function() { };
 haxe.IMap.__name__ = ["haxe","IMap"];
@@ -580,8 +509,7 @@ haxe.ds.ObjectMap = function() {
 haxe.ds.ObjectMap.__name__ = ["haxe","ds","ObjectMap"];
 haxe.ds.ObjectMap.__interfaces__ = [haxe.IMap];
 haxe.ds.ObjectMap.prototype = {
-	h: null
-	,set: function(key,value) {
+	set: function(key,value) {
 		var id = key.__id__ || (key.__id__ = ++haxe.ds.ObjectMap.count);
 		this.h[id] = value;
 		this.h.__keys__[id] = key;
@@ -611,11 +539,7 @@ haxe.ds._StringMap.StringMapIterator = function(map,keys) {
 };
 haxe.ds._StringMap.StringMapIterator.__name__ = ["haxe","ds","_StringMap","StringMapIterator"];
 haxe.ds._StringMap.StringMapIterator.prototype = {
-	map: null
-	,keys: null
-	,index: null
-	,count: null
-	,hasNext: function() {
+	hasNext: function() {
 		return this.index < this.count;
 	}
 	,next: function() {
@@ -629,9 +553,7 @@ haxe.ds.StringMap = function() {
 haxe.ds.StringMap.__name__ = ["haxe","ds","StringMap"];
 haxe.ds.StringMap.__interfaces__ = [haxe.IMap];
 haxe.ds.StringMap.prototype = {
-	h: null
-	,rh: null
-	,set: function(key,value) {
+	set: function(key,value) {
 		if(__map_reserved[key] != null) this.setReserved(key,value); else this.h[key] = value;
 	}
 	,get: function(key) {
@@ -664,10 +586,6 @@ haxe.ds.StringMap.prototype = {
 			delete(this.h[key]);
 			return true;
 		}
-	}
-	,keys: function() {
-		var _this = this.arrayKeys();
-		return HxOverrides.iter(_this);
 	}
 	,arrayKeys: function() {
 		var out = [];
@@ -765,10 +683,57 @@ js.Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
+js.Boot.__interfLoop = function(cc,cl) {
+	if(cc == null) return false;
+	if(cc == cl) return true;
+	var intf = cc.__interfaces__;
+	if(intf != null) {
+		var _g1 = 0;
+		var _g = intf.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			var i1 = intf[i];
+			if(i1 == cl || js.Boot.__interfLoop(i1,cl)) return true;
+		}
+	}
+	return js.Boot.__interfLoop(cc.__super__,cl);
+};
+js.Boot.__instanceof = function(o,cl) {
+	if(cl == null) return false;
+	switch(cl) {
+	case Int:
+		return (o|0) === o;
+	case Float:
+		return typeof(o) == "number";
+	case Bool:
+		return typeof(o) == "boolean";
+	case String:
+		return typeof(o) == "string";
+	case Array:
+		return (o instanceof Array) && o.__enum__ == null;
+	case Dynamic:
+		return true;
+	default:
+		if(o != null) {
+			if(typeof(cl) == "function") {
+				if(o instanceof cl) return true;
+				if(js.Boot.__interfLoop(js.Boot.getClass(o),cl)) return true;
+			} else if(typeof(cl) == "object" && js.Boot.__isNativeObj(cl)) {
+				if(o instanceof cl) return true;
+			}
+		} else return false;
+		if(cl == Class && o.__name__ != null) return true;
+		if(cl == Enum && o.__ename__ != null) return true;
+		return o.__enum__ == cl;
+	}
+};
 js.Boot.__nativeClassName = function(o) {
 	var name = js.Boot.__toStr.call(o).slice(8,-1);
 	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") return null;
 	return name;
+};
+js.Boot.__isNativeObj = function(o) {
+	return js.Boot.__nativeClassName(o) != null;
 };
 js.Boot.__resolveNativeClass = function(name) {
 	if(typeof window != "undefined") return window[name]; else return global[name];
@@ -791,17 +756,7 @@ minicanvas.MiniCanvas.create = function(width,height,scaleMode) {
 	if(minicanvas.MiniCanvas.envIsNode()) return new minicanvas.NodeCanvas(width,height,scaleMode); else return new minicanvas.BrowserCanvas(width,height,scaleMode);
 };
 minicanvas.MiniCanvas.prototype = {
-	isNode: null
-	,isBrowser: null
-	,width: null
-	,height: null
-	,scaleMode: null
-	,canvas: null
-	,ctx: null
-	,startTime: null
-	,deltaTime: null
-	,events: null
-	,display: function(name) {
+	display: function(name) {
 		this.deltaTime = performance.now() - this.startTime;
 		if(!minicanvas.MiniCanvas.displayGenerationTime) console.log("generated \"" + name + "\" in " + thx.core.Floats.roundTo(this.deltaTime,2) + "ms");
 		this.nativeDisplay(name);
@@ -852,16 +807,16 @@ minicanvas.MiniCanvas.prototype = {
 		default:
 		}
 	}
-	,_keyUp: null
-	,_keyDown: null
 	,__class__: minicanvas.MiniCanvas
 };
 minicanvas.ScaleMode = { __ename__ : true, __constructs__ : ["NoScale","Auto","Scaled"] };
 minicanvas.ScaleMode.NoScale = ["NoScale",0];
+minicanvas.ScaleMode.NoScale.toString = $estr;
 minicanvas.ScaleMode.NoScale.__enum__ = minicanvas.ScaleMode;
 minicanvas.ScaleMode.Auto = ["Auto",1];
+minicanvas.ScaleMode.Auto.toString = $estr;
 minicanvas.ScaleMode.Auto.__enum__ = minicanvas.ScaleMode;
-minicanvas.ScaleMode.Scaled = function(v) { var $x = ["Scaled",2,v]; $x.__enum__ = minicanvas.ScaleMode; return $x; };
+minicanvas.ScaleMode.Scaled = function(v) { var $x = ["Scaled",2,v]; $x.__enum__ = minicanvas.ScaleMode; $x.toString = $estr; return $x; };
 minicanvas.BrowserCanvas = function(width,height,scaleMode) {
 	this.isNode = false;
 	this.isBrowser = true;
@@ -953,7 +908,6 @@ minicanvas.NodeCanvas.prototype = $extend(minicanvas.MiniCanvas.prototype,{
 			console.log("saved " + file);
 		});
 	}
-	,hasFrames: null
 	,init: function() {
 		var Canvas = require("canvas");
 		{
@@ -980,7 +934,6 @@ minicanvas.NodeCanvas.prototype = $extend(minicanvas.MiniCanvas.prototype,{
 	,nativeDisplay: function(name) {
 		this.save(name);
 	}
-	,encoder: null
 	,ensureEncoder: function() {
 		if(null != this.encoder) return this.encoder;
 		if(this.hasFrames) return this.encoder = new minicanvas.node.GifEncoder(this.width,this.height); else return this.encoder = new minicanvas.node.PNGEncoder(this.canvas);
@@ -991,9 +944,7 @@ minicanvas.node = {};
 minicanvas.node.IEncoder = function() { };
 minicanvas.node.IEncoder.__name__ = ["minicanvas","node","IEncoder"];
 minicanvas.node.IEncoder.prototype = {
-	addFrame: null
-	,save: null
-	,__class__: minicanvas.node.IEncoder
+	__class__: minicanvas.node.IEncoder
 };
 minicanvas.node.GifEncoder = function(width,height) {
 	this.frames = 0;
@@ -1011,10 +962,7 @@ minicanvas.node.GifEncoder = function(width,height) {
 minicanvas.node.GifEncoder.__name__ = ["minicanvas","node","GifEncoder"];
 minicanvas.node.GifEncoder.__interfaces__ = [minicanvas.node.IEncoder];
 minicanvas.node.GifEncoder.prototype = {
-	encoder: null
-	,stream: null
-	,frames: null
-	,addFrame: function(ctx) {
+	addFrame: function(ctx) {
 		this.encoder.addFrame(ctx);
 		this.frames++;
 	}
@@ -1030,8 +978,7 @@ minicanvas.node.PNGEncoder = function(canvas) {
 minicanvas.node.PNGEncoder.__name__ = ["minicanvas","node","PNGEncoder"];
 minicanvas.node.PNGEncoder.__interfaces__ = [minicanvas.node.IEncoder];
 minicanvas.node.PNGEncoder.prototype = {
-	canvas: null
-	,addFrame: function(ctx) {
+	addFrame: function(ctx) {
 	}
 	,save: function(name,callback) {
 		var fs = require("fs");
@@ -1165,9 +1112,7 @@ thx.color.parse.ColorParser.getInt8Channel = function(channel) {
 	}
 };
 thx.color.parse.ColorParser.prototype = {
-	pattern_color: null
-	,pattern_channel: null
-	,processHex: function(s) {
+	processHex: function(s) {
 		if(!thx.color.parse.ColorParser.isPureHex.match(s)) {
 			if(HxOverrides.substr(s,0,1) == "#") {
 				if(s.length == 4) s = s.charAt(1) + s.charAt(1) + s.charAt(2) + s.charAt(2) + s.charAt(3) + s.charAt(3); else if(s.length == 5) s = s.charAt(1) + s.charAt(1) + s.charAt(2) + s.charAt(2) + s.charAt(3) + s.charAt(3) + s.charAt(4) + s.charAt(4); else s = HxOverrides.substr(s,1,null);
@@ -1243,31 +1188,16 @@ thx.color.parse.ColorInfo = function(name,channels) {
 };
 thx.color.parse.ColorInfo.__name__ = ["thx","color","parse","ColorInfo"];
 thx.color.parse.ColorInfo.prototype = {
-	name: null
-	,channels: null
-	,__class__: thx.color.parse.ColorInfo
+	__class__: thx.color.parse.ColorInfo
 };
 thx.color.parse.ChannelInfo = { __ename__ : true, __constructs__ : ["CIPercent","CIFloat","CIDegree","CIInt8","CIInt","CIBool"] };
-thx.color.parse.ChannelInfo.CIPercent = function(value) { var $x = ["CIPercent",0,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
-thx.color.parse.ChannelInfo.CIFloat = function(value) { var $x = ["CIFloat",1,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
-thx.color.parse.ChannelInfo.CIDegree = function(value) { var $x = ["CIDegree",2,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
-thx.color.parse.ChannelInfo.CIInt8 = function(value) { var $x = ["CIInt8",3,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
-thx.color.parse.ChannelInfo.CIInt = function(value) { var $x = ["CIInt",4,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
-thx.color.parse.ChannelInfo.CIBool = function(value) { var $x = ["CIBool",5,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
+thx.color.parse.ChannelInfo.CIPercent = function(value) { var $x = ["CIPercent",0,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
+thx.color.parse.ChannelInfo.CIFloat = function(value) { var $x = ["CIFloat",1,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
+thx.color.parse.ChannelInfo.CIDegree = function(value) { var $x = ["CIDegree",2,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
+thx.color.parse.ChannelInfo.CIInt8 = function(value) { var $x = ["CIInt8",3,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
+thx.color.parse.ChannelInfo.CIInt = function(value) { var $x = ["CIInt",4,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
+thx.color.parse.ChannelInfo.CIBool = function(value) { var $x = ["CIBool",5,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
 thx.core = {};
-thx.core.Arrays = function() { };
-thx.core.Arrays.__name__ = ["thx","core","Arrays"];
-thx.core.Arrays.contains = function(array,element,eq) {
-	if(null == eq) return HxOverrides.indexOf(array,element,0) >= 0; else {
-		var _g1 = 0;
-		var _g = array.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			if(eq(array[i],element)) return true;
-		}
-		return false;
-	}
-};
 thx.core.ArrayInts = function() { };
 thx.core.ArrayInts.__name__ = ["thx","core","ArrayInts"];
 thx.core.ArrayInts.resize = function(array,length,fill) {
@@ -1335,14 +1265,19 @@ thx.core.Timer.frame = function(callback) {
 };
 var $_, $fid = 0;
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $fid++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = function(){ return f.method.apply(f.scope, arguments); }; f.scope = o; f.method = m; o.hx__closures__[m.__id__] = f; } return f; }
-if(Array.prototype.indexOf) HxOverrides.indexOf = function(a,o,i) {
-	return Array.prototype.indexOf.call(a,o,i);
-};
 String.prototype.__class__ = String;
 String.__name__ = ["String"];
 Array.__name__ = ["Array"];
 Date.prototype.__class__ = Date;
 Date.__name__ = ["Date"];
+var Int = { __name__ : ["Int"]};
+var Dynamic = { __name__ : ["Dynamic"]};
+var Float = Number;
+Float.__name__ = ["Float"];
+var Bool = Boolean;
+Bool.__ename__ = ["Bool"];
+var Class = { __name__ : ["Class"]};
+var Enum = { };
 if(Array.prototype.map == null) Array.prototype.map = function(f) {
 	var a = [];
 	var _g1 = 0;
@@ -1354,39 +1289,6 @@ if(Array.prototype.map == null) Array.prototype.map = function(f) {
 	return a;
 };
 var __map_reserved = {}
-
-      // Production steps of ECMA-262, Edition 5, 15.4.4.21
-      // Reference: http://es5.github.io/#x15.4.4.21
-      if (!Array.prototype.reduce) {
-        Array.prototype.reduce = function(callback /*, initialValue*/) {
-          'use strict';
-          if (this == null) {
-            throw new TypeError('Array.prototype.reduce called on null or undefined');
-          }
-          if (typeof callback !== 'function') {
-            throw new TypeError(callback + ' is not a function');
-          }
-          var t = Object(this), len = t.length >>> 0, k = 0, value;
-          if (arguments.length == 2) {
-            value = arguments[1];
-          } else {
-            while (k < len && ! k in t) {
-              k++;
-            }
-            if (k >= len) {
-              throw new TypeError('Reduce of empty array with no initial value');
-            }
-            value = t[k++];
-          }
-          for (; k < len; k++) {
-            if (k in t) {
-              value = callback(value, t[k], k, t);
-            }
-          }
-          return value;
-        };
-      }
-    ;
 var scope = ("undefined" !== typeof window && window) || ("undefined" !== typeof global && global) || this;
 if(!scope.setImmediate) scope.setImmediate = function(callback) {
 	scope.setTimeout(callback,0);

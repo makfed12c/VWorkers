@@ -3,9 +3,12 @@
   "url": "https://github.com/fponticelli/edge",
   "license": "MIT",
   "classPath": "src",
-  "tags": ["entity system", "gaming", "cross"],
+  "tags": ["entity-system", "gaming", "cross"],
   "description": "Entity system for Haxe.",
-  "releasenote": "First release.",
-  "version": "0.3.0",
-  "contributors": ["fponticelli"]
+  "releasenote": "Several improvements and optimizations.",
+  "version": "0.4.0",
+  "contributors": ["fponticelli"],
+  "dependencies": {
+    "thx.core": ""
+  }
 }
