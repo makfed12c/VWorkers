@@ -11,11 +11,12 @@ class BuildSystem {
   public inline static var PROCESS_SUFFIX = "_SystemProcess";
 
   macro public static function complete() : Array<Field> {
-    var fields = Context.getBuildFields();
+    var fields = Context.getBuildFields(),
+        type = Context.getLocalClass().get();
     checkUpdate(fields);
     injectComponentRequirements(fields);
-    injectToString(fields);
-    injectConstructor(fields);
+    injectToString(type, fields);
+    injectConstructor(type, fields);
     makePublic(fields, "engine");
     makePublic(fields, "entity");
     makePublic(fields, "timeDelta");
@@ -74,10 +75,9 @@ class BuildSystem {
     });
   }
 
-  static function injectToString(fields : Array<Field>) {
-    var field = findField(fields, "toString"),
-        cls = clsName();
-    if(null != field) return;
+  static function injectToString(type : ClassType, fields : Array<Field>) {
+    if(isFieldInHirearchy(type, "toString")) return;
+    var cls = clsName();
     fields.push({
       name: "toString",
       doc: null,
@@ -93,7 +93,7 @@ class BuildSystem {
     });
   }
 
-  static function injectConstructor(fields : Array<Field>) {
+  static function injectConstructor(type : ClassType, fields : Array<Field>) {
     var field = findField(fields, "new");
     if(null != field) return;
     fields.push({
@@ -104,7 +104,10 @@ class BuildSystem {
       kind: FFun({
         ret : macro : Void,
         params : null,
-        expr : macro {},
+        expr :
+          isFieldInHirearchy(type, "new") ?
+            macro super() :
+            macro {},
         args : []
       }),
       pos: Context.currentPos()
