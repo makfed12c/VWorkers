@@ -1,4 +1,4 @@
-# dfgan
+# apparatus
 
 Entity system for Haxe
 
