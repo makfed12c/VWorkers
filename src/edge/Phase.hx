@@ -87,8 +87,7 @@ class Phase {
     mapType.remove(key(system));
     if(null == node)
       return;
-    if(null != engine)
-      engine.removeSystem(system);
+    engine.removeSystem(system);
     mapSystem.remove(system);
     if(node == first && node == last) {
       first = last = null;
