@@ -30,7 +30,7 @@ class BuildSystemProcess {
     injectViews(systemFields, fields);
     injectUpdateMatchRequirements(systemFields, fields);
 //    injectSetEntity(systemFields, fields);
-    injectFeatureCollections(fields);
+//    injectFeatureCollections(fields);
 
     Context.defineType({
       pos : Context.currentPos(),
@@ -96,7 +96,8 @@ class BuildSystemProcess {
     sexprs.push(expr);
     sexprs.push('if(count == 0) system.$name.add(entity, o)');
 
-    trace(sexprs.join(";\n") +";");
+//    trace(sexprs.join(";\n") +";");
+
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos())),
         methodName = '${name}MatchRequirements';
     fields.push({
@@ -346,7 +347,7 @@ class BuildSystemProcess {
       pos: Context.currentPos()
     });
   }
-
+/*
   static function injectFeatureCollections(fields : Array<Field>) {
     // public var collections : Map<String, ViewInfo>;
     injectViewCollection(fields);
@@ -367,7 +368,7 @@ class BuildSystemProcess {
       pos: Context.currentPos()
     });
   }
-
+*/
   public static function appendExprToFieldFunction(field : Field, expr : Expr) {
     switch field.kind {
       case FFun(o):

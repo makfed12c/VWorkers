@@ -29,6 +29,7 @@ class SystemInfo {
 //    this.before        = null;
 //    this.components    = new Map();
 //    this.collections = new Map();
+/*
     if(null != system.entityRequirements) {
       var view = new View();
       this.process.collections.set("entities", {
@@ -38,7 +39,7 @@ class SystemInfo {
       });
       Reflect.setField(system, "entities", view);
     }
-
+*/
 //    if(hasBefore)
 //      before = Reflect.field(system, "before");
   }

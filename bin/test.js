@@ -13,14 +13,12 @@ edge.ISystemProcess.prototype = {
 	,update: null
 	,addEntity: null
 	,removeEntity: null
-	,collections: null
 	,__class__: edge.ISystemProcess
 };
 var Components1System_SystemProcess = function(system) {
 	this.system = system;
 	this.hasUpdateItems = true;
 	this.updateItems = new edge.View();
-	this.collections = new haxe.ds.StringMap();
 };
 Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
 Components1System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
@@ -59,14 +57,12 @@ Components1System_SystemProcess.prototype = {
 		}
 		if(count == 0) this.updateItems.add(entity,o);
 	}
-	,collections: null
 	,__class__: Components1System_SystemProcess
 };
 var Components2System_SystemProcess = function(system) {
 	this.system = system;
 	this.hasUpdateItems = true;
 	this.updateItems = new edge.View();
-	this.collections = new haxe.ds.StringMap();
 };
 Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
 Components2System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
@@ -107,7 +103,6 @@ Components2System_SystemProcess.prototype = {
 		}
 		if(count == 0) this.updateItems.add(entity,o);
 	}
-	,collections: null
 	,__class__: Components2System_SystemProcess
 };
 var ComponentsEntitiesSystem_SystemProcess = function(system) {
@@ -115,7 +110,6 @@ var ComponentsEntitiesSystem_SystemProcess = function(system) {
 	this.hasUpdateItems = true;
 	this.updateItems = new edge.View();
 	system.entities = new edge.View();
-	this.collections = new haxe.ds.StringMap();
 };
 ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_SystemProcess"];
 ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
@@ -168,7 +162,6 @@ ComponentsEntitiesSystem_SystemProcess.prototype = {
 		}
 		if(count == 0) this.updateItems.add(entity,o);
 	}
-	,collections: null
 	,__class__: ComponentsEntitiesSystem_SystemProcess
 };
 var EReg = function(r,opt) {
@@ -353,7 +346,6 @@ Math.__name__ = ["Math"];
 var NoComponentsSystem_SystemProcess = function(system) {
 	this.system = system;
 	this.hasUpdateItems = false;
-	this.collections = new haxe.ds.StringMap();
 };
 NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"];
 NoComponentsSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
@@ -367,7 +359,6 @@ NoComponentsSystem_SystemProcess.prototype = {
 	,update: function(engine,delta) {
 		this.system.update();
 	}
-	,collections: null
 	,__class__: NoComponentsSystem_SystemProcess
 };
 var Reflect = function() { };
@@ -833,7 +824,6 @@ edge.Engine.prototype = {
 		var entity = new edge.Entity(this,components);
 		this.mapEntities.set(entity,true);
 		this.matchSystems(entity);
-		this.matchEntities(entity);
 		return entity;
 	}
 	,clear: function() {
@@ -848,15 +838,6 @@ edge.Engine.prototype = {
 		while( $it0.hasNext() ) {
 			var info = $it0.next();
 			info.process.removeEntity(entity);
-		}
-		var $it1 = this.mapInfo.iterator();
-		while( $it1.hasNext() ) {
-			var info1 = $it1.next();
-			var $it2 = info1.process.collections.iterator();
-			while( $it2.hasNext() ) {
-				var collection = $it2.next();
-				collection.view.remove(entity);
-			}
 		}
 		this.mapEntities.remove(entity);
 		entity.engine = null;
@@ -879,19 +860,10 @@ edge.Engine.prototype = {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
 		var info = new edge.SystemInfo(system,system.__systemProcess);
 		this.mapInfo.set(system,info);
-		if(info.process.hasUpdateItems) {
-			var $it0 = this.mapEntities.keys();
-			while( $it0.hasNext() ) {
-				var entity = $it0.next();
-				this.matchSystem(entity,system);
-			}
-		}
-		if(info.process.collections.iterator().hasNext()) {
-			var $it1 = this.mapEntities.keys();
-			while( $it1.hasNext() ) {
-				var entity1 = $it1.next();
-				this.matchEntity(entity1,system);
-			}
+		var $it0 = this.mapEntities.keys();
+		while( $it0.hasNext() ) {
+			var entity = $it0.next();
+			this.match(entity,system);
 		}
 	}
 	,removeSystem: function(system) {
@@ -908,61 +880,12 @@ edge.Engine.prototype = {
 		var $it0 = this.mapInfo.keys();
 		while( $it0.hasNext() ) {
 			var system = $it0.next();
-			this.matchSystem(entity,system);
+			this.match(entity,system);
 		}
 	}
-	,matchEntities: function(entity) {
-		var $it0 = this.mapInfo.keys();
-		while( $it0.hasNext() ) {
-			var system = $it0.next();
-			this.matchEntity(entity,system);
-		}
-	}
-	,matchSystem: function(entity,system) {
+	,match: function(entity,system) {
 		var info = this.mapInfo.h[system.__id__];
 		info.process.addEntity(entity);
-	}
-	,matchEntity: function(entity,system) {
-		var info = this.mapInfo.h[system.__id__];
-		if(!info.process.collections.iterator().hasNext()) return;
-		var $it0 = info.process.collections.keys();
-		while( $it0.hasNext() ) {
-			var name = $it0.next();
-			var collection = info.process.collections.get(name);
-			collection.view.remove(entity);
-			var componentRequirements = collection.classes;
-			var components = this.matchRequirements(entity,componentRequirements);
-			var o;
-			if(null != components) {
-				o = { };
-				var _g1 = 0;
-				var _g = components.length;
-				while(_g1 < _g) {
-					var i = _g1++;
-					o[collection.fields[i]] = components[i];
-				}
-				o.entity = entity;
-				collection.view.add(entity,o);
-			}
-		}
-		info.process.addEntity(entity);
-	}
-	,matchRequirements: function(entity,requirements) {
-		var comps = [];
-		var _g = 0;
-		while(_g < requirements.length) {
-			var req = requirements[_g];
-			++_g;
-			var $it0 = entity.map.iterator();
-			while( $it0.hasNext() ) {
-				var component = $it0.next();
-				if(Type.getClass(component) == req) {
-					comps.push(component);
-					break;
-				}
-			}
-		}
-		if(comps.length == requirements.length) return comps; else return null;
 	}
 	,__class__: edge.Engine
 };
@@ -1185,16 +1108,6 @@ edge.NodeSystemIterator.prototype = {
 };
 edge.SystemInfo = function(system,process) {
 	this.process = process;
-	if(null != system.entityRequirements) {
-		var view = new edge.View();
-		var value = { classes : system.entityRequirements.map(function(_) {
-			return _.cls;
-		}), fields : system.entityRequirements.map(function(_1) {
-			return _1.name;
-		}), view : view};
-		this.process.collections.set("entities",value);
-		system.entities = view;
-	}
 };
 edge.SystemInfo.__name__ = ["edge","SystemInfo"];
 edge.SystemInfo.prototype = {

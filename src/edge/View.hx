@@ -31,6 +31,7 @@ class View<T : {}> {
 
   function add(entity : Entity, data : T) {
     if(map.exists(entity)) return;
+//    trace(data);
     map.set(entity, data);
     count++;
   }
