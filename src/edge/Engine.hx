@@ -91,6 +91,8 @@ class Engine {
 //          Reflect.setField(system, "entity", entity);
         Reflect.callMethod(system, info.update, components);
       }
+//    } else {
+//      Reflect.callMethod(system, info.update, emptyArgs);
     }
   }
 
