@@ -6,6 +6,56 @@ using thx.core.Iterators;
 import edge.*;
 
 class TestAll {
+
+  public function testUpdateRemoved() {
+    var engine = new Engine(),
+        phase = engine.createPhase(),
+        system = new UpdateRemovedSystem();
+    phase.add(system);
+    Assert.same([], system.results);
+    engine.create([new B()]); // doesn't affect the system
+    Assert.same([], system.results);
+    var e = engine.create([new A()]);
+    Assert.same([], system.results);
+    phase.update(0);
+    Assert.same([2], system.results);
+    e.removeType(A);
+    Assert.same([2, 1], system.results);
+    e.add(new A());
+    e.removeType(A);
+    Assert.same([2, 1, 1], system.results);
+  }
+
+  public function testUpdateAdded() {
+    var engine = new Engine(),
+        phase = engine.createPhase(),
+        system = new UpdateAddedSystem();
+    phase.add(system);
+    Assert.same([], system.results);
+    engine.create([new B()]); // doesn't affect the system
+    Assert.same([], system.results);
+    var e = engine.create([new A()]);
+    Assert.same([1], system.results);
+    phase.update(0);
+    Assert.same([1, 2], system.results);
+    e.removeType(A);
+    Assert.same([1, 2], system.results);
+    e.add(new A());
+    Assert.same([1, 2, 1], system.results);
+  }
+
+  public function testBefore() {
+    var engine = new Engine(),
+        phase = engine.createPhase(),
+        system = new BeforeSystem();
+    phase.add(system);
+    phase.update(0);
+    Assert.same([], system.results);
+    engine.create([new A()]);
+    phase.update(0);
+    Assert.same([1,2], system.results);
+  }
+
   public function testMultipleViews() {
     var engine = new Engine(),
         phase = engine.createPhase(),
@@ -246,6 +296,62 @@ class HasAandBSystem implements ISystem {
 
   public function update() {
 
+  }
+}
+
+class BeforeSystem implements ISystem {
+  public var results : Array<Int> = [];
+
+  public function before() {
+    results.push(1);
+  }
+
+  public function update(a : A) {
+    results.push(2);
+  }
+}
+
+class UpdateAddedSystem implements ISystem {
+  public var results : Array<Int> = [];
+
+  public function updateAdded(entity : Entity) {
+    Assert.is(entity, Entity);
+    results.push(1);
+  }
+
+  public function update(a : A) {
+    results.push(2);
+  }
+}
+
+class UpdateRemovedSystem implements ISystem {
+  public var results : Array<Int> = [];
+
+  public function updateRemoved(entity : Entity) {
+    Assert.is(entity, Entity);
+    results.push(1);
+  }
+
+  public function update(a : A) {
+    results.push(2);
+  }
+}
+
+class UpdateAddedRemovedSystem implements ISystem {
+  public var results : Array<Int> = [];
+
+  public function updateAdded(entity : Entity) {
+    Assert.is(entity, Entity);
+    results.push(1);
+  }
+
+  public function updateRemoved(entity : Entity) {
+    Assert.is(entity, Entity);
+    results.push(2);
+  }
+
+  public function update(a : A) {
+    results.push(3);
   }
 }
 
