@@ -14,7 +14,6 @@ class BuildSystem {
     var fields = Context.getBuildFields(),
         type = Context.getLocalClass().get();
     checkUpdate(fields);
-    injectComponentRequirements(fields);
     injectToString(type, fields);
     injectConstructor(type, fields);
     makePublic(fields, "engine");
@@ -36,35 +35,6 @@ class BuildSystem {
       findField(fields, "new"),
       Context.parse('__process__ = new $process(this)', Context.currentPos())
     );
-  }
-
-  static function injectComponentRequirements(fields : Array<Field>) {
-    var field = findField(fields, "componentRequirements");
-    if(null != field) return;
-    var update = findField(fields, "update"),
-        arr = switch update.kind {
-          case FFun(f):
-            f.args.map(function(arg) return switch arg.type {
-              case TPath(p):
-                Context.getType(p.name).toString();
-              case _:
-                null;
-            });
-          case _:
-            null;
-        };
-
-    fields.push({
-      name: "componentRequirements",
-      doc: null,
-      meta: [],
-      access: [APublic],
-      kind: FVar(
-        macro : Array<Dynamic>,
-        Context.parse('[${arr.join(", ")}]', Context.currentPos())
-      ),
-      pos: Context.currentPos()
-    });
   }
 
   static function injectToString(type : ClassType, fields : Array<Field>) {

@@ -777,7 +777,6 @@ edge.ISystem.prototype = {
 	,__class__: edge.ISystem
 };
 var NoComponentsSystem = function() {
-	this.componentRequirements = [];
 	this.count = 0;
 	this.__process__ = new NoComponentsSystem_SystemProcess(this);
 };
@@ -788,7 +787,6 @@ NoComponentsSystem.prototype = {
 	,update: function() {
 		this.count++;
 	}
-	,componentRequirements: null
 	,toString: function() {
 		return "NoComponentsSystem";
 	}
@@ -796,7 +794,6 @@ NoComponentsSystem.prototype = {
 	,__class__: NoComponentsSystem
 };
 var Components2System = function() {
-	this.componentRequirements = [B,A];
 	this.count = 0;
 	this.__process__ = new Components2System_SystemProcess(this);
 };
@@ -809,7 +806,6 @@ Components2System.prototype = {
 		utest.Assert["is"](a,A,null,{ fileName : "TestAll.hx", lineNumber : 269, className : "Components2System", methodName : "update"});
 		this.count++;
 	}
-	,componentRequirements: null
 	,toString: function() {
 		return "Components2System";
 	}
@@ -817,7 +813,6 @@ Components2System.prototype = {
 	,__class__: Components2System
 };
 var Components1System = function() {
-	this.componentRequirements = [B];
 	this.count = 0;
 	this.__process__ = new Components1System_SystemProcess(this);
 };
@@ -831,7 +826,6 @@ Components1System.prototype = {
 		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 279, className : "Components1System", methodName : "update"});
 		this.count++;
 	}
-	,componentRequirements: null
 	,toString: function() {
 		return "Components1System";
 	}
@@ -839,7 +833,6 @@ Components1System.prototype = {
 	,__class__: Components1System
 };
 var ComponentsEntitiesSystem = function() {
-	this.componentRequirements = [B];
 	this.count = 0;
 	this.__process__ = new ComponentsEntitiesSystem_SystemProcess(this);
 };
@@ -852,7 +845,6 @@ ComponentsEntitiesSystem.prototype = {
 		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 288, className : "ComponentsEntitiesSystem", methodName : "update"});
 		this.count++;
 	}
-	,componentRequirements: null
 	,toString: function() {
 		return "ComponentsEntitiesSystem";
 	}
@@ -860,7 +852,6 @@ ComponentsEntitiesSystem.prototype = {
 	,__class__: ComponentsEntitiesSystem
 };
 var HasAandBSystem = function() {
-	this.componentRequirements = [];
 	this.__process__ = new HasAandBSystem_SystemProcess(this);
 };
 HasAandBSystem.__name__ = ["HasAandBSystem"];
@@ -870,7 +861,6 @@ HasAandBSystem.prototype = {
 	,viewB: null
 	,update: function() {
 	}
-	,componentRequirements: null
 	,toString: function() {
 		return "HasAandBSystem";
 	}
@@ -878,7 +868,6 @@ HasAandBSystem.prototype = {
 	,__class__: HasAandBSystem
 };
 var BeforeSystem = function() {
-	this.componentRequirements = [A];
 	this.results = [];
 	this.__process__ = new BeforeSystem_SystemProcess(this);
 };
@@ -892,7 +881,6 @@ BeforeSystem.prototype = {
 	,update: function(a) {
 		this.results.push(2);
 	}
-	,componentRequirements: null
 	,toString: function() {
 		return "BeforeSystem";
 	}
@@ -900,7 +888,6 @@ BeforeSystem.prototype = {
 	,__class__: BeforeSystem
 };
 var UpdateAddedSystem = function() {
-	this.componentRequirements = [A];
 	this.results = [];
 	this.__process__ = new UpdateAddedSystem_SystemProcess(this);
 };
@@ -915,7 +902,6 @@ UpdateAddedSystem.prototype = {
 	,update: function(a) {
 		this.results.push(2);
 	}
-	,componentRequirements: null
 	,toString: function() {
 		return "UpdateAddedSystem";
 	}
@@ -923,7 +909,6 @@ UpdateAddedSystem.prototype = {
 	,__class__: UpdateAddedSystem
 };
 var UpdateRemovedSystem = function() {
-	this.componentRequirements = [A];
 	this.results = [];
 	this.__process__ = new UpdateRemovedSystem_SystemProcess(this);
 };
@@ -938,7 +923,6 @@ UpdateRemovedSystem.prototype = {
 	,update: function(a) {
 		this.results.push(2);
 	}
-	,componentRequirements: null
 	,toString: function() {
 		return "UpdateRemovedSystem";
 	}
@@ -946,7 +930,6 @@ UpdateRemovedSystem.prototype = {
 	,__class__: UpdateRemovedSystem
 };
 var UpdateAddedRemovedSystem = function() {
-	this.componentRequirements = [A];
 	this.results = [];
 	this.__process__ = new UpdateAddedRemovedSystem_SystemProcess(this);
 };
@@ -965,7 +948,6 @@ UpdateAddedRemovedSystem.prototype = {
 	,update: function(a) {
 		this.results.push(3);
 	}
-	,componentRequirements: null
 	,toString: function() {
 		return "UpdateAddedRemovedSystem";
 	}
