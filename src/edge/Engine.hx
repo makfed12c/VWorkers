@@ -115,8 +115,8 @@ class Engine {
     for(system in mapProcess.keys())
       matchEntity(entity, system);
 */
-  function match(entity : Entity, system : ISystem)
-    mapProcess.get(system).addEntity(entity);
+  inline function match(entity : Entity, system : ISystem)
+    system.__systemProcess.addEntity(entity);
 
 //  function matchSystem(entity : Entity, system : ISystem) {
 //    var info = mapProcess.get(system);

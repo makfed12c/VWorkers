@@ -9,22 +9,19 @@ var edge = {};
 edge.ISystemProcess = function() { };
 edge.ISystemProcess.__name__ = ["edge","ISystemProcess"];
 edge.ISystemProcess.prototype = {
-	hasUpdateItems: null
-	,update: null
+	update: null
 	,addEntity: null
 	,removeEntity: null
 	,__class__: edge.ISystemProcess
 };
 var Components1System_SystemProcess = function(system) {
 	this.system = system;
-	this.hasUpdateItems = true;
 	this.updateItems = new edge.View();
 };
 Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
 Components1System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components1System_SystemProcess.prototype = {
-	hasUpdateItems: null
-	,removeEntity: function(entity) {
+	removeEntity: function(entity) {
 		this.updateItems.remove(entity);
 	}
 	,addEntity: function(entity) {
@@ -61,14 +58,12 @@ Components1System_SystemProcess.prototype = {
 };
 var Components2System_SystemProcess = function(system) {
 	this.system = system;
-	this.hasUpdateItems = true;
 	this.updateItems = new edge.View();
 };
 Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
 Components2System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components2System_SystemProcess.prototype = {
-	hasUpdateItems: null
-	,removeEntity: function(entity) {
+	removeEntity: function(entity) {
 		this.updateItems.remove(entity);
 	}
 	,addEntity: function(entity) {
@@ -107,15 +102,13 @@ Components2System_SystemProcess.prototype = {
 };
 var ComponentsEntitiesSystem_SystemProcess = function(system) {
 	this.system = system;
-	this.hasUpdateItems = true;
 	this.updateItems = new edge.View();
 	system.entities = new edge.View();
 };
 ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_SystemProcess"];
 ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 ComponentsEntitiesSystem_SystemProcess.prototype = {
-	hasUpdateItems: null
-	,removeEntity: function(entity) {
+	removeEntity: function(entity) {
 		this.updateItems.remove(entity);
 		this.system.entities.remove(entity);
 	}
@@ -345,13 +338,11 @@ _List.ListIterator.prototype = {
 Math.__name__ = ["Math"];
 var NoComponentsSystem_SystemProcess = function(system) {
 	this.system = system;
-	this.hasUpdateItems = false;
 };
 NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"];
 NoComponentsSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 NoComponentsSystem_SystemProcess.prototype = {
-	hasUpdateItems: null
-	,removeEntity: function(entity) {
+	removeEntity: function(entity) {
 	}
 	,addEntity: function(entity) {
 	}
@@ -853,7 +844,7 @@ edge.Engine.prototype = {
 		var $it0 = this.mapEntities.keys();
 		while( $it0.hasNext() ) {
 			var entity = $it0.next();
-			this.match(entity,system);
+			system.__systemProcess.addEntity(entity);
 		}
 	}
 	,removeSystem: function(system) {
@@ -869,11 +860,11 @@ edge.Engine.prototype = {
 		var $it0 = this.mapProcess.keys();
 		while( $it0.hasNext() ) {
 			var system = $it0.next();
-			this.match(entity,system);
+			system.__systemProcess.addEntity(entity);
 		}
 	}
 	,match: function(entity,system) {
-		this.mapProcess.h[system.__id__].addEntity(entity);
+		system.__systemProcess.addEntity(entity);
 	}
 	,__class__: edge.Engine
 };
