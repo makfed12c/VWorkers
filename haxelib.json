@@ -5,8 +5,8 @@
   "classPath": "src",
   "tags": ["entity-system", "gaming", "cross"],
   "description": "Entity system for Haxe.",
-  "releasenote": "${view}Added/Removed, changed system process implementation, added before/after functions, check parent class when injecting toString and new, general cleanup.",
-  "version": "0.5.0",
+  "releasenote": "Added sub phases, fixes and updated package for thx.core",
+  "version": "0.6.0",
   "contributors": ["fponticelli"],
   "dependencies": {
     "thx.core": ""
