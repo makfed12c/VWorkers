@@ -84,9 +84,6 @@ class BuildSystem {
         var ret = f.ret;
         if(null == ret) {
           ret = macro : Void;
-          //trace(f.expr);
-          //trace(Context.typeof(f.expr));
-          //ret = Context.toComplexType(Context.follow(Context.typeof(f.expr)));
         }
         switch ret {
         case macro : Void: // change return type to Bool
@@ -109,18 +106,8 @@ class BuildSystem {
     return ExprTools.map(expr, function(e) {
       switch e.expr {
       case EReturn(v) if(v == null):
-        trace(v);
-        /*
-        switch Context.follow(Context.typeof(v)) {
-        case t:
-          trace(t);
-          return e;
-        //case _:
-        }
-        */
         return macro return true;
       case EReturn(v):
-        trace(v);
         return e;
       case ex:
         return changeReturnFromVoidToBool(e);
