@@ -45,22 +45,12 @@ class BuildSystem {
 
   static function injectConstructor(type : ClassType, fields : Array<Field>) {
     if(hasField(fields, "new")) return;
-    fields.push({
-      name: "new",
-      doc: null,
-      meta: [],
-      access: [APublic],
-      kind: FFun({
-        ret : macro : Void,
-        params : null,
-        expr :
-          isFieldInHirearchy(type, "new") ?
-            macro super() :
-            macro {},
-        args : []
-      }),
-      pos: Context.currentPos()
-    });
+    fields.push(createFunctionField(
+      "new",
+      [],
+      macro : Void,
+      isFieldInHirearchy(type, "new") ? macro super() : macro {}
+    ));
   }
 
   static function checkUpdate(fields : Array<Field>) {
@@ -94,10 +84,6 @@ class BuildSystem {
       case _:
     }
     if(!fieldHasMeta(field, ":keep"))
-      field.meta.push({
-        name : ":keep",
-        params : [],
-        pos : Context.currentPos()
-      });
+      field.meta.push({ name : ":keep", pos : Context.currentPos() });
   }
 }
