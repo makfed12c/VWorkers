@@ -10,6 +10,8 @@ edge.ISystemProcess = function() { };
 edge.ISystemProcess.__name__ = ["edge","ISystemProcess"];
 edge.ISystemProcess.prototype = {
 	update: null
+	,addEntity: null
+	,removeEntity: null
 	,setEntity: null
 	,collections: null
 	,__class__: edge.ISystemProcess
@@ -22,7 +24,12 @@ var Components1System_SystemProcess = function(system) {
 Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
 Components1System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components1System_SystemProcess.prototype = {
-	system: null
+	removeEntity: function(entity) {
+		this.updateItems.remove(entity);
+	}
+	,addEntity: function(entity) {
+	}
+	,system: null
 	,updateItems: null
 	,update: function(engine,delta) {
 		this.system.engine = engine;
@@ -49,7 +56,12 @@ var Components2System_SystemProcess = function(system) {
 Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
 Components2System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components2System_SystemProcess.prototype = {
-	system: null
+	removeEntity: function(entity) {
+		this.updateItems.remove(entity);
+	}
+	,addEntity: function(entity) {
+	}
+	,system: null
 	,updateItems: null
 	,update: function(engine,delta) {
 		var data;
@@ -73,7 +85,12 @@ var ComponentsEntitiesSystem_SystemProcess = function(system) {
 ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_SystemProcess"];
 ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 ComponentsEntitiesSystem_SystemProcess.prototype = {
-	system: null
+	removeEntity: function(entity) {
+		this.updateItems.remove(entity);
+	}
+	,addEntity: function(entity) {
+	}
+	,system: null
 	,updateItems: null
 	,update: function(engine,delta) {
 		var data;
@@ -275,7 +292,11 @@ var NoComponentsSystem_SystemProcess = function(system) {
 NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"];
 NoComponentsSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 NoComponentsSystem_SystemProcess.prototype = {
-	system: null
+	removeEntity: function(entity) {
+	}
+	,addEntity: function(entity) {
+	}
+	,system: null
 	,update: function(engine,delta) {
 		this.system.update();
 	}
@@ -766,6 +787,7 @@ edge.Engine.prototype = {
 		var $it0 = this.mapInfo.iterator();
 		while( $it0.hasNext() ) {
 			var info = $it0.next();
+			info.process.removeEntity(entity);
 			info.components.remove(entity);
 		}
 		var $it1 = this.mapInfo.iterator();

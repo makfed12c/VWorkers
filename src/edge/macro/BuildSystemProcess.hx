@@ -22,6 +22,8 @@ class BuildSystemProcess {
         );
 
     injectConstructor(system, fields);
+    injectRemoveEntity(fields);
+    injectAddEntity(fields);
     injectSystemField(system, fields);
     injectUpdate(systemFields, fields);
     injectSetEntity(systemFields, fields);
@@ -32,7 +34,11 @@ class BuildSystemProcess {
       params : [],
       pack : pack,
       name : name,
-      meta : [],
+      meta : [{
+          pos : Context.currentPos(),
+          name : ":access",
+          params : [macro edge.View]
+        }],
       kind : kind,
       isExtern : false,
       fields : fields
@@ -78,6 +84,10 @@ class BuildSystemProcess {
         pos: Context.currentPos()
       });
 //      trace(args);
+      // inject remove entity
+      appendExprToFieldFunction(
+        BuildSystem.findField(fields, "removeEntity"),
+        macro updateItems.remove(entity));
       // inject constructor init
       appendExprToFieldFunction(constructor, macro updateItems = new edge.View());
       // create loop expression
@@ -129,6 +139,40 @@ class BuildSystemProcess {
         ret : macro : Void,
         params : null,
         expr : macro $b{exprs},
+        args : [{
+          name : "entity",
+          type : macro : edge.Entity
+        }]
+      }),
+      pos: Context.currentPos()
+    });
+  }
+
+  static function injectRemoveEntity(fields : Array<Field>) {
+    fields.push({
+      name : "removeEntity",
+      access: [APublic],
+      kind: FFun({
+        ret : macro : Void,
+        params : null,
+        expr : macro {},
+        args : [{
+          name : "entity",
+          type : macro : edge.Entity
+        }]
+      }),
+      pos: Context.currentPos()
+    });
+  }
+
+  static function injectAddEntity(fields : Array<Field>) {
+    fields.push({
+      name : "addEntity",
+      access: [APublic],
+      kind: FFun({
+        ret : macro : Void,
+        params : null,
+        expr : macro {},
         args : [{
           name : "entity",
           type : macro : edge.Entity
