@@ -1,4 +1,4 @@
-# boostpow
+# Spore
 
 Entity system for Haxe
 
