@@ -13,7 +13,6 @@ edge.ISystemProcess.prototype = {
 	,update: null
 	,addEntity: null
 	,removeEntity: null
-	,setEntity: null
 	,collections: null
 	,__class__: edge.ISystemProcess
 };
@@ -59,9 +58,6 @@ Components1System_SystemProcess.prototype = {
 			}
 		}
 		if(count == 0) this.updateItems.add(entity,o);
-	}
-	,setEntity: function(entity) {
-		this.system.entity = entity;
 	}
 	,collections: null
 	,__class__: Components1System_SystemProcess
@@ -111,8 +107,6 @@ Components2System_SystemProcess.prototype = {
 		}
 		if(count == 0) this.updateItems.add(entity,o);
 	}
-	,setEntity: function(entity) {
-	}
 	,collections: null
 	,__class__: Components2System_SystemProcess
 };
@@ -120,6 +114,7 @@ var ComponentsEntitiesSystem_SystemProcess = function(system) {
 	this.system = system;
 	this.hasUpdateItems = true;
 	this.updateItems = new edge.View();
+	system.entities = new edge.View();
 	this.collections = new haxe.ds.StringMap();
 };
 ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_SystemProcess"];
@@ -128,8 +123,10 @@ ComponentsEntitiesSystem_SystemProcess.prototype = {
 	hasUpdateItems: null
 	,removeEntity: function(entity) {
 		this.updateItems.remove(entity);
+		this.system.entities.remove(entity);
 	}
 	,addEntity: function(entity) {
+		this.entitiesMatchRequirements(entity);
 		this.updateMatchRequirements(entity);
 	}
 	,system: null
@@ -142,6 +139,20 @@ ComponentsEntitiesSystem_SystemProcess.prototype = {
 			data = item.data;
 			this.system.update(data.b);
 		}
+	}
+	,entitiesMatchRequirements: function(entity) {
+		this.system.entities.remove(entity);
+		var count = 1;
+		var o = { a : null};
+		var $it0 = entity.map.iterator();
+		while( $it0.hasNext() ) {
+			var component = $it0.next();
+			if(js.Boot.__instanceof(component,A)) {
+				o.a = component;
+				if(--count == 0) break; else continue;
+			}
+		}
+		if(count == 0) this.system.entities.add(entity,o);
 	}
 	,updateMatchRequirements: function(entity) {
 		this.updateItems.remove(entity);
@@ -156,8 +167,6 @@ ComponentsEntitiesSystem_SystemProcess.prototype = {
 			}
 		}
 		if(count == 0) this.updateItems.add(entity,o);
-	}
-	,setEntity: function(entity) {
 	}
 	,collections: null
 	,__class__: ComponentsEntitiesSystem_SystemProcess
@@ -357,8 +366,6 @@ NoComponentsSystem_SystemProcess.prototype = {
 	,system: null
 	,update: function(engine,delta) {
 		this.system.update();
-	}
-	,setEntity: function(entity) {
 	}
 	,collections: null
 	,__class__: NoComponentsSystem_SystemProcess

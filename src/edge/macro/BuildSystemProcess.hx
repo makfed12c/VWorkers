@@ -27,8 +27,9 @@ class BuildSystemProcess {
     injectAddEntity(fields);
     injectSystemField(system, fields);
     injectUpdate(systemFields, fields);
+    injectViews(systemFields, fields);
     injectUpdateMatchRequirements(systemFields, fields);
-    injectSetEntity(systemFields, fields);
+//    injectSetEntity(systemFields, fields);
     injectFeatureCollections(fields);
 
     Context.defineType({
@@ -45,6 +46,83 @@ class BuildSystemProcess {
       isExtern : false,
       fields : fields
     });
+  }
+
+  static function injectViews(systemFields : Array<Field>, fields : Array<Field>) {
+    for(field in collectViewFields(systemFields)) {
+      injectView(field, fields);
+    }
+  }
+
+  static function injectView(info : { name : String, types : Array<Field>, field : Field }, fields : Array<Field>) {
+    var name = info.name;
+    BuildSystem.makeFieldPublic(info.field);
+    appendExprToFieldFunction(
+      BuildSystem.findField(fields, "new"),
+      macro system.$name = new edge.View()
+    );
+
+    injectViewMatchRequirements(info, fields);
+  }
+
+  static function injectViewMatchRequirements(info : { name : String, types : Array<Field>, field : Field }, fields : Array<Field>) {
+    var name   = info.name,
+        types  = info.types,
+        sexprs = [];
+    sexprs.push('system.$name.remove(entity)');
+    sexprs.push('var count = ' + types.length);
+    sexprs.push('var o : {' +
+      types.map(function(type) {
+          var t = switch type.kind {
+            case FVar(t, _): Context.follow(t.toType()).toComplexType();
+            case _: null;
+          };
+          return '${type.name} : ${t.toString()}';
+        }).join(", ") +
+      '} = {' +
+      types.map(function(type) return '${type.name} : null').join(", ") + '}');
+    var expr = 'for(component in entity.components()) {\n';
+    for(type in types) {
+      var t = switch type.kind {
+          case FVar(t, _): Context.follow(t.toType()).toComplexType();
+          case _: null;
+        };
+      expr += '  if(Std.is(component, ${t.toString()})) {\n';
+      expr += '    o.${type.name} = cast component;\n';
+      expr += '    if(--count == 0) break; else continue;\n';
+      expr += '  }\n';
+    }
+    expr += '}';
+    sexprs.push(expr);
+    sexprs.push('if(count == 0) system.$name.add(entity, o)');
+
+    trace(sexprs.join(";\n") +";");
+    var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos())),
+        methodName = '${name}MatchRequirements';
+    fields.push({
+      name : methodName,
+      access: [],
+      kind: FFun({
+        ret : macro : Void,
+        params : null,
+        expr : macro $b{exprs},
+        args : [{
+          name : "entity",
+          type : macro : edge.Entity
+        }]
+      }),
+      pos: Context.currentPos()
+    });
+
+    appendExprToFieldFunction(
+      BuildSystem.findField(fields, "addEntity"),
+      Context.parse('$methodName(entity)', Context.currentPos())
+    );
+
+    appendExprToFieldFunction(
+      BuildSystem.findField(fields, "removeEntity"),
+      Context.parse('system.$name.remove(entity)', Context.currentPos())
+    );
   }
 
   static function injectUpdate(systemFields : Array<Field>, fields : Array<Field>) {
@@ -179,7 +257,7 @@ class BuildSystemProcess {
       BuildSystem.findField(fields, "addEntity"),
       macro updateMatchRequirements(entity));
   }
-
+/*
   static function injectSetEntity(systemFields : Array<Field>, fields : Array<Field>) {
     var exprs = [];
     if(BuildSystem.hasVarField(systemFields, "entity"))
@@ -200,7 +278,7 @@ class BuildSystemProcess {
       pos: Context.currentPos()
     });
   }
-
+*/
   static function injectRemoveEntity(fields : Array<Field>) {
     fields.push({
       name : "removeEntity",
@@ -315,5 +393,27 @@ class BuildSystemProcess {
       case _:
         return null;
     }
+  }
+
+  static function collectViewFields(fields : Array<Field>) : Array<{ name : String, types : Array<Field>, field : Field }> {
+    var results = [];
+    for(field in fields) {
+      switch field.kind {
+        case FVar(tp, _):
+          if(tp == null) continue;
+          tp = Context.follow(tp.toType()).toComplexType();
+          switch tp {
+            case TPath({ name : "View", pack : ["edge"], params : [TPType(TAnonymous(p))] }):
+              results.push({
+                name  : field.name,
+                types : p,
+                field : field
+              });
+            case _:
+          };
+        case _:
+      }
+    }
+    return results;
   }
 }

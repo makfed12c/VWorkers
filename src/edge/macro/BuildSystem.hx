@@ -270,7 +270,12 @@ class BuildSystem {
 
   public static function makePublic(fields : Array<Field>, name : String) {
     var field = findField(fields, name);
-    if(null == field || isPublic(field)) return;
+    if(null == field) return;
+    makeFieldPublic(field);
+  }
+
+  public static function makeFieldPublic(field : Field) {
+    if(isPublic(field)) return;
     field.access.push(APublic);
   }
 

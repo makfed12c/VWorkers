@@ -10,6 +10,6 @@ interface ISystemProcess {
   public function removeEntity(entity : Entity) : Void;
 
 // TODO remove
-  public function setEntity(entity : Entity) : Void;
+//  public function setEntity(entity : Entity) : Void;
   public var collections : Map<String, ViewInfo>;
 }
