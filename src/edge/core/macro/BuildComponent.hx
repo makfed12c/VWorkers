@@ -18,29 +18,29 @@ class BuildComponent {
   static function injectConstructor(fields : Array<Field>) {
     var field = findField(fields, "new");
     if(null != field) return;
-    var info = getVarInfo(fields),
-        init = info
+    var args = getVarAsFunctionArgs(fields),
+        init = args
           .map(function(arg) return arg.name)
           .map(function(name) return macro this.$name = $i{name});
-    fields.push(createFunctionField("new", info, macro : Void, macro $b{init}));
+    fields.push(createFunctionField("new", args, macro : Void, macro $b{init}));
   }
 
   static function injectToString(fields : Array<Field>) {
     if(null != findField(fields, "toString")) return;
     var cls  = clsName().split(".").pop(),
-        info = getVarInfo(fields),
-        args = info
+        args = getVarAsFunctionArgs(fields),
+        params = args
           .map(function(arg) return '${arg.name}=$' + arg.name)
           .join(","),
-        s = 'return \'$cls($args)\'';
+        s = 'return \'$cls($params)\'';
     fields.push(createFunctionField(
       "toString",
-      info,
+      args,
       macro : String,
       Context.parse(s, Context.currentPos())));
   }
 
-  static function getVarInfo(fields : Array<Field>) : Array<FunctionArg> {
+  static function getVarAsFunctionArgs(fields : Array<Field>) : Array<FunctionArg> {
     return fields
       .map(function(field) return switch field.kind {
         case FVar(t, _) if(!field.isStatic()):
