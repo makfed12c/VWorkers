@@ -1,4 +1,4 @@
-package edge.macro;
+package edge.core.macro;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;

@@ -796,7 +796,6 @@ Type.enumIndex = function(e) {
 	return e[1];
 };
 edge.Engine = function() {
-	this.emptyArgs = [];
 	this.mapEntities = new haxe.ds.ObjectMap();
 	this.listPhases = [];
 };
@@ -865,7 +864,6 @@ edge.Engine.prototype = {
 			system.__systemProcess.removeEntity(entity);
 		}
 	}
-	,emptyArgs: null
 	,updateSystem: function(system,t) {
 		system.__systemProcess.update(this,t);
 	}

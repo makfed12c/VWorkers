@@ -1,6 +1,6 @@
 package edge;
 
-@:autoBuild(edge.macro.BuildSystem.complete())
+@:autoBuild(edge.core.macro.BuildSystem.complete())
 interface ISystem {
   private var __systemProcess : ISystemProcess;
 }

@@ -1,4 +1,4 @@
 package edge;
 
-@:autoBuild(edge.macro.BuildComponent.complete())
+@:autoBuild(edge.core.macro.BuildComponent.complete())
 interface IComponent {}
