@@ -48,8 +48,55 @@ class BuildSystemProcess {
     if(BuildSystem.hasFunField(systemFields, "before"))
       exprs.push(macro system.before());
 
-    if(!fieldFunctionHasArguments(BuildSystem.findField(systemFields, "update")))
+    var update = BuildSystem.findField(systemFields, "update"),
+        constructor = BuildSystem.findField(fields, "new");
+
+    if(fieldFunctionHasArguments(update)) {
+      var args = fieldFunctionArguments(update),
+          fieldTypes = args.map(function(arg) : Field {
+              var t = Context.follow(arg.type.toType()).toComplexType(),
+                  kind : FieldType = FVar(t, null);
+              return {
+                pos  : Context.currentPos(),
+                name : arg.name,
+                //access : null, //[APublic],
+                //meta : null,
+                kind : kind//,
+                //doc : null
+              };
+            }),
+          type = TPath({
+              pack : ["edge"],
+              name : "View",
+              params : [TPType(TAnonymous(fieldTypes))] //[TPType(TAnonymous(fieldTypes))]
+            });
+//      $type(args);
+//      $type(fieldTypes);
+      fields.push({
+        name : "updateItems",
+        kind: FVar(type, null),
+        pos: Context.currentPos()
+      });
+//      trace(args);
+      // inject constructor init
+      appendExprToFieldFunction(constructor, macro updateItems = new edge.View());
+      // create loop expression
+      exprs.push(macro var data);
+      var expr = '\nfor(item in updateItems) {\n';
+      // set entity if required
+      if(BuildSystem.hasVarField(systemFields, "entity"))
+        expr += '  system.entity = item.entity;\n';
+      // call update
+      expr += '  data = item.data;\n';
+      expr += '  system.update(' + args.map(function(arg) {
+          return 'data.${arg.name}';
+        }).join(", ") + ');\n';
+      expr += '}';
+//      trace(expr);
+      exprs.push(Context.parse(expr, Context.currentPos()));
+    } else {
       exprs.push(macro system.update());
+    }
 
     fields.push({
       name : "update",
@@ -152,6 +199,15 @@ class BuildSystemProcess {
         return o.args.length > 0;
       case _:
         return false;
+    }
+  }
+
+  static function fieldFunctionArguments(field : Field) {
+    switch field.kind {
+      case FFun(o):
+        return o.args;
+      case _:
+        return null;
     }
   }
 }

@@ -16,14 +16,24 @@ edge.ISystemProcess.prototype = {
 };
 var Components1System_SystemProcess = function(system) {
 	this.system = system;
+	this.updateItems = new edge.View();
 	this.collections = new haxe.ds.StringMap();
 };
 Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
 Components1System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components1System_SystemProcess.prototype = {
 	system: null
+	,updateItems: null
 	,update: function(engine,delta) {
 		this.system.engine = engine;
+		var data;
+		var $it0 = this.updateItems.iterator();
+		while( $it0.hasNext() ) {
+			var item = $it0.next();
+			this.system.entity = item.entity;
+			data = item.data;
+			this.system.update(data.b);
+		}
 	}
 	,setEntity: function(entity) {
 		this.system.entity = entity;
@@ -33,13 +43,22 @@ Components1System_SystemProcess.prototype = {
 };
 var Components2System_SystemProcess = function(system) {
 	this.system = system;
+	this.updateItems = new edge.View();
 	this.collections = new haxe.ds.StringMap();
 };
 Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
 Components2System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components2System_SystemProcess.prototype = {
 	system: null
+	,updateItems: null
 	,update: function(engine,delta) {
+		var data;
+		var $it0 = this.updateItems.iterator();
+		while( $it0.hasNext() ) {
+			var item = $it0.next();
+			data = item.data;
+			this.system.update(data.b,data.a);
+		}
 	}
 	,setEntity: function(entity) {
 	}
@@ -48,13 +67,22 @@ Components2System_SystemProcess.prototype = {
 };
 var ComponentsEntitiesSystem_SystemProcess = function(system) {
 	this.system = system;
+	this.updateItems = new edge.View();
 	this.collections = new haxe.ds.StringMap();
 };
 ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_SystemProcess"];
 ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 ComponentsEntitiesSystem_SystemProcess.prototype = {
 	system: null
+	,updateItems: null
 	,update: function(engine,delta) {
+		var data;
+		var $it0 = this.updateItems.iterator();
+		while( $it0.hasNext() ) {
+			var item = $it0.next();
+			data = item.data;
+			this.system.update(data.b);
+		}
 	}
 	,setEntity: function(entity) {
 	}
@@ -1130,10 +1158,6 @@ edge.View.prototype = {
 			holder.data = _g.map.h[key.__id__];
 			return holder;
 		}};
-	}
-	,added: function(item) {
-	}
-	,removed: function(entity) {
 	}
 	,add: function(entity,data) {
 		if(this.map.h.__keys__[entity.__id__] != null) return;
