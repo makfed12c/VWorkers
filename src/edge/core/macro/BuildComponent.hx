@@ -34,19 +34,11 @@ class BuildComponent {
           .map(function(arg) return '${arg.name}=$' + arg.name)
           .join(","),
         s = 'return \'$cls($args)\'';
-    fields.push({
-      name: "toString",
-      doc: null,
-      meta: [],
-      access: [APublic],
-      kind: FFun({
-        ret : macro : String,
-        params : null,
-        expr : Context.parse(s, Context.currentPos()),
-        args : []
-      }),
-      pos: Context.currentPos()
-    });
+    fields.push(createFunctionField(
+      "toString",
+      info,
+      macro : String,
+      Context.parse(s, Context.currentPos())));
   }
 
   static function getVarInfo(fields : Array<Field>) : Array<FunctionArg> {
