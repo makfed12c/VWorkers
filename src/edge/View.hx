@@ -25,9 +25,9 @@ class View<T : {}> {
     };
   }
 
-  public function added(item : ViewData<T>) {}
+//  public function added(item : ViewData<T>) {}
 
-  public function removed(entity : Entity) {}
+//  public function removed(entity : Entity) {}
 
   function add(entity : Entity, data : T) {
     if(map.exists(entity)) return;
