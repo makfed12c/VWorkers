@@ -5,8 +5,8 @@
   "classPath": "src",
   "tags": ["entity-system", "gaming", "cross"],
   "description": "Entity system for Haxe.",
-  "releasenote": "Added sub phases, fixes and updated package for thx.core",
-  "version": "0.6.0",
+  "releasenote": "Fixes and addressed changes in thx.core",
+  "version": "0.7.0",
   "contributors": ["fponticelli"],
   "dependencies": {
     "thx.core": ""

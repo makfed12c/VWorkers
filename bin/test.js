@@ -1602,7 +1602,7 @@ edge_Phase.prototype = {
 			this.first = node.next;
 			node.next.prev = null;
 		} else if(node == this.last) {
-			this.first = node.prev;
+			this.last = node.prev;
 			node.prev.next = null;
 		} else {
 			node.prev.next = node.next;
