@@ -51,24 +51,21 @@ class BuildSystemProcess {
   static function injectView(info : { name : String, types : Array<Field>, field : Field }, systemFields : Array<Field>, fields : Array<Field>) {
     var name = info.name;
     makeFieldPublic(info.field);
-    var sexpr = 'system.$name = new edge.View(';
-    sexpr += hasFunField(systemFields, '${name}Added') ? 'system.${name}Added' : 'null';
-    sexpr += ',';
-    sexpr += hasFunField(systemFields, '${name}Removed') ? 'system.${name}Removed' : 'null';
-    sexpr += ')';
     appendExprToFieldFunction(
       findField(fields, "new"),
-      Context.parse(sexpr, Context.currentPos())
+      Context.parse('system.$name = new edge.View()', Context.currentPos())
     );
 
-    injectViewMatchRequirements(info, fields);
+    injectViewMatchRequirements(info, systemFields, fields);
   }
 
-  static function injectViewMatchRequirements(info : { name : String, types : Array<Field>, field : Field }, fields : Array<Field>) {
+  static function injectViewMatchRequirements(info : { name : String, types : Array<Field>, field : Field }, systemFields : Array<Field>, fields : Array<Field>) {
     var name   = info.name,
         types  = info.types,
-        sexprs = [];
-    sexprs.push('system.$name.tryRemove(entity)');
+        sexprs = [],
+        expr;
+
+    sexprs.push('var removed = system.$name.tryRemove(entity)');
     sexprs.push('var count = ' + types.length);
     sexprs.push('var o : {' +
       types.map(function(type) {
@@ -93,7 +90,14 @@ class BuildSystemProcess {
     }
     expr += '}';
     sexprs.push(expr);
-    sexprs.push('if(count == 0) system.$name.tryAdd(entity, o)');
+    sexprs.push('var added = count == 0 && system.$name.tryAdd(entity, o)');
+
+    if(hasFunField(systemFields, '${name}Removed')) {
+      sexprs.push('if(removed && !added) system.${name}Removed(entity)');
+    }
+    if(hasFunField(systemFields, '${name}Added')) {
+      sexprs.push('if(added & !removed) system.${name}Added(entity)');
+    }
 
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos())),
         methodName = '${name}MatchRequirements';
@@ -117,9 +121,12 @@ class BuildSystemProcess {
       Context.parse('$methodName(entity)', Context.currentPos())
     );
 
+    expr = hasFunField(systemFields, '${name}Removed') ?
+      'if(system.$name.tryRemove(entity)) system.${name}Removed(entity)' :
+      'system.$name.tryRemove(entity)';
     appendExprToFieldFunction(
       findField(fields, "removeEntity"),
-      Context.parse('system.$name.tryRemove(entity)', Context.currentPos())
+      Context.parse(expr, Context.currentPos())
     );
   }
 
@@ -156,18 +163,31 @@ class BuildSystemProcess {
         kind: FVar(type, null),
         pos: Context.currentPos()
       });
+
+      var expr = hasFunField(systemFields, 'updateRemoved') ?
+        'if(updateItems.tryRemove(entity)) system.updateRemoved(entity)' :
+        'updateItems.tryRemove(entity)';
+      appendExprToFieldFunction(
+        findField(fields, "removeEntity"),
+        Context.parse(expr, Context.currentPos())
+      );
+
+/*
       appendExprToFieldFunction(
         findField(fields, "removeEntity"),
         macro updateItems.tryRemove(entity));
+*/
       // inject constructor init
+/*
       var sexpr = 'updateItems = new edge.View(';
-      sexpr += hasFunField(systemFields, 'system.updateAdded') ? 'system.updateAdded' : 'null';
+      sexpr += hasFunField(systemFields, 'updateAdded') ? 'system.updateAdded' : 'null';
       sexpr += ',';
-      sexpr += hasFunField(systemFields, 'system.updateRemoved') ? 'system.updateRemoved' : 'null';
+      sexpr += hasFunField(systemFields, 'updateRemoved') ? 'system.updateRemoved' : 'null';
       sexpr += ')';
+*/
       appendExprToFieldFunction(
         constructor,
-        Context.parse(sexpr, Context.currentPos())
+        macro updateItems = new edge.View()
       );
 
       // create loop expression
@@ -211,7 +231,7 @@ class BuildSystemProcess {
     if(args.length == 0) return;
 
     var sexprs = [];
-    sexprs.push('updateItems.tryRemove(entity)');
+    sexprs.push('var removed = updateItems.tryRemove(entity)');
     sexprs.push('var count = ' + args.length);
     sexprs.push('var o : {' + args.map(function(arg) return '${arg.name} : ${Context.follow(arg.type.toType()).toComplexType().toString()}').join(", ") + '} = {' + args.map(function(arg) return '${arg.name} : null').join(", ") + '}');
 
@@ -226,7 +246,14 @@ class BuildSystemProcess {
     expr += '}';
     sexprs.push(expr);
 
-    sexprs.push('if(count == 0) updateItems.tryAdd(entity, o)');
+    sexprs.push('var added = count == 0 && updateItems.tryAdd(entity, o)');
+
+    if(hasFunField(systemFields, 'updateRemoved')) {
+      sexprs.push('if(removed && !added) system.updateRemoved(entity)');
+    }
+    if(hasFunField(systemFields, 'updateAdded')) {
+      sexprs.push('if(added && !removed) system.updateAdded(entity)');
+    }
 
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos()));
     fields.push({

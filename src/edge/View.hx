@@ -3,21 +3,15 @@ package edge;
 class View<T : {}> {
   public var count(default, null) : Int;
   var map : Map<Entity, T>;
-  var added : ViewData<T> -> Void;
-  var removed : Entity -> Void;
-  var holder : { entity : Entity, data : T };
-
-  public function new(added : ViewData<T> -> Void, removed : Entity -> Void) {
+  public function new() {
     map = new Map();
     count = 0;
-    holder = { entity : null, data : null };
-    this.added = added != null ? added : function(_){};
-    this.removed = removed != null ? removed : function(_){};
   }
 
   // TODO optimize
   public function iterator() : Iterator<ViewData<T>> {
-    var keys = map.keys();
+    var keys = map.keys(),
+        holder = { entity : null, data : null };
     return {
       hasNext : function() {
         return keys.hasNext();
@@ -31,20 +25,18 @@ class View<T : {}> {
     };
   }
 
-    if(map.exists(entity)) return;
   function tryAdd(entity : Entity, data : T) {
+    if(map.exists(entity)) return false;
     map.set(entity, data);
     count++;
-    holder.entity = entity;
-    holder.data = data;
-    added(holder);
+    return true;
   }
 
-    if(!map.exists(entity)) return;
   function tryRemove(entity : Entity) {
+    if(!map.exists(entity)) return false;
     map.remove(entity);
     count--;
-    removed(entity);
+    return true;
   }
 }
 typedef ViewData<T : {}> = {
