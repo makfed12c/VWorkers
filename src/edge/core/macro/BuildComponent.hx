@@ -26,8 +26,7 @@ class BuildComponent {
   }
 
   static function injectToString(fields : Array<Field>) {
-    var field = findField(fields, "toString");
-    if(null != field) return;
+    if(null != findField(fields, "toString")) return;
     var cls  = clsName().split(".").pop(),
         info = getVarInfo(fields),
         args = info
