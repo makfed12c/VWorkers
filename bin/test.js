@@ -734,21 +734,15 @@ edge.Engine.prototype = {
 		}
 	}
 	,remove: function(entity) {
-		var $it0 = this.mapInfo.keys();
+		var $it0 = this.mapInfo.iterator();
 		while( $it0.hasNext() ) {
-			var system = $it0.next();
-			var this1 = this.mapInfo.h[system.__id__].components;
-			this1.remove(entity);
+			var info = $it0.next();
+			info.components.remove(entity);
 		}
-		var $it1 = this.mapInfo.keys();
+		var $it1 = this.mapInfo.iterator();
 		while( $it1.hasNext() ) {
-			var system1 = $it1.next();
-			var $it2 = (function($this) {
-				var $r;
-				var this11 = $this.mapInfo.h[system1.__id__].process.collections;
-				$r = this11.iterator();
-				return $r;
-			}(this));
+			var info1 = $it1.next();
+			var $it2 = info1.process.collections.iterator();
 			while( $it2.hasNext() ) {
 				var collection = $it2.next();
 				collection.view.remove(entity);
@@ -1257,9 +1251,7 @@ haxe.IMap = function() { };
 haxe.IMap.__name__ = ["haxe","IMap"];
 haxe.IMap.prototype = {
 	get: null
-	,remove: null
 	,keys: null
-	,iterator: null
 	,__class__: haxe.IMap
 };
 haxe.Log = function() { };

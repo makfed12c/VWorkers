@@ -28,10 +28,10 @@ class Engine {
       remove(entity);
 
   function remove(entity : Entity) {
-    for(system in mapInfo.keys())
-      mapInfo.get(system).components.remove(entity);
-    for(system in mapInfo.keys())
-      for(collection in mapInfo.get(system).process.collections)
+    for(info in mapInfo)
+      info.components.remove(entity);
+    for(info in mapInfo)
+      for(collection in info.process.collections)
         collection.view.remove(entity);
     mapEntities.remove(entity);
     entity.engine = null;
