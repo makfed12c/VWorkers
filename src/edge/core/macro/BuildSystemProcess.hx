@@ -176,6 +176,8 @@ class BuildSystemProcess {
         exprs.push(macro system.before());
       exprs.push(macro system.update());
     }
+    if(hasFunField(systemFields, "after"))
+      exprs.push(macro system.after());
 
     fields.push(createFunctionField(
         "update",

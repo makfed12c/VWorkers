@@ -1,27 +1,26 @@
 (function (console) { "use strict";
+var $estr = function() { return js_Boot.__string_rec(this,''); };
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
 	if( fields.toString !== Object.prototype.toString ) proto.toString = fields.toString;
 	return proto;
 }
-var edge = {};
-edge.core = {};
-edge.core.ISystemProcess = function() { };
-edge.core.ISystemProcess.__name__ = ["edge","core","ISystemProcess"];
-edge.core.ISystemProcess.prototype = {
+var edge_core_ISystemProcess = function() { };
+edge_core_ISystemProcess.__name__ = ["edge","core","ISystemProcess"];
+edge_core_ISystemProcess.prototype = {
 	update: null
 	,addEntity: null
 	,removeEntity: null
-	,__class__: edge.core.ISystemProcess
+	,__class__: edge_core_ISystemProcess
 };
-var BeforeSystem_SystemProcess = function(system) {
+var BeforeSystem_$SystemProcess = function(system) {
 	this.system = system;
-	this.updateItems = new edge.View();
+	this.updateItems = new edge_View();
 };
-BeforeSystem_SystemProcess.__name__ = ["BeforeSystem_SystemProcess"];
-BeforeSystem_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
-BeforeSystem_SystemProcess.prototype = {
+BeforeSystem_$SystemProcess.__name__ = ["BeforeSystem_SystemProcess"];
+BeforeSystem_$SystemProcess.__interfaces__ = [edge_core_ISystemProcess];
+BeforeSystem_$SystemProcess.prototype = {
 	removeEntity: function(entity) {
 		this.updateItems.tryRemove(entity);
 	}
@@ -47,22 +46,22 @@ BeforeSystem_SystemProcess.prototype = {
 		var $it0 = entity.map.iterator();
 		while( $it0.hasNext() ) {
 			var component = $it0.next();
-			if(js.Boot.__instanceof(component,A)) {
+			if(js_Boot.__instanceof(component,A)) {
 				o.a = component;
 				if(--count == 0) break; else continue;
 			}
 		}
 		var added = count == 0 && this.updateItems.tryAdd(entity,o);
 	}
-	,__class__: BeforeSystem_SystemProcess
+	,__class__: BeforeSystem_$SystemProcess
 };
-var Components1System_SystemProcess = function(system) {
+var Components1System_$SystemProcess = function(system) {
 	this.system = system;
-	this.updateItems = new edge.View();
+	this.updateItems = new edge_View();
 };
-Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
-Components1System_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
-Components1System_SystemProcess.prototype = {
+Components1System_$SystemProcess.__name__ = ["Components1System_SystemProcess"];
+Components1System_$SystemProcess.__interfaces__ = [edge_core_ISystemProcess];
+Components1System_$SystemProcess.prototype = {
 	removeEntity: function(entity) {
 		this.updateItems.tryRemove(entity);
 	}
@@ -89,22 +88,22 @@ Components1System_SystemProcess.prototype = {
 		var $it0 = entity.map.iterator();
 		while( $it0.hasNext() ) {
 			var component = $it0.next();
-			if(js.Boot.__instanceof(component,B)) {
+			if(js_Boot.__instanceof(component,B)) {
 				o.b = component;
 				if(--count == 0) break; else continue;
 			}
 		}
 		var added = count == 0 && this.updateItems.tryAdd(entity,o);
 	}
-	,__class__: Components1System_SystemProcess
+	,__class__: Components1System_$SystemProcess
 };
-var Components2System_SystemProcess = function(system) {
+var Components2System_$SystemProcess = function(system) {
 	this.system = system;
-	this.updateItems = new edge.View();
+	this.updateItems = new edge_View();
 };
-Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
-Components2System_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
-Components2System_SystemProcess.prototype = {
+Components2System_$SystemProcess.__name__ = ["Components2System_SystemProcess"];
+Components2System_$SystemProcess.__interfaces__ = [edge_core_ISystemProcess];
+Components2System_$SystemProcess.prototype = {
 	removeEntity: function(entity) {
 		this.updateItems.tryRemove(entity);
 	}
@@ -129,27 +128,27 @@ Components2System_SystemProcess.prototype = {
 		var $it0 = entity.map.iterator();
 		while( $it0.hasNext() ) {
 			var component = $it0.next();
-			if(js.Boot.__instanceof(component,B)) {
+			if(js_Boot.__instanceof(component,B)) {
 				o.b = component;
 				if(--count == 0) break; else continue;
 			}
-			if(js.Boot.__instanceof(component,A)) {
+			if(js_Boot.__instanceof(component,A)) {
 				o.a = component;
 				if(--count == 0) break; else continue;
 			}
 		}
 		var added = count == 0 && this.updateItems.tryAdd(entity,o);
 	}
-	,__class__: Components2System_SystemProcess
+	,__class__: Components2System_$SystemProcess
 };
-var ComponentsEntitiesSystem_SystemProcess = function(system) {
+var ComponentsEntitiesSystem_$SystemProcess = function(system) {
 	this.system = system;
-	this.updateItems = new edge.View();
-	system.entities = new edge.View();
+	this.updateItems = new edge_View();
+	system.entities = new edge_View();
 };
-ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_SystemProcess"];
-ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
-ComponentsEntitiesSystem_SystemProcess.prototype = {
+ComponentsEntitiesSystem_$SystemProcess.__name__ = ["ComponentsEntitiesSystem_SystemProcess"];
+ComponentsEntitiesSystem_$SystemProcess.__interfaces__ = [edge_core_ISystemProcess];
+ComponentsEntitiesSystem_$SystemProcess.prototype = {
 	removeEntity: function(entity) {
 		this.updateItems.tryRemove(entity);
 		this.system.entities.tryRemove(entity);
@@ -176,7 +175,7 @@ ComponentsEntitiesSystem_SystemProcess.prototype = {
 		var $it0 = entity.map.iterator();
 		while( $it0.hasNext() ) {
 			var component = $it0.next();
-			if(js.Boot.__instanceof(component,A)) {
+			if(js_Boot.__instanceof(component,A)) {
 				o.a = component;
 				if(--count == 0) break; else continue;
 			}
@@ -190,14 +189,14 @@ ComponentsEntitiesSystem_SystemProcess.prototype = {
 		var $it0 = entity.map.iterator();
 		while( $it0.hasNext() ) {
 			var component = $it0.next();
-			if(js.Boot.__instanceof(component,B)) {
+			if(js_Boot.__instanceof(component,B)) {
 				o.b = component;
 				if(--count == 0) break; else continue;
 			}
 		}
 		var added = count == 0 && this.updateItems.tryAdd(entity,o);
 	}
-	,__class__: ComponentsEntitiesSystem_SystemProcess
+	,__class__: ComponentsEntitiesSystem_$SystemProcess
 };
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
@@ -264,14 +263,14 @@ EReg.prototype = {
 	}
 	,__class__: EReg
 };
-var HasAandBSystem_SystemProcess = function(system) {
+var HasAandBSystem_$SystemProcess = function(system) {
 	this.system = system;
-	system.viewA = new edge.View();
-	system.viewB = new edge.View();
+	system.viewA = new edge_View();
+	system.viewB = new edge_View();
 };
-HasAandBSystem_SystemProcess.__name__ = ["HasAandBSystem_SystemProcess"];
-HasAandBSystem_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
-HasAandBSystem_SystemProcess.prototype = {
+HasAandBSystem_$SystemProcess.__name__ = ["HasAandBSystem_SystemProcess"];
+HasAandBSystem_$SystemProcess.__interfaces__ = [edge_core_ISystemProcess];
+HasAandBSystem_$SystemProcess.prototype = {
 	removeEntity: function(entity) {
 		this.system.viewA.tryRemove(entity);
 		this.system.viewB.tryRemove(entity);
@@ -291,7 +290,7 @@ HasAandBSystem_SystemProcess.prototype = {
 		var $it0 = entity.map.iterator();
 		while( $it0.hasNext() ) {
 			var component = $it0.next();
-			if(js.Boot.__instanceof(component,A)) {
+			if(js_Boot.__instanceof(component,A)) {
 				o.a = component;
 				if(--count == 0) break; else continue;
 			}
@@ -305,14 +304,14 @@ HasAandBSystem_SystemProcess.prototype = {
 		var $it0 = entity.map.iterator();
 		while( $it0.hasNext() ) {
 			var component = $it0.next();
-			if(js.Boot.__instanceof(component,B)) {
+			if(js_Boot.__instanceof(component,B)) {
 				o.b = component;
 				if(--count == 0) break; else continue;
 			}
 		}
 		var added = count == 0 && this.system.viewB.tryAdd(entity,o);
 	}
-	,__class__: HasAandBSystem_SystemProcess
+	,__class__: HasAandBSystem_$SystemProcess
 };
 var HxOverrides = function() { };
 HxOverrides.__name__ = ["HxOverrides"];
@@ -404,17 +403,16 @@ List.prototype = {
 		return false;
 	}
 	,iterator: function() {
-		return new _List.ListIterator(this.h);
+		return new _$List_ListIterator(this.h);
 	}
 	,__class__: List
 };
-var _List = {};
-_List.ListIterator = function(head) {
+var _$List_ListIterator = function(head) {
 	this.head = head;
 	this.val = null;
 };
-_List.ListIterator.__name__ = ["_List","ListIterator"];
-_List.ListIterator.prototype = {
+_$List_ListIterator.__name__ = ["_List","ListIterator"];
+_$List_ListIterator.prototype = {
 	head: null
 	,val: null
 	,hasNext: function() {
@@ -425,15 +423,15 @@ _List.ListIterator.prototype = {
 		this.head = this.head[1];
 		return this.val;
 	}
-	,__class__: _List.ListIterator
+	,__class__: _$List_ListIterator
 };
 Math.__name__ = ["Math"];
-var NoComponentsSystem_SystemProcess = function(system) {
+var NoComponentsSystem_$SystemProcess = function(system) {
 	this.system = system;
 };
-NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"];
-NoComponentsSystem_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
-NoComponentsSystem_SystemProcess.prototype = {
+NoComponentsSystem_$SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"];
+NoComponentsSystem_$SystemProcess.__interfaces__ = [edge_core_ISystemProcess];
+NoComponentsSystem_$SystemProcess.prototype = {
 	removeEntity: function(entity) {
 	}
 	,addEntity: function(entity) {
@@ -442,7 +440,7 @@ NoComponentsSystem_SystemProcess.prototype = {
 	,update: function(engine,delta) {
 		this.system.update();
 	}
-	,__class__: NoComponentsSystem_SystemProcess
+	,__class__: NoComponentsSystem_$SystemProcess
 };
 var Reflect = function() { };
 Reflect.__name__ = ["Reflect"];
@@ -485,7 +483,13 @@ Reflect.isObject = function(v) {
 var Std = function() { };
 Std.__name__ = ["Std"];
 Std.string = function(s) {
-	return js.Boot.__string_rec(s,"");
+	return js_Boot.__string_rec(s,"");
+};
+Std.parseInt = function(x) {
+	var v = parseInt(x,10);
+	if(v == 0 && (HxOverrides.cca(x,1) == 120 || HxOverrides.cca(x,1) == 88)) v = parseInt(x);
+	if(isNaN(v)) return null;
+	return v;
 };
 Std.random = function(x) {
 	if(x <= 0) return 0; else return Math.floor(Math.random() * x);
@@ -541,173 +545,173 @@ var TestAll = function() {
 };
 TestAll.__name__ = ["TestAll"];
 TestAll.main = function() {
-	var runner = new utest.Runner();
+	var runner = new utest_Runner();
 	runner.addCase(new TestAll());
-	utest.ui.Report.create(runner);
+	utest_ui_Report.create(runner);
 	runner.run();
 };
 TestAll.prototype = {
 	testUpdateRemoved: function() {
-		var engine = new edge.Engine();
+		var engine = new edge_Engine();
 		var phase = engine.createPhase();
 		var system = new UpdateRemovedSystem();
 		phase.add(system);
-		utest.Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 15, className : "TestAll", methodName : "testUpdateRemoved"});
+		utest_Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 15, className : "TestAll", methodName : "testUpdateRemoved"});
 		engine.create([new B()]);
-		utest.Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 17, className : "TestAll", methodName : "testUpdateRemoved"});
+		utest_Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 17, className : "TestAll", methodName : "testUpdateRemoved"});
 		var e = engine.create([new A()]);
-		utest.Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 19, className : "TestAll", methodName : "testUpdateRemoved"});
+		utest_Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 19, className : "TestAll", methodName : "testUpdateRemoved"});
 		phase.update(0);
-		utest.Assert.same([2],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 21, className : "TestAll", methodName : "testUpdateRemoved"});
+		utest_Assert.same([2],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 21, className : "TestAll", methodName : "testUpdateRemoved"});
 		e.removeType(A);
-		utest.Assert.same([2,1],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 23, className : "TestAll", methodName : "testUpdateRemoved"});
+		utest_Assert.same([2,1],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 23, className : "TestAll", methodName : "testUpdateRemoved"});
 		e.add(new A());
 		e.removeType(A);
-		utest.Assert.same([2,1,1],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 26, className : "TestAll", methodName : "testUpdateRemoved"});
+		utest_Assert.same([2,1,1],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 26, className : "TestAll", methodName : "testUpdateRemoved"});
 	}
 	,testUpdateAdded: function() {
-		var engine = new edge.Engine();
+		var engine = new edge_Engine();
 		var phase = engine.createPhase();
 		var system = new UpdateAddedSystem();
 		phase.add(system);
-		utest.Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 34, className : "TestAll", methodName : "testUpdateAdded"});
+		utest_Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 34, className : "TestAll", methodName : "testUpdateAdded"});
 		engine.create([new B()]);
-		utest.Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 36, className : "TestAll", methodName : "testUpdateAdded"});
+		utest_Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 36, className : "TestAll", methodName : "testUpdateAdded"});
 		var e = engine.create([new A()]);
-		utest.Assert.same([1],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 38, className : "TestAll", methodName : "testUpdateAdded"});
+		utest_Assert.same([1],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 38, className : "TestAll", methodName : "testUpdateAdded"});
 		phase.update(0);
-		utest.Assert.same([1,2],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 40, className : "TestAll", methodName : "testUpdateAdded"});
+		utest_Assert.same([1,2],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 40, className : "TestAll", methodName : "testUpdateAdded"});
 		e.removeType(A);
-		utest.Assert.same([1,2],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 42, className : "TestAll", methodName : "testUpdateAdded"});
+		utest_Assert.same([1,2],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 42, className : "TestAll", methodName : "testUpdateAdded"});
 		e.add(new A());
-		utest.Assert.same([1,2,1],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 44, className : "TestAll", methodName : "testUpdateAdded"});
+		utest_Assert.same([1,2,1],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 44, className : "TestAll", methodName : "testUpdateAdded"});
 	}
 	,testBefore: function() {
-		var engine = new edge.Engine();
+		var engine = new edge_Engine();
 		var phase = engine.createPhase();
 		var system = new BeforeSystem();
 		phase.add(system);
 		phase.update(0);
-		utest.Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 53, className : "TestAll", methodName : "testBefore"});
+		utest_Assert.same([],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 53, className : "TestAll", methodName : "testBefore"});
 		engine.create([new A()]);
 		phase.update(0);
-		utest.Assert.same([1,2],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 56, className : "TestAll", methodName : "testBefore"});
+		utest_Assert.same([1,2],system.results,null,null,{ fileName : "TestAll.hx", lineNumber : 56, className : "TestAll", methodName : "testBefore"});
 	}
 	,testMultipleViews: function() {
-		var engine = new edge.Engine();
+		var engine = new edge_Engine();
 		var phase = engine.createPhase();
 		var system = new HasAandBSystem();
-		utest.Assert.equals(0,system.viewA.count,null,{ fileName : "TestAll.hx", lineNumber : 64, className : "TestAll", methodName : "testMultipleViews"});
-		utest.Assert.equals(0,system.viewB.count,null,{ fileName : "TestAll.hx", lineNumber : 65, className : "TestAll", methodName : "testMultipleViews"});
+		utest_Assert.equals(0,system.viewA.count,null,{ fileName : "TestAll.hx", lineNumber : 64, className : "TestAll", methodName : "testMultipleViews"});
+		utest_Assert.equals(0,system.viewB.count,null,{ fileName : "TestAll.hx", lineNumber : 65, className : "TestAll", methodName : "testMultipleViews"});
 		phase.add(system);
-		utest.Assert.equals(0,system.viewA.count,null,{ fileName : "TestAll.hx", lineNumber : 67, className : "TestAll", methodName : "testMultipleViews"});
-		utest.Assert.equals(0,system.viewB.count,null,{ fileName : "TestAll.hx", lineNumber : 68, className : "TestAll", methodName : "testMultipleViews"});
+		utest_Assert.equals(0,system.viewA.count,null,{ fileName : "TestAll.hx", lineNumber : 67, className : "TestAll", methodName : "testMultipleViews"});
+		utest_Assert.equals(0,system.viewB.count,null,{ fileName : "TestAll.hx", lineNumber : 68, className : "TestAll", methodName : "testMultipleViews"});
 		var e = engine.create([new A()]);
-		utest.Assert.equals(1,system.viewA.count,null,{ fileName : "TestAll.hx", lineNumber : 71, className : "TestAll", methodName : "testMultipleViews"});
-		utest.Assert.equals(0,system.viewB.count,null,{ fileName : "TestAll.hx", lineNumber : 72, className : "TestAll", methodName : "testMultipleViews"});
+		utest_Assert.equals(1,system.viewA.count,null,{ fileName : "TestAll.hx", lineNumber : 71, className : "TestAll", methodName : "testMultipleViews"});
+		utest_Assert.equals(0,system.viewB.count,null,{ fileName : "TestAll.hx", lineNumber : 72, className : "TestAll", methodName : "testMultipleViews"});
 		e.add(new B());
-		utest.Assert.equals(1,system.viewA.count,null,{ fileName : "TestAll.hx", lineNumber : 75, className : "TestAll", methodName : "testMultipleViews"});
-		utest.Assert.equals(1,system.viewB.count,null,{ fileName : "TestAll.hx", lineNumber : 76, className : "TestAll", methodName : "testMultipleViews"});
+		utest_Assert.equals(1,system.viewA.count,null,{ fileName : "TestAll.hx", lineNumber : 75, className : "TestAll", methodName : "testMultipleViews"});
+		utest_Assert.equals(1,system.viewB.count,null,{ fileName : "TestAll.hx", lineNumber : 76, className : "TestAll", methodName : "testMultipleViews"});
 		engine.create([new B()]);
-		utest.Assert.equals(1,system.viewA.count,null,{ fileName : "TestAll.hx", lineNumber : 79, className : "TestAll", methodName : "testMultipleViews"});
-		utest.Assert.equals(2,system.viewB.count,null,{ fileName : "TestAll.hx", lineNumber : 80, className : "TestAll", methodName : "testMultipleViews"});
+		utest_Assert.equals(1,system.viewA.count,null,{ fileName : "TestAll.hx", lineNumber : 79, className : "TestAll", methodName : "testMultipleViews"});
+		utest_Assert.equals(2,system.viewB.count,null,{ fileName : "TestAll.hx", lineNumber : 80, className : "TestAll", methodName : "testMultipleViews"});
 	}
 	,testPhaseNodes: function() {
-		var phase = new edge.Phase(null);
+		var phase = new edge_Phase(null);
 		var it = phase.systems();
-		utest.Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 86, className : "TestAll", methodName : "testPhaseNodes"});
+		utest_Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 86, className : "TestAll", methodName : "testPhaseNodes"});
 		phase.add(new Components2System());
 		it = phase.systems();
-		utest.Assert.isTrue(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 89, className : "TestAll", methodName : "testPhaseNodes"});
-		utest.Assert.notNull(it.next(),null,{ fileName : "TestAll.hx", lineNumber : 90, className : "TestAll", methodName : "testPhaseNodes"});
-		utest.Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 91, className : "TestAll", methodName : "testPhaseNodes"});
+		utest_Assert.isTrue(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 89, className : "TestAll", methodName : "testPhaseNodes"});
+		utest_Assert.notNull(it.next(),null,{ fileName : "TestAll.hx", lineNumber : 90, className : "TestAll", methodName : "testPhaseNodes"});
+		utest_Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 91, className : "TestAll", methodName : "testPhaseNodes"});
 		phase.add(new Components1System());
 		it = phase.systems();
-		utest.Assert.isTrue(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 94, className : "TestAll", methodName : "testPhaseNodes"});
-		utest.Assert["is"](it.next(),Components2System,null,{ fileName : "TestAll.hx", lineNumber : 95, className : "TestAll", methodName : "testPhaseNodes"});
-		utest.Assert["is"](it.next(),Components1System,null,{ fileName : "TestAll.hx", lineNumber : 96, className : "TestAll", methodName : "testPhaseNodes"});
-		utest.Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 97, className : "TestAll", methodName : "testPhaseNodes"});
+		utest_Assert.isTrue(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 94, className : "TestAll", methodName : "testPhaseNodes"});
+		utest_Assert["is"](it.next(),Components2System,null,{ fileName : "TestAll.hx", lineNumber : 95, className : "TestAll", methodName : "testPhaseNodes"});
+		utest_Assert["is"](it.next(),Components1System,null,{ fileName : "TestAll.hx", lineNumber : 96, className : "TestAll", methodName : "testPhaseNodes"});
+		utest_Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 97, className : "TestAll", methodName : "testPhaseNodes"});
 		phase.removeType(Components2System);
 		it = phase.systems();
-		utest.Assert.isTrue(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 100, className : "TestAll", methodName : "testPhaseNodes"});
-		utest.Assert["is"](it.next(),Components1System,null,{ fileName : "TestAll.hx", lineNumber : 101, className : "TestAll", methodName : "testPhaseNodes"});
-		utest.Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 102, className : "TestAll", methodName : "testPhaseNodes"});
+		utest_Assert.isTrue(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 100, className : "TestAll", methodName : "testPhaseNodes"});
+		utest_Assert["is"](it.next(),Components1System,null,{ fileName : "TestAll.hx", lineNumber : 101, className : "TestAll", methodName : "testPhaseNodes"});
+		utest_Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 102, className : "TestAll", methodName : "testPhaseNodes"});
 	}
 	,testEngineComponents2System: function() {
-		var engine = new edge.Engine();
+		var engine = new edge_Engine();
 		var phase = engine.createPhase();
 		var system = new Components2System();
 		phase.add(system);
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 110, className : "TestAll", methodName : "testEngineComponents2System"});
+		utest_Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 110, className : "TestAll", methodName : "testEngineComponents2System"});
 		phase.update(0);
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 112, className : "TestAll", methodName : "testEngineComponents2System"});
+		utest_Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 112, className : "TestAll", methodName : "testEngineComponents2System"});
 		var entity = engine.create([new A(),new B()]);
-		utest.Assert.equals(engine,entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 114, className : "TestAll", methodName : "testEngineComponents2System"});
+		utest_Assert.equals(engine,entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 114, className : "TestAll", methodName : "testEngineComponents2System"});
 		phase.update(0);
-		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 116, className : "TestAll", methodName : "testEngineComponents2System"});
+		utest_Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 116, className : "TestAll", methodName : "testEngineComponents2System"});
 		entity.destroy();
-		utest.Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 118, className : "TestAll", methodName : "testEngineComponents2System"});
+		utest_Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 118, className : "TestAll", methodName : "testEngineComponents2System"});
 		phase.update(0);
-		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 120, className : "TestAll", methodName : "testEngineComponents2System"});
+		utest_Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 120, className : "TestAll", methodName : "testEngineComponents2System"});
 		entity = engine.create([new A(),new B()]);
 		phase.update(0);
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 123, className : "TestAll", methodName : "testEngineComponents2System"});
+		utest_Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 123, className : "TestAll", methodName : "testEngineComponents2System"});
 		entity.removeType(A);
 		phase.update(0);
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 126, className : "TestAll", methodName : "testEngineComponents2System"});
+		utest_Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 126, className : "TestAll", methodName : "testEngineComponents2System"});
 	}
 	,testEngineComponents1System: function() {
-		var engine = new edge.Engine();
+		var engine = new edge_Engine();
 		var phase = engine.createPhase();
 		var system = new Components1System();
 		phase.add(system);
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 134, className : "TestAll", methodName : "testEngineComponents1System"});
+		utest_Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 134, className : "TestAll", methodName : "testEngineComponents1System"});
 		phase.update(0);
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 136, className : "TestAll", methodName : "testEngineComponents1System"});
+		utest_Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 136, className : "TestAll", methodName : "testEngineComponents1System"});
 		var entity = engine.create([new B()]);
 		phase.update(0);
-		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 139, className : "TestAll", methodName : "testEngineComponents1System"});
+		utest_Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 139, className : "TestAll", methodName : "testEngineComponents1System"});
 		entity.destroy();
 		phase.update(0);
-		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 142, className : "TestAll", methodName : "testEngineComponents1System"});
+		utest_Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 142, className : "TestAll", methodName : "testEngineComponents1System"});
 		entity = engine.create([new B()]);
 		phase.update(0);
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 145, className : "TestAll", methodName : "testEngineComponents1System"});
+		utest_Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 145, className : "TestAll", methodName : "testEngineComponents1System"});
 		entity.removeType(B);
 		phase.update(0);
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 148, className : "TestAll", methodName : "testEngineComponents1System"});
+		utest_Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 148, className : "TestAll", methodName : "testEngineComponents1System"});
 	}
 	,testEngineComponents1MissingSystem: function() {
-		var engine = new edge.Engine();
+		var engine = new edge_Engine();
 		var phase = engine.createPhase();
 		var system = new Components1System();
 		phase.add(system);
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 156, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
+		utest_Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 156, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 		phase.update(0);
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 158, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
+		utest_Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 158, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 		var entity = engine.create([new A()]);
 		phase.update(0);
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 161, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
+		utest_Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 161, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 		entity.destroy();
 		phase.update(0);
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 164, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
+		utest_Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 164, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 	}
 	,testEngineNoComponentSystem: function() {
-		var engine = new edge.Engine();
+		var engine = new edge_Engine();
 		var phase = engine.createPhase();
 		var system = new NoComponentsSystem();
 		phase.add(system);
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 172, className : "TestAll", methodName : "testEngineNoComponentSystem"});
+		utest_Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 172, className : "TestAll", methodName : "testEngineNoComponentSystem"});
 		phase.update(0);
-		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 174, className : "TestAll", methodName : "testEngineNoComponentSystem"});
+		utest_Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 174, className : "TestAll", methodName : "testEngineNoComponentSystem"});
 		phase.update(0);
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 176, className : "TestAll", methodName : "testEngineNoComponentSystem"});
+		utest_Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 176, className : "TestAll", methodName : "testEngineNoComponentSystem"});
 		phase.remove(system);
 		phase.update(0);
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 179, className : "TestAll", methodName : "testEngineNoComponentSystem"});
+		utest_Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 179, className : "TestAll", methodName : "testEngineNoComponentSystem"});
 	}
 	,testEngineSystemCounting: function() {
-		var engine = new edge.Engine();
+		var engine = new edge_Engine();
 		var phase = engine.createPhase();
 		var s1 = new NoComponentsSystem();
 		var s2 = new Components2System();
@@ -725,7 +729,7 @@ TestAll.prototype = {
 		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 198, className : "TestAll", methodName : "testEngineSystemCounting"});
 	}
 	,testEngineEntity: function() {
-		var engine = new edge.Engine();
+		var engine = new edge_Engine();
 		this.assertNumberOfEntities(engine,0,{ fileName : "TestAll.hx", lineNumber : 203, className : "TestAll", methodName : "testEngineEntity"});
 		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 204, className : "TestAll", methodName : "testEngineEntity"});
 		var e1 = engine.create();
@@ -741,7 +745,7 @@ TestAll.prototype = {
 		this.assertNumberOfEntities(engine,0,{ fileName : "TestAll.hx", lineNumber : 215, className : "TestAll", methodName : "testEngineEntity"});
 	}
 	,testEntity: function() {
-		var engine = new edge.Engine();
+		var engine = new edge_Engine();
 		var entity = engine.create();
 		entity.add(new A());
 		this.assertNumberOfComponents(entity,1,{ fileName : "TestAll.hx", lineNumber : 222, className : "TestAll", methodName : "testEntity"});
@@ -756,32 +760,32 @@ TestAll.prototype = {
 		this.assertNumberOfComponents(entity,0,{ fileName : "TestAll.hx", lineNumber : 231, className : "TestAll", methodName : "testEntity"});
 	}
 	,assertNumberOfComponents: function(entity,qt,pos) {
-		utest.Assert.equals(qt,thx.core.Iterators.toArray(entity.map.iterator()).length,null,pos);
+		utest_Assert.equals(qt,thx_core_Iterators.toArray(entity.map.iterator()).length,null,pos);
 	}
 	,assertNumberOfEntities: function(engine,qt,pos) {
-		utest.Assert.equals(qt,thx.core.Iterators.toArray(engine.entities()).length,null,pos);
+		utest_Assert.equals(qt,thx_core_Iterators.toArray(engine.entities()).length,null,pos);
 	}
 	,assertNumberOfSystems: function(engine,qt,pos) {
 		var count = 0;
 		engine.eachSystem(function(_) {
 			count++;
 		});
-		utest.Assert.equals(qt,count,null,pos);
+		utest_Assert.equals(qt,count,null,pos);
 	}
 	,__class__: TestAll
 };
-edge.ISystem = function() { };
-edge.ISystem.__name__ = ["edge","ISystem"];
-edge.ISystem.prototype = {
+var edge_ISystem = function() { };
+edge_ISystem.__name__ = ["edge","ISystem"];
+edge_ISystem.prototype = {
 	__process__: null
-	,__class__: edge.ISystem
+	,__class__: edge_ISystem
 };
 var NoComponentsSystem = function() {
 	this.count = 0;
-	this.__process__ = new NoComponentsSystem_SystemProcess(this);
+	this.__process__ = new NoComponentsSystem_$SystemProcess(this);
 };
 NoComponentsSystem.__name__ = ["NoComponentsSystem"];
-NoComponentsSystem.__interfaces__ = [edge.ISystem];
+NoComponentsSystem.__interfaces__ = [edge_ISystem];
 NoComponentsSystem.prototype = {
 	count: null
 	,update: function() {
@@ -795,15 +799,15 @@ NoComponentsSystem.prototype = {
 };
 var Components2System = function() {
 	this.count = 0;
-	this.__process__ = new Components2System_SystemProcess(this);
+	this.__process__ = new Components2System_$SystemProcess(this);
 };
 Components2System.__name__ = ["Components2System"];
-Components2System.__interfaces__ = [edge.ISystem];
+Components2System.__interfaces__ = [edge_ISystem];
 Components2System.prototype = {
 	count: null
 	,update: function(b,a) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 268, className : "Components2System", methodName : "update"});
-		utest.Assert["is"](a,A,null,{ fileName : "TestAll.hx", lineNumber : 269, className : "Components2System", methodName : "update"});
+		utest_Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 268, className : "Components2System", methodName : "update"});
+		utest_Assert["is"](a,A,null,{ fileName : "TestAll.hx", lineNumber : 269, className : "Components2System", methodName : "update"});
 		this.count++;
 	}
 	,toString: function() {
@@ -814,16 +818,16 @@ Components2System.prototype = {
 };
 var Components1System = function() {
 	this.count = 0;
-	this.__process__ = new Components1System_SystemProcess(this);
+	this.__process__ = new Components1System_$SystemProcess(this);
 };
 Components1System.__name__ = ["Components1System"];
-Components1System.__interfaces__ = [edge.ISystem];
+Components1System.__interfaces__ = [edge_ISystem];
 Components1System.prototype = {
 	count: null
 	,entity: null
 	,engine: null
 	,update: function(b) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 279, className : "Components1System", methodName : "update"});
+		utest_Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 279, className : "Components1System", methodName : "update"});
 		this.count++;
 	}
 	,toString: function() {
@@ -834,15 +838,15 @@ Components1System.prototype = {
 };
 var ComponentsEntitiesSystem = function() {
 	this.count = 0;
-	this.__process__ = new ComponentsEntitiesSystem_SystemProcess(this);
+	this.__process__ = new ComponentsEntitiesSystem_$SystemProcess(this);
 };
 ComponentsEntitiesSystem.__name__ = ["ComponentsEntitiesSystem"];
-ComponentsEntitiesSystem.__interfaces__ = [edge.ISystem];
+ComponentsEntitiesSystem.__interfaces__ = [edge_ISystem];
 ComponentsEntitiesSystem.prototype = {
 	count: null
 	,entities: null
 	,update: function(b) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 288, className : "ComponentsEntitiesSystem", methodName : "update"});
+		utest_Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 288, className : "ComponentsEntitiesSystem", methodName : "update"});
 		this.count++;
 	}
 	,toString: function() {
@@ -852,10 +856,10 @@ ComponentsEntitiesSystem.prototype = {
 	,__class__: ComponentsEntitiesSystem
 };
 var HasAandBSystem = function() {
-	this.__process__ = new HasAandBSystem_SystemProcess(this);
+	this.__process__ = new HasAandBSystem_$SystemProcess(this);
 };
 HasAandBSystem.__name__ = ["HasAandBSystem"];
-HasAandBSystem.__interfaces__ = [edge.ISystem];
+HasAandBSystem.__interfaces__ = [edge_ISystem];
 HasAandBSystem.prototype = {
 	viewA: null
 	,viewB: null
@@ -869,10 +873,10 @@ HasAandBSystem.prototype = {
 };
 var BeforeSystem = function() {
 	this.results = [];
-	this.__process__ = new BeforeSystem_SystemProcess(this);
+	this.__process__ = new BeforeSystem_$SystemProcess(this);
 };
 BeforeSystem.__name__ = ["BeforeSystem"];
-BeforeSystem.__interfaces__ = [edge.ISystem];
+BeforeSystem.__interfaces__ = [edge_ISystem];
 BeforeSystem.prototype = {
 	results: null
 	,before: function() {
@@ -889,14 +893,14 @@ BeforeSystem.prototype = {
 };
 var UpdateAddedSystem = function() {
 	this.results = [];
-	this.__process__ = new UpdateAddedSystem_SystemProcess(this);
+	this.__process__ = new UpdateAddedSystem_$SystemProcess(this);
 };
 UpdateAddedSystem.__name__ = ["UpdateAddedSystem"];
-UpdateAddedSystem.__interfaces__ = [edge.ISystem];
+UpdateAddedSystem.__interfaces__ = [edge_ISystem];
 UpdateAddedSystem.prototype = {
 	results: null
 	,updateAdded: function(entity,o) {
-		utest.Assert["is"](entity,edge.Entity,null,{ fileName : "TestAll.hx", lineNumber : 318, className : "UpdateAddedSystem", methodName : "updateAdded"});
+		utest_Assert["is"](entity,edge_Entity,null,{ fileName : "TestAll.hx", lineNumber : 318, className : "UpdateAddedSystem", methodName : "updateAdded"});
 		this.results.push(1);
 	}
 	,update: function(a) {
@@ -910,14 +914,14 @@ UpdateAddedSystem.prototype = {
 };
 var UpdateRemovedSystem = function() {
 	this.results = [];
-	this.__process__ = new UpdateRemovedSystem_SystemProcess(this);
+	this.__process__ = new UpdateRemovedSystem_$SystemProcess(this);
 };
 UpdateRemovedSystem.__name__ = ["UpdateRemovedSystem"];
-UpdateRemovedSystem.__interfaces__ = [edge.ISystem];
+UpdateRemovedSystem.__interfaces__ = [edge_ISystem];
 UpdateRemovedSystem.prototype = {
 	results: null
 	,updateRemoved: function(entity,_) {
-		utest.Assert["is"](entity,edge.Entity,null,{ fileName : "TestAll.hx", lineNumber : 331, className : "UpdateRemovedSystem", methodName : "updateRemoved"});
+		utest_Assert["is"](entity,edge_Entity,null,{ fileName : "TestAll.hx", lineNumber : 331, className : "UpdateRemovedSystem", methodName : "updateRemoved"});
 		this.results.push(1);
 	}
 	,update: function(a) {
@@ -931,18 +935,18 @@ UpdateRemovedSystem.prototype = {
 };
 var UpdateAddedRemovedSystem = function() {
 	this.results = [];
-	this.__process__ = new UpdateAddedRemovedSystem_SystemProcess(this);
+	this.__process__ = new UpdateAddedRemovedSystem_$SystemProcess(this);
 };
 UpdateAddedRemovedSystem.__name__ = ["UpdateAddedRemovedSystem"];
-UpdateAddedRemovedSystem.__interfaces__ = [edge.ISystem];
+UpdateAddedRemovedSystem.__interfaces__ = [edge_ISystem];
 UpdateAddedRemovedSystem.prototype = {
 	results: null
 	,updateAdded: function(entity,o) {
-		utest.Assert["is"](entity,edge.Entity,null,{ fileName : "TestAll.hx", lineNumber : 344, className : "UpdateAddedRemovedSystem", methodName : "updateAdded"});
+		utest_Assert["is"](entity,edge_Entity,null,{ fileName : "TestAll.hx", lineNumber : 344, className : "UpdateAddedRemovedSystem", methodName : "updateAdded"});
 		this.results.push(1);
 	}
 	,updateRemoved: function(entity,_) {
-		utest.Assert["is"](entity,edge.Entity,null,{ fileName : "TestAll.hx", lineNumber : 349, className : "UpdateAddedRemovedSystem", methodName : "updateRemoved"});
+		utest_Assert["is"](entity,edge_Entity,null,{ fileName : "TestAll.hx", lineNumber : 349, className : "UpdateAddedRemovedSystem", methodName : "updateRemoved"});
 		this.results.push(2);
 	}
 	,update: function(a) {
@@ -968,25 +972,32 @@ B.prototype = {
 };
 var ValueType = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] };
 ValueType.TNull = ["TNull",0];
+ValueType.TNull.toString = $estr;
 ValueType.TNull.__enum__ = ValueType;
 ValueType.TInt = ["TInt",1];
+ValueType.TInt.toString = $estr;
 ValueType.TInt.__enum__ = ValueType;
 ValueType.TFloat = ["TFloat",2];
+ValueType.TFloat.toString = $estr;
 ValueType.TFloat.__enum__ = ValueType;
 ValueType.TBool = ["TBool",3];
+ValueType.TBool.toString = $estr;
 ValueType.TBool.__enum__ = ValueType;
 ValueType.TObject = ["TObject",4];
+ValueType.TObject.toString = $estr;
 ValueType.TObject.__enum__ = ValueType;
 ValueType.TFunction = ["TFunction",5];
+ValueType.TFunction.toString = $estr;
 ValueType.TFunction.__enum__ = ValueType;
-ValueType.TClass = function(c) { var $x = ["TClass",6,c]; $x.__enum__ = ValueType; return $x; };
-ValueType.TEnum = function(e) { var $x = ["TEnum",7,e]; $x.__enum__ = ValueType; return $x; };
+ValueType.TClass = function(c) { var $x = ["TClass",6,c]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; };
+ValueType.TEnum = function(e) { var $x = ["TEnum",7,e]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; };
 ValueType.TUnknown = ["TUnknown",8];
+ValueType.TUnknown.toString = $estr;
 ValueType.TUnknown.__enum__ = ValueType;
 var Type = function() { };
 Type.__name__ = ["Type"];
 Type.getClass = function(o) {
-	if(o == null) return null; else return js.Boot.getClass(o);
+	if(o == null) return null; else return js_Boot.getClass(o);
 };
 Type.getEnum = function(o) {
 	if(o == null) return null;
@@ -1025,7 +1036,7 @@ Type["typeof"] = function(v) {
 		if(v == null) return ValueType.TNull;
 		var e = v.__enum__;
 		if(e != null) return ValueType.TEnum(e);
-		var c = js.Boot.getClass(v);
+		var c = js_Boot.getClass(v);
 		if(c != null) return ValueType.TClass(c);
 		return ValueType.TObject;
 	case "function":
@@ -1046,13 +1057,13 @@ Type.enumParameters = function(e) {
 Type.enumIndex = function(e) {
 	return e[1];
 };
-var UpdateAddedRemovedSystem_SystemProcess = function(system) {
+var UpdateAddedRemovedSystem_$SystemProcess = function(system) {
 	this.system = system;
-	this.updateItems = new edge.View();
+	this.updateItems = new edge_View();
 };
-UpdateAddedRemovedSystem_SystemProcess.__name__ = ["UpdateAddedRemovedSystem_SystemProcess"];
-UpdateAddedRemovedSystem_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
-UpdateAddedRemovedSystem_SystemProcess.prototype = {
+UpdateAddedRemovedSystem_$SystemProcess.__name__ = ["UpdateAddedRemovedSystem_SystemProcess"];
+UpdateAddedRemovedSystem_$SystemProcess.__interfaces__ = [edge_core_ISystemProcess];
+UpdateAddedRemovedSystem_$SystemProcess.prototype = {
 	removeEntity: function(entity) {
 		var removed = this.updateItems.tryRemove(entity);
 		if(removed != null) this.system.updateRemoved(entity,removed);
@@ -1078,7 +1089,7 @@ UpdateAddedRemovedSystem_SystemProcess.prototype = {
 		var $it0 = entity.map.iterator();
 		while( $it0.hasNext() ) {
 			var component = $it0.next();
-			if(js.Boot.__instanceof(component,A)) {
+			if(js_Boot.__instanceof(component,A)) {
 				o.a = component;
 				if(--count == 0) break; else continue;
 			}
@@ -1087,15 +1098,15 @@ UpdateAddedRemovedSystem_SystemProcess.prototype = {
 		if(null != removed && !added) this.system.updateRemoved(entity,removed);
 		if(added && null == removed) this.system.updateAdded(entity,o);
 	}
-	,__class__: UpdateAddedRemovedSystem_SystemProcess
+	,__class__: UpdateAddedRemovedSystem_$SystemProcess
 };
-var UpdateAddedSystem_SystemProcess = function(system) {
+var UpdateAddedSystem_$SystemProcess = function(system) {
 	this.system = system;
-	this.updateItems = new edge.View();
+	this.updateItems = new edge_View();
 };
-UpdateAddedSystem_SystemProcess.__name__ = ["UpdateAddedSystem_SystemProcess"];
-UpdateAddedSystem_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
-UpdateAddedSystem_SystemProcess.prototype = {
+UpdateAddedSystem_$SystemProcess.__name__ = ["UpdateAddedSystem_SystemProcess"];
+UpdateAddedSystem_$SystemProcess.__interfaces__ = [edge_core_ISystemProcess];
+UpdateAddedSystem_$SystemProcess.prototype = {
 	removeEntity: function(entity) {
 		this.updateItems.tryRemove(entity);
 	}
@@ -1120,7 +1131,7 @@ UpdateAddedSystem_SystemProcess.prototype = {
 		var $it0 = entity.map.iterator();
 		while( $it0.hasNext() ) {
 			var component = $it0.next();
-			if(js.Boot.__instanceof(component,A)) {
+			if(js_Boot.__instanceof(component,A)) {
 				o.a = component;
 				if(--count == 0) break; else continue;
 			}
@@ -1128,15 +1139,15 @@ UpdateAddedSystem_SystemProcess.prototype = {
 		var added = count == 0 && this.updateItems.tryAdd(entity,o);
 		if(added && null == removed) this.system.updateAdded(entity,o);
 	}
-	,__class__: UpdateAddedSystem_SystemProcess
+	,__class__: UpdateAddedSystem_$SystemProcess
 };
-var UpdateRemovedSystem_SystemProcess = function(system) {
+var UpdateRemovedSystem_$SystemProcess = function(system) {
 	this.system = system;
-	this.updateItems = new edge.View();
+	this.updateItems = new edge_View();
 };
-UpdateRemovedSystem_SystemProcess.__name__ = ["UpdateRemovedSystem_SystemProcess"];
-UpdateRemovedSystem_SystemProcess.__interfaces__ = [edge.core.ISystemProcess];
-UpdateRemovedSystem_SystemProcess.prototype = {
+UpdateRemovedSystem_$SystemProcess.__name__ = ["UpdateRemovedSystem_SystemProcess"];
+UpdateRemovedSystem_$SystemProcess.__interfaces__ = [edge_core_ISystemProcess];
+UpdateRemovedSystem_$SystemProcess.prototype = {
 	removeEntity: function(entity) {
 		var removed = this.updateItems.tryRemove(entity);
 		if(removed != null) this.system.updateRemoved(entity,removed);
@@ -1162,7 +1173,7 @@ UpdateRemovedSystem_SystemProcess.prototype = {
 		var $it0 = entity.map.iterator();
 		while( $it0.hasNext() ) {
 			var component = $it0.next();
-			if(js.Boot.__instanceof(component,A)) {
+			if(js_Boot.__instanceof(component,A)) {
 				o.a = component;
 				if(--count == 0) break; else continue;
 			}
@@ -1170,18 +1181,18 @@ UpdateRemovedSystem_SystemProcess.prototype = {
 		var added = count == 0 && this.updateItems.tryAdd(entity,o);
 		if(null != removed && !added) this.system.updateRemoved(entity,removed);
 	}
-	,__class__: UpdateRemovedSystem_SystemProcess
+	,__class__: UpdateRemovedSystem_$SystemProcess
 };
-edge.Engine = function() {
-	this.mapEntities = new haxe.ds.ObjectMap();
+var edge_Engine = function() {
+	this.mapEntities = new haxe_ds_ObjectMap();
 	this.listPhases = [];
 };
-edge.Engine.__name__ = ["edge","Engine"];
-edge.Engine.prototype = {
+edge_Engine.__name__ = ["edge","Engine"];
+edge_Engine.prototype = {
 	mapEntities: null
 	,listPhases: null
 	,create: function(components) {
-		var entity = new edge.Entity(this,components);
+		var entity = new edge_Entity(this,components);
 		this.mapEntities.set(entity,true);
 		this.matchSystems(entity);
 		return entity;
@@ -1204,7 +1215,7 @@ edge.Engine.prototype = {
 		return this.mapEntities.keys();
 	}
 	,createPhase: function() {
-		var phase = new edge.Phase(this);
+		var phase = new edge_Phase(this);
 		this.listPhases.push(phase);
 		return phase;
 	}
@@ -1253,15 +1264,15 @@ edge.Engine.prototype = {
 	,match: function(entity,system) {
 		system.__process__.addEntity(entity);
 	}
-	,__class__: edge.Engine
+	,__class__: edge_Engine
 };
-edge.Entity = function(engine,components) {
+var edge_Entity = function(engine,components) {
 	this.engine = engine;
-	this.map = new haxe.ds.StringMap();
+	this.map = new haxe_ds_StringMap();
 	if(null != components) this.addMany(components);
 };
-edge.Entity.__name__ = ["edge","Entity"];
-edge.Entity.prototype = {
+edge_Entity.__name__ = ["edge","Entity"];
+edge_Entity.prototype = {
 	map: null
 	,engine: null
 	,add: function(component) {
@@ -1281,10 +1292,10 @@ edge.Entity.prototype = {
 	,destroy: function() {
 		if(null == this.engine) return;
 		this.engine.remove(this);
-		this.map = new haxe.ds.StringMap();
+		this.map = new haxe_ds_StringMap();
 	}
 	,exists: function(component) {
-		return this.existsType(Type.getClassName(component == null?null:js.Boot.getClass(component)));
+		return this.existsType(Type.getClassName(component == null?null:js_Boot.getClass(component)));
 	}
 	,existsType: function(type) {
 		return this.map.exists(type);
@@ -1317,29 +1328,29 @@ edge.Entity.prototype = {
 		return this.map.iterator();
 	}
 	,_add: function(component) {
-		var type = Type.getClassName(component == null?null:js.Boot.getClass(component));
+		var type = Type.getClassName(component == null?null:js_Boot.getClass(component));
 		if(this.map.exists(type)) this.remove(this.map.get(type));
 		this.map.set(type,component);
 	}
 	,_remove: function(component) {
-		var type = Type.getClassName(component == null?null:js.Boot.getClass(component));
+		var type = Type.getClassName(component == null?null:js_Boot.getClass(component));
 		this._removeTypeName(type);
 	}
 	,_removeTypeName: function(type) {
 		this.map.remove(type);
 	}
 	,key: function(component) {
-		return Type.getClassName(component == null?null:js.Boot.getClass(component));
+		return Type.getClassName(component == null?null:js_Boot.getClass(component));
 	}
-	,__class__: edge.Entity
+	,__class__: edge_Entity
 };
-edge.Phase = function(engine) {
+var edge_Phase = function(engine) {
 	this.engine = engine;
-	this.mapSystem = new haxe.ds.ObjectMap();
-	this.mapType = new haxe.ds.StringMap();
+	this.mapSystem = new haxe_ds_ObjectMap();
+	this.mapType = new haxe_ds_StringMap();
 };
-edge.Phase.__name__ = ["edge","Phase"];
-edge.Phase.prototype = {
+edge_Phase.__name__ = ["edge","Phase"];
+edge_Phase.prototype = {
 	first: null
 	,last: null
 	,mapSystem: null
@@ -1423,7 +1434,7 @@ edge.Phase.prototype = {
 		return;
 	}
 	,systems: function() {
-		return new edge.core.NodeSystemIterator(this.first);
+		return new edge_core_NodeSystemIterator(this.first);
 	}
 	,update: function(t) {
 		if(null == this.engine) return;
@@ -1434,7 +1445,7 @@ edge.Phase.prototype = {
 		}
 	}
 	,createNode: function(system) {
-		var node = new edge.core.NodeSystem(system);
+		var node = new edge_core_NodeSystem(system);
 		this.mapSystem.set(system,node);
 		var key = this.key(system);
 		this.mapType.set(key,system);
@@ -1442,16 +1453,16 @@ edge.Phase.prototype = {
 		return node;
 	}
 	,key: function(system) {
-		return Type.getClassName(system == null?null:js.Boot.getClass(system));
+		return Type.getClassName(system == null?null:js_Boot.getClass(system));
 	}
-	,__class__: edge.Phase
+	,__class__: edge_Phase
 };
-edge.View = function() {
-	this.map = new haxe.ds.ObjectMap();
+var edge_View = function() {
+	this.map = new haxe_ds_ObjectMap();
 	this.count = 0;
 };
-edge.View.__name__ = ["edge","View"];
-edge.View.prototype = {
+edge_View.__name__ = ["edge","View"];
+edge_View.prototype = {
 	count: null
 	,map: null
 	,iterator: function() {
@@ -1480,23 +1491,23 @@ edge.View.prototype = {
 		this.count--;
 		return o;
 	}
-	,__class__: edge.View
+	,__class__: edge_View
 };
-edge.core.NodeSystem = function(system) {
+var edge_core_NodeSystem = function(system) {
 	this.system = system;
 };
-edge.core.NodeSystem.__name__ = ["edge","core","NodeSystem"];
-edge.core.NodeSystem.prototype = {
+edge_core_NodeSystem.__name__ = ["edge","core","NodeSystem"];
+edge_core_NodeSystem.prototype = {
 	system: null
 	,next: null
 	,prev: null
-	,__class__: edge.core.NodeSystem
+	,__class__: edge_core_NodeSystem
 };
-edge.core.NodeSystemIterator = function(node) {
+var edge_core_NodeSystemIterator = function(node) {
 	this.node = node;
 };
-edge.core.NodeSystemIterator.__name__ = ["edge","core","NodeSystemIterator"];
-edge.core.NodeSystemIterator.prototype = {
+edge_core_NodeSystemIterator.__name__ = ["edge","core","NodeSystemIterator"];
+edge_core_NodeSystemIterator.prototype = {
 	node: null
 	,hasNext: function() {
 		return null != this.node;
@@ -1506,19 +1517,19 @@ edge.core.NodeSystemIterator.prototype = {
 		this.node = this.node.next;
 		return system;
 	}
-	,__class__: edge.core.NodeSystemIterator
+	,__class__: edge_core_NodeSystemIterator
 };
-var haxe = {};
-haxe.StackItem = { __ename__ : ["haxe","StackItem"], __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
-haxe.StackItem.CFunction = ["CFunction",0];
-haxe.StackItem.CFunction.__enum__ = haxe.StackItem;
-haxe.StackItem.Module = function(m) { var $x = ["Module",1,m]; $x.__enum__ = haxe.StackItem; return $x; };
-haxe.StackItem.FilePos = function(s,file,line) { var $x = ["FilePos",2,s,file,line]; $x.__enum__ = haxe.StackItem; return $x; };
-haxe.StackItem.Method = function(classname,method) { var $x = ["Method",3,classname,method]; $x.__enum__ = haxe.StackItem; return $x; };
-haxe.StackItem.LocalFunction = function(v) { var $x = ["LocalFunction",4,v]; $x.__enum__ = haxe.StackItem; return $x; };
-haxe.CallStack = function() { };
-haxe.CallStack.__name__ = ["haxe","CallStack"];
-haxe.CallStack.callStack = function() {
+var haxe_StackItem = { __ename__ : ["haxe","StackItem"], __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
+haxe_StackItem.CFunction = ["CFunction",0];
+haxe_StackItem.CFunction.toString = $estr;
+haxe_StackItem.CFunction.__enum__ = haxe_StackItem;
+haxe_StackItem.Module = function(m) { var $x = ["Module",1,m]; $x.__enum__ = haxe_StackItem; $x.toString = $estr; return $x; };
+haxe_StackItem.FilePos = function(s,file,line) { var $x = ["FilePos",2,s,file,line]; $x.__enum__ = haxe_StackItem; $x.toString = $estr; return $x; };
+haxe_StackItem.Method = function(classname,method) { var $x = ["Method",3,classname,method]; $x.__enum__ = haxe_StackItem; $x.toString = $estr; return $x; };
+haxe_StackItem.LocalFunction = function(v) { var $x = ["LocalFunction",4,v]; $x.__enum__ = haxe_StackItem; $x.toString = $estr; return $x; };
+var haxe_CallStack = function() { };
+haxe_CallStack.__name__ = ["haxe","CallStack"];
+haxe_CallStack.callStack = function() {
 	var oldValue = Error.prepareStackTrace;
 	Error.prepareStackTrace = function(error,callsites) {
 		var stack = [];
@@ -1533,33 +1544,37 @@ haxe.CallStack.callStack = function() {
 				if(idx >= 0) {
 					var className = HxOverrides.substr(fullName,0,idx);
 					var methodName = HxOverrides.substr(fullName,idx + 1,null);
-					method = haxe.StackItem.Method(className,methodName);
+					method = haxe_StackItem.Method(className,methodName);
 				}
 			}
-			stack.push(haxe.StackItem.FilePos(method,site.getFileName(),site.getLineNumber()));
+			stack.push(haxe_StackItem.FilePos(method,site.getFileName(),site.getLineNumber()));
 		}
 		return stack;
 	};
-	var a = haxe.CallStack.makeStack(new Error().stack);
-	a.shift();
-	Error.prepareStackTrace = oldValue;
-	return a;
+	try {
+		throw new Error();
+	} catch( e ) {
+		var a = haxe_CallStack.makeStack(e.stack);
+		if(a != null) a.shift();
+		Error.prepareStackTrace = oldValue;
+		return a;
+	}
 };
-haxe.CallStack.exceptionStack = function() {
+haxe_CallStack.exceptionStack = function() {
 	return [];
 };
-haxe.CallStack.toString = function(stack) {
+haxe_CallStack.toString = function(stack) {
 	var b = new StringBuf();
 	var _g = 0;
 	while(_g < stack.length) {
 		var s = stack[_g];
 		++_g;
 		b.b += "\nCalled from ";
-		haxe.CallStack.itemToString(b,s);
+		haxe_CallStack.itemToString(b,s);
 	}
 	return b.b;
 };
-haxe.CallStack.itemToString = function(b,s) {
+haxe_CallStack.itemToString = function(b,s) {
 	switch(s[1]) {
 	case 0:
 		b.b += "a C function";
@@ -1574,7 +1589,7 @@ haxe.CallStack.itemToString = function(b,s) {
 		var file = s[3];
 		var s1 = s[2];
 		if(s1 != null) {
-			haxe.CallStack.itemToString(b,s1);
+			haxe_CallStack.itemToString(b,s1);
 			b.b += " (";
 		}
 		if(file == null) b.b += "null"; else b.b += "" + file;
@@ -1596,50 +1611,68 @@ haxe.CallStack.itemToString = function(b,s) {
 		break;
 	}
 };
-haxe.CallStack.makeStack = function(s) {
+haxe_CallStack.makeStack = function(s) {
 	if(typeof(s) == "string") {
 		var stack = s.split("\n");
+		if(stack[0] == "Error") stack.shift();
 		var m = [];
+		var rie10 = new EReg("^   at ([A-Za-z0-9_. ]+) \\(([^)]+):([0-9]+):([0-9]+)\\)$","");
 		var _g = 0;
 		while(_g < stack.length) {
 			var line = stack[_g];
 			++_g;
-			m.push(haxe.StackItem.Module(line));
+			if(rie10.match(line)) {
+				var path = rie10.matched(1).split(".");
+				var meth = path.pop();
+				var file = rie10.matched(2);
+				var line1 = Std.parseInt(rie10.matched(3));
+				m.push(haxe_StackItem.FilePos(meth == "Anonymous function"?haxe_StackItem.LocalFunction():meth == "Global code"?null:haxe_StackItem.Method(path.join("."),meth),file,line1));
+			} else m.push(haxe_StackItem.Module(line));
 		}
 		return m;
 	} else return s;
 };
-haxe.IMap = function() { };
-haxe.IMap.__name__ = ["haxe","IMap"];
-haxe.IMap.prototype = {
+var haxe_IMap = function() { };
+haxe_IMap.__name__ = ["haxe","IMap"];
+haxe_IMap.prototype = {
 	get: null
 	,keys: null
-	,__class__: haxe.IMap
+	,__class__: haxe_IMap
 };
-haxe.Log = function() { };
-haxe.Log.__name__ = ["haxe","Log"];
-haxe.Log.trace = function(v,infos) {
-	js.Boot.__trace(v,infos);
+var haxe__$Int64__$_$_$Int64 = function(high,low) {
+	this.high = high;
+	this.low = low;
 };
-haxe.Timer = function(time_ms) {
+haxe__$Int64__$_$_$Int64.__name__ = ["haxe","_Int64","___Int64"];
+haxe__$Int64__$_$_$Int64.prototype = {
+	high: null
+	,low: null
+	,__class__: haxe__$Int64__$_$_$Int64
+};
+var haxe_Log = function() { };
+haxe_Log.__name__ = ["haxe","Log"];
+haxe_Log.trace = function(v,infos) {
+	js_Boot.__trace(v,infos);
+};
+var haxe_Timer = function(time_ms) {
 	var me = this;
 	this.id = setInterval(function() {
 		me.run();
 	},time_ms);
 };
-haxe.Timer.__name__ = ["haxe","Timer"];
-haxe.Timer.delay = function(f,time_ms) {
-	var t = new haxe.Timer(time_ms);
+haxe_Timer.__name__ = ["haxe","Timer"];
+haxe_Timer.delay = function(f,time_ms) {
+	var t = new haxe_Timer(time_ms);
 	t.run = function() {
 		t.stop();
 		f();
 	};
 	return t;
 };
-haxe.Timer.stamp = function() {
+haxe_Timer.stamp = function() {
 	return new Date().getTime() / 1000;
 };
-haxe.Timer.prototype = {
+haxe_Timer.prototype = {
 	id: null
 	,stop: function() {
 		if(this.id == null) return;
@@ -1648,19 +1681,18 @@ haxe.Timer.prototype = {
 	}
 	,run: function() {
 	}
-	,__class__: haxe.Timer
+	,__class__: haxe_Timer
 };
-haxe.ds = {};
-haxe.ds.ObjectMap = function() {
+var haxe_ds_ObjectMap = function() {
 	this.h = { };
 	this.h.__keys__ = { };
 };
-haxe.ds.ObjectMap.__name__ = ["haxe","ds","ObjectMap"];
-haxe.ds.ObjectMap.__interfaces__ = [haxe.IMap];
-haxe.ds.ObjectMap.prototype = {
+haxe_ds_ObjectMap.__name__ = ["haxe","ds","ObjectMap"];
+haxe_ds_ObjectMap.__interfaces__ = [haxe_IMap];
+haxe_ds_ObjectMap.prototype = {
 	h: null
 	,set: function(key,value) {
-		var id = key.__id__ || (key.__id__ = ++haxe.ds.ObjectMap.count);
+		var id = key.__id__ || (key.__id__ = ++haxe_ds_ObjectMap.count);
 		this.h[id] = value;
 		this.h.__keys__[id] = key;
 	}
@@ -1681,17 +1713,16 @@ haxe.ds.ObjectMap.prototype = {
 		}
 		return HxOverrides.iter(a);
 	}
-	,__class__: haxe.ds.ObjectMap
+	,__class__: haxe_ds_ObjectMap
 };
-haxe.ds._StringMap = {};
-haxe.ds._StringMap.StringMapIterator = function(map,keys) {
+var haxe_ds__$StringMap_StringMapIterator = function(map,keys) {
 	this.map = map;
 	this.keys = keys;
 	this.index = 0;
 	this.count = keys.length;
 };
-haxe.ds._StringMap.StringMapIterator.__name__ = ["haxe","ds","_StringMap","StringMapIterator"];
-haxe.ds._StringMap.StringMapIterator.prototype = {
+haxe_ds__$StringMap_StringMapIterator.__name__ = ["haxe","ds","_StringMap","StringMapIterator"];
+haxe_ds__$StringMap_StringMapIterator.prototype = {
 	map: null
 	,keys: null
 	,index: null
@@ -1702,14 +1733,14 @@ haxe.ds._StringMap.StringMapIterator.prototype = {
 	,next: function() {
 		return this.map.get(this.keys[this.index++]);
 	}
-	,__class__: haxe.ds._StringMap.StringMapIterator
+	,__class__: haxe_ds__$StringMap_StringMapIterator
 };
-haxe.ds.StringMap = function() {
+var haxe_ds_StringMap = function() {
 	this.h = { };
 };
-haxe.ds.StringMap.__name__ = ["haxe","ds","StringMap"];
-haxe.ds.StringMap.__interfaces__ = [haxe.IMap];
-haxe.ds.StringMap.prototype = {
+haxe_ds_StringMap.__name__ = ["haxe","ds","StringMap"];
+haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
+haxe_ds_StringMap.prototype = {
 	h: null
 	,rh: null
 	,set: function(key,value) {
@@ -1763,50 +1794,103 @@ haxe.ds.StringMap.prototype = {
 		return out;
 	}
 	,iterator: function() {
-		return new haxe.ds._StringMap.StringMapIterator(this,this.arrayKeys());
+		return new haxe_ds__$StringMap_StringMapIterator(this,this.arrayKeys());
 	}
-	,__class__: haxe.ds.StringMap
+	,__class__: haxe_ds_StringMap
 };
-haxe.io = {};
-haxe.io.Bytes = function() { };
-haxe.io.Bytes.__name__ = ["haxe","io","Bytes"];
-haxe.io.Bytes.prototype = {
+var haxe_io_Bytes = function() { };
+haxe_io_Bytes.__name__ = ["haxe","io","Bytes"];
+haxe_io_Bytes.prototype = {
 	length: null
 	,b: null
-	,__class__: haxe.io.Bytes
+	,__class__: haxe_io_Bytes
 };
-var js = {};
-js.Boot = function() { };
-js.Boot.__name__ = ["js","Boot"];
-js.Boot.__unhtml = function(s) {
+var haxe_io_Error = { __ename__ : ["haxe","io","Error"], __constructs__ : ["Blocked","Overflow","OutsideBounds","Custom"] };
+haxe_io_Error.Blocked = ["Blocked",0];
+haxe_io_Error.Blocked.toString = $estr;
+haxe_io_Error.Blocked.__enum__ = haxe_io_Error;
+haxe_io_Error.Overflow = ["Overflow",1];
+haxe_io_Error.Overflow.toString = $estr;
+haxe_io_Error.Overflow.__enum__ = haxe_io_Error;
+haxe_io_Error.OutsideBounds = ["OutsideBounds",2];
+haxe_io_Error.OutsideBounds.toString = $estr;
+haxe_io_Error.OutsideBounds.__enum__ = haxe_io_Error;
+haxe_io_Error.Custom = function(e) { var $x = ["Custom",3,e]; $x.__enum__ = haxe_io_Error; $x.toString = $estr; return $x; };
+var haxe_io_FPHelper = function() { };
+haxe_io_FPHelper.__name__ = ["haxe","io","FPHelper"];
+haxe_io_FPHelper.i32ToFloat = function(i) {
+	var sign = 1 - (i >>> 31 << 1);
+	var exp = i >>> 23 & 255;
+	var sig = i & 8388607;
+	if(sig == 0 && exp == 0) return 0.0;
+	return sign * (1 + Math.pow(2,-23) * sig) * Math.pow(2,exp - 127);
+};
+haxe_io_FPHelper.floatToI32 = function(f) {
+	if(f == 0) return 0;
+	var af;
+	if(f < 0) af = -f; else af = f;
+	var exp = Math.floor(Math.log(af) / 0.6931471805599453);
+	if(exp < -127) exp = -127; else if(exp > 128) exp = 128;
+	var sig = Math.round((af / Math.pow(2,exp) - 1) * 8388608) & 8388607;
+	return (f < 0?-2147483648:0) | exp + 127 << 23 | sig;
+};
+haxe_io_FPHelper.i64ToDouble = function(low,high) {
+	var sign = 1 - (high >>> 31 << 1);
+	var exp = (high >> 20 & 2047) - 1023;
+	var sig = (high & 1048575) * 4294967296. + (low >>> 31) * 2147483648. + (low & 2147483647);
+	if(sig == 0 && exp == -1023) return 0.0;
+	return sign * (1.0 + Math.pow(2,-52) * sig) * Math.pow(2,exp);
+};
+haxe_io_FPHelper.doubleToI64 = function(v) {
+	var i64 = haxe_io_FPHelper.i64tmp;
+	if(v == 0) {
+		i64.low = 0;
+		i64.high = 0;
+	} else {
+		var av;
+		if(v < 0) av = -v; else av = v;
+		var exp = Math.floor(Math.log(av) / 0.6931471805599453);
+		var sig;
+		var v1 = (av / Math.pow(2,exp) - 1) * 4503599627370496.;
+		sig = Math.round(v1);
+		var sig_l = sig | 0;
+		var sig_h = sig / 4294967296.0 | 0;
+		i64.low = sig_l;
+		i64.high = (v < 0?-2147483648:0) | exp + 1023 << 20 | sig_h;
+	}
+	return i64;
+};
+var js_Boot = function() { };
+js_Boot.__name__ = ["js","Boot"];
+js_Boot.__unhtml = function(s) {
 	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
 };
-js.Boot.__trace = function(v,i) {
+js_Boot.__trace = function(v,i) {
 	var msg;
 	if(i != null) msg = i.fileName + ":" + i.lineNumber + ": "; else msg = "";
-	msg += js.Boot.__string_rec(v,"");
+	msg += js_Boot.__string_rec(v,"");
 	if(i != null && i.customParams != null) {
 		var _g = 0;
 		var _g1 = i.customParams;
 		while(_g < _g1.length) {
 			var v1 = _g1[_g];
 			++_g;
-			msg += "," + js.Boot.__string_rec(v1,"");
+			msg += "," + js_Boot.__string_rec(v1,"");
 		}
 	}
 	var d;
-	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js.Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
+	if(typeof(document) != "undefined" && (d = document.getElementById("haxe:trace")) != null) d.innerHTML += js_Boot.__unhtml(msg) + "<br/>"; else if(typeof console != "undefined" && console.log != null) console.log(msg);
 };
-js.Boot.getClass = function(o) {
+js_Boot.getClass = function(o) {
 	if((o instanceof Array) && o.__enum__ == null) return Array; else {
 		var cl = o.__class__;
 		if(cl != null) return cl;
-		var name = js.Boot.__nativeClassName(o);
-		if(name != null) return js.Boot.__resolveNativeClass(name);
+		var name = js_Boot.__nativeClassName(o);
+		if(name != null) return js_Boot.__resolveNativeClass(name);
 		return null;
 	}
 };
-js.Boot.__string_rec = function(o,s) {
+js_Boot.__string_rec = function(o,s) {
 	if(o == null) return "null";
 	if(s.length >= 5) return "<...>";
 	var t = typeof(o);
@@ -1822,7 +1906,7 @@ js.Boot.__string_rec = function(o,s) {
 				var _g = o.length;
 				while(_g1 < _g) {
 					var i1 = _g1++;
-					if(i1 != 2) str2 += "," + js.Boot.__string_rec(o[i1],s); else str2 += js.Boot.__string_rec(o[i1],s);
+					if(i1 != 2) str2 += "," + js_Boot.__string_rec(o[i1],s); else str2 += js_Boot.__string_rec(o[i1],s);
 				}
 				return str2 + ")";
 			}
@@ -1833,7 +1917,7 @@ js.Boot.__string_rec = function(o,s) {
 			var _g2 = 0;
 			while(_g2 < l) {
 				var i2 = _g2++;
-				str1 += (i2 > 0?",":"") + js.Boot.__string_rec(o[i2],s);
+				str1 += (i2 > 0?",":"") + js_Boot.__string_rec(o[i2],s);
 			}
 			str1 += "]";
 			return str1;
@@ -1860,7 +1944,7 @@ js.Boot.__string_rec = function(o,s) {
 			continue;
 		}
 		if(str.length != 2) str += ", \n";
-		str += s + k + " : " + js.Boot.__string_rec(o[k],s);
+		str += s + k + " : " + js_Boot.__string_rec(o[k],s);
 		}
 		s = s.substring(1);
 		str += "\n" + s + "}";
@@ -1873,7 +1957,7 @@ js.Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
-js.Boot.__interfLoop = function(cc,cl) {
+js_Boot.__interfLoop = function(cc,cl) {
 	if(cc == null) return false;
 	if(cc == cl) return true;
 	var intf = cc.__interfaces__;
@@ -1883,12 +1967,12 @@ js.Boot.__interfLoop = function(cc,cl) {
 		while(_g1 < _g) {
 			var i = _g1++;
 			var i1 = intf[i];
-			if(i1 == cl || js.Boot.__interfLoop(i1,cl)) return true;
+			if(i1 == cl || js_Boot.__interfLoop(i1,cl)) return true;
 		}
 	}
-	return js.Boot.__interfLoop(cc.__super__,cl);
+	return js_Boot.__interfLoop(cc.__super__,cl);
 };
-js.Boot.__instanceof = function(o,cl) {
+js_Boot.__instanceof = function(o,cl) {
 	if(cl == null) return false;
 	switch(cl) {
 	case Int:
@@ -1907,8 +1991,8 @@ js.Boot.__instanceof = function(o,cl) {
 		if(o != null) {
 			if(typeof(cl) == "function") {
 				if(o instanceof cl) return true;
-				if(js.Boot.__interfLoop(js.Boot.getClass(o),cl)) return true;
-			} else if(typeof(cl) == "object" && js.Boot.__isNativeObj(cl)) {
+				if(js_Boot.__interfLoop(js_Boot.getClass(o),cl)) return true;
+			} else if(typeof(cl) == "object" && js_Boot.__isNativeObj(cl)) {
 				if(o instanceof cl) return true;
 			}
 		} else return false;
@@ -1917,23 +2001,21 @@ js.Boot.__instanceof = function(o,cl) {
 		return o.__enum__ == cl;
 	}
 };
-js.Boot.__cast = function(o,t) {
-	if(js.Boot.__instanceof(o,t)) return o; else throw "Cannot cast " + Std.string(o) + " to " + Std.string(t);
+js_Boot.__cast = function(o,t) {
+	if(js_Boot.__instanceof(o,t)) return o; else throw "Cannot cast " + Std.string(o) + " to " + Std.string(t);
 };
-js.Boot.__nativeClassName = function(o) {
-	var name = js.Boot.__toStr.call(o).slice(8,-1);
+js_Boot.__nativeClassName = function(o) {
+	var name = js_Boot.__toStr.call(o).slice(8,-1);
 	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") return null;
 	return name;
 };
-js.Boot.__isNativeObj = function(o) {
-	return js.Boot.__nativeClassName(o) != null;
+js_Boot.__isNativeObj = function(o) {
+	return js_Boot.__nativeClassName(o) != null;
 };
-js.Boot.__resolveNativeClass = function(name) {
+js_Boot.__resolveNativeClass = function(name) {
 	if(typeof window != "undefined") return window[name]; else return global[name];
 };
-js.html = {};
-js.html.compat = {};
-js.html.compat.ArrayBuffer = function(a) {
+var js_html_compat_ArrayBuffer = function(a) {
 	if((a instanceof Array) && a.__enum__ == null) {
 		this.a = a;
 		this.byteLength = a.length;
@@ -1948,25 +2030,121 @@ js.html.compat.ArrayBuffer = function(a) {
 		this.byteLength = len;
 	}
 };
-js.html.compat.ArrayBuffer.__name__ = ["js","html","compat","ArrayBuffer"];
-js.html.compat.ArrayBuffer.sliceImpl = function(begin,end) {
+js_html_compat_ArrayBuffer.__name__ = ["js","html","compat","ArrayBuffer"];
+js_html_compat_ArrayBuffer.sliceImpl = function(begin,end) {
 	var u = new Uint8Array(this,begin,end == null?null:end - begin);
 	var result = new ArrayBuffer(u.byteLength);
 	var resultArray = new Uint8Array(result);
 	resultArray.set(u);
 	return result;
 };
-js.html.compat.ArrayBuffer.prototype = {
+js_html_compat_ArrayBuffer.prototype = {
 	byteLength: null
 	,a: null
 	,slice: function(begin,end) {
-		return new js.html.compat.ArrayBuffer(this.a.slice(begin,end));
+		return new js_html_compat_ArrayBuffer(this.a.slice(begin,end));
 	}
-	,__class__: js.html.compat.ArrayBuffer
+	,__class__: js_html_compat_ArrayBuffer
 };
-js.html.compat.Uint8Array = function() { };
-js.html.compat.Uint8Array.__name__ = ["js","html","compat","Uint8Array"];
-js.html.compat.Uint8Array._new = function(arg1,offset,length) {
+var js_html_compat_DataView = function(buffer,byteOffset,byteLength) {
+	this.buf = buffer;
+	if(byteOffset == null) this.offset = 0; else this.offset = byteOffset;
+	if(byteLength == null) this.length = buffer.byteLength - this.offset; else this.length = byteLength;
+	if(this.offset < 0 || this.length < 0 || this.offset + this.length > buffer.byteLength) throw haxe_io_Error.OutsideBounds;
+};
+js_html_compat_DataView.__name__ = ["js","html","compat","DataView"];
+js_html_compat_DataView.prototype = {
+	buf: null
+	,offset: null
+	,length: null
+	,getInt8: function(byteOffset) {
+		var v = this.buf.a[this.offset + byteOffset];
+		if(v >= 128) return v - 256; else return v;
+	}
+	,getUint8: function(byteOffset) {
+		return this.buf.a[this.offset + byteOffset];
+	}
+	,getInt16: function(byteOffset,littleEndian) {
+		var v = this.getUint16(byteOffset,littleEndian);
+		if(v >= 32768) return v - 65536; else return v;
+	}
+	,getUint16: function(byteOffset,littleEndian) {
+		if(littleEndian) return this.buf.a[this.offset + byteOffset] | this.buf.a[this.offset + byteOffset + 1] << 8; else return this.buf.a[this.offset + byteOffset] << 8 | this.buf.a[this.offset + byteOffset + 1];
+	}
+	,getInt32: function(byteOffset,littleEndian) {
+		var p = this.offset + byteOffset;
+		var a = this.buf.a[p++];
+		var b = this.buf.a[p++];
+		var c = this.buf.a[p++];
+		var d = this.buf.a[p++];
+		if(littleEndian) return a | b << 8 | c << 16 | d << 24; else return d | c << 8 | b << 16 | a << 24;
+	}
+	,getUint32: function(byteOffset,littleEndian) {
+		var v = this.getInt32(byteOffset,littleEndian);
+		if(v < 0) return v + 4294967296.; else return v;
+	}
+	,getFloat32: function(byteOffset,littleEndian) {
+		return haxe_io_FPHelper.i32ToFloat(this.getInt32(byteOffset,littleEndian));
+	}
+	,getFloat64: function(byteOffset,littleEndian) {
+		var a = this.getInt32(byteOffset,littleEndian);
+		var b = this.getInt32(byteOffset + 4,littleEndian);
+		return haxe_io_FPHelper.i64ToDouble(littleEndian?a:b,littleEndian?b:a);
+	}
+	,setInt8: function(byteOffset,value) {
+		if(value < 0) this.buf.a[byteOffset + this.offset] = value + 128 & 255; else this.buf.a[byteOffset + this.offset] = value & 255;
+	}
+	,setUint8: function(byteOffset,value) {
+		this.buf.a[byteOffset + this.offset] = value & 255;
+	}
+	,setInt16: function(byteOffset,value,littleEndian) {
+		this.setUint16(byteOffset,value < 0?value + 65536:value,littleEndian);
+	}
+	,setUint16: function(byteOffset,value,littleEndian) {
+		var p = byteOffset + this.offset;
+		if(littleEndian) {
+			this.buf.a[p] = value & 255;
+			this.buf.a[p++] = value >> 8 & 255;
+		} else {
+			this.buf.a[p++] = value >> 8 & 255;
+			this.buf.a[p] = value & 255;
+		}
+	}
+	,setInt32: function(byteOffset,value,littleEndian) {
+		this.setUint32(byteOffset,value,littleEndian);
+	}
+	,setUint32: function(byteOffset,value,littleEndian) {
+		var p = byteOffset + this.offset;
+		if(littleEndian) {
+			this.buf.a[p++] = value & 255;
+			this.buf.a[p++] = value >> 8 & 255;
+			this.buf.a[p++] = value >> 16 & 255;
+			this.buf.a[p++] = value >>> 24;
+		} else {
+			this.buf.a[p++] = value >>> 24;
+			this.buf.a[p++] = value >> 16 & 255;
+			this.buf.a[p++] = value >> 8 & 255;
+			this.buf.a[p++] = value & 255;
+		}
+	}
+	,setFloat32: function(byteOffset,value,littleEndian) {
+		this.setUint32(byteOffset,haxe_io_FPHelper.floatToI32(value),littleEndian);
+	}
+	,setFloat64: function(byteOffset,value,littleEndian) {
+		var i64 = haxe_io_FPHelper.doubleToI64(value);
+		if(littleEndian) {
+			this.setUint32(byteOffset,i64.low);
+			this.setUint32(byteOffset,i64.high);
+		} else {
+			this.setUint32(byteOffset,i64.high);
+			this.setUint32(byteOffset,i64.low);
+		}
+	}
+	,__class__: js_html_compat_DataView
+};
+var js_html_compat_Uint8Array = function() { };
+js_html_compat_Uint8Array.__name__ = ["js","html","compat","Uint8Array"];
+js_html_compat_Uint8Array._new = function(arg1,offset,length) {
 	var arr;
 	if(typeof(arg1) == "number") {
 		arr = [];
@@ -1977,8 +2155,8 @@ js.html.compat.Uint8Array._new = function(arg1,offset,length) {
 		}
 		arr.byteLength = arr.length;
 		arr.byteOffset = 0;
-		arr.buffer = new js.html.compat.ArrayBuffer(arr);
-	} else if(js.Boot.__instanceof(arg1,js.html.compat.ArrayBuffer)) {
+		arr.buffer = new js_html_compat_ArrayBuffer(arr);
+	} else if(js_Boot.__instanceof(arg1,js_html_compat_ArrayBuffer)) {
 		var buffer = arg1;
 		if(offset == null) offset = 0;
 		if(length == null) length = buffer.byteLength - offset;
@@ -1990,15 +2168,15 @@ js.html.compat.Uint8Array._new = function(arg1,offset,length) {
 		arr = arg1.slice();
 		arr.byteLength = arr.length;
 		arr.byteOffset = 0;
-		arr.buffer = new js.html.compat.ArrayBuffer(arr);
+		arr.buffer = new js_html_compat_ArrayBuffer(arr);
 	} else throw "TODO " + Std.string(arg1);
-	arr.subarray = js.html.compat.Uint8Array._subarray;
-	arr.set = js.html.compat.Uint8Array._set;
+	arr.subarray = js_html_compat_Uint8Array._subarray;
+	arr.set = js_html_compat_Uint8Array._set;
 	return arr;
 };
-js.html.compat.Uint8Array._set = function(arg,offset) {
+js_html_compat_Uint8Array._set = function(arg,offset) {
 	var t = this;
-	if(js.Boot.__instanceof(arg.buffer,js.html.compat.ArrayBuffer)) {
+	if(js_Boot.__instanceof(arg.buffer,js_html_compat_ArrayBuffer)) {
 		var a = arg;
 		if(arg.byteLength + offset > t.byteLength) throw "set() outside of range";
 		var _g1 = 0;
@@ -2018,20 +2196,18 @@ js.html.compat.Uint8Array._set = function(arg,offset) {
 		}
 	} else throw "TODO";
 };
-js.html.compat.Uint8Array._subarray = function(start,end) {
+js_html_compat_Uint8Array._subarray = function(start,end) {
 	var t = this;
-	var a = js.html.compat.Uint8Array._new(t.slice(start,end));
+	var a = js_html_compat_Uint8Array._new(t.slice(start,end));
 	a.byteOffset = start;
 	return a;
 };
-var thx = {};
-thx.core = {};
-thx.core.Arrays = function() { };
-thx.core.Arrays.__name__ = ["thx","core","Arrays"];
-thx.core.Arrays.after = function(array,element) {
+var thx_core_Arrays = function() { };
+thx_core_Arrays.__name__ = ["thx","core","Arrays"];
+thx_core_Arrays.after = function(array,element) {
 	return array.slice(HxOverrides.indexOf(array,element,0) + 1);
 };
-thx.core.Arrays.all = function(arr,predicate) {
+thx_core_Arrays.all = function(arr,predicate) {
 	var _g = 0;
 	while(_g < arr.length) {
 		var item = arr[_g];
@@ -2040,7 +2216,7 @@ thx.core.Arrays.all = function(arr,predicate) {
 	}
 	return true;
 };
-thx.core.Arrays.any = function(arr,predicate) {
+thx_core_Arrays.any = function(arr,predicate) {
 	var _g = 0;
 	while(_g < arr.length) {
 		var item = arr[_g];
@@ -2049,20 +2225,20 @@ thx.core.Arrays.any = function(arr,predicate) {
 	}
 	return false;
 };
-thx.core.Arrays.at = function(arr,indexes) {
+thx_core_Arrays.at = function(arr,indexes) {
 	return indexes.map(function(i) {
 		return arr[i];
 	});
 };
-thx.core.Arrays.before = function(array,element) {
+thx_core_Arrays.before = function(array,element) {
 	return array.slice(0,HxOverrides.indexOf(array,element,0));
 };
-thx.core.Arrays.compact = function(arr) {
+thx_core_Arrays.compact = function(arr) {
 	return arr.filter(function(v) {
 		return null != v;
 	});
 };
-thx.core.Arrays.contains = function(array,element,eq) {
+thx_core_Arrays.contains = function(array,element,eq) {
 	if(null == eq) return HxOverrides.indexOf(array,element,0) >= 0; else {
 		var _g1 = 0;
 		var _g = array.length;
@@ -2073,7 +2249,7 @@ thx.core.Arrays.contains = function(array,element,eq) {
 		return false;
 	}
 };
-thx.core.Arrays.cross = function(a,b) {
+thx_core_Arrays.cross = function(a,b) {
 	var r = [];
 	var _g = 0;
 	while(_g < a.length) {
@@ -2088,7 +2264,7 @@ thx.core.Arrays.cross = function(a,b) {
 	}
 	return r;
 };
-thx.core.Arrays.crossMulti = function(array) {
+thx_core_Arrays.crossMulti = function(array) {
 	var acopy = array.slice();
 	var result = acopy.shift().map(function(v) {
 		return [v];
@@ -2113,7 +2289,17 @@ thx.core.Arrays.crossMulti = function(array) {
 	}
 	return result;
 };
-thx.core.Arrays.eachPair = function(array,callback) {
+thx_core_Arrays.distinct = function(array) {
+	var result = [];
+	var _g = 0;
+	while(_g < array.length) {
+		var v = array[_g];
+		++_g;
+		if(!thx_core_Arrays.contains(result,v)) result.push(v);
+	}
+	return result;
+};
+thx_core_Arrays.eachPair = function(array,callback) {
 	var _g1 = 0;
 	var _g = array.length;
 	while(_g1 < _g) {
@@ -2126,9 +2312,9 @@ thx.core.Arrays.eachPair = function(array,callback) {
 		}
 	}
 };
-thx.core.Arrays.equals = function(a,b,equality) {
+thx_core_Arrays.equals = function(a,b,equality) {
 	if(a == null || b == null || a.length != b.length) return false;
-	if(null == equality) equality = thx.core.Functions.equality;
+	if(null == equality) equality = thx_core_Functions.equality;
 	var _g1 = 0;
 	var _g = a.length;
 	while(_g1 < _g) {
@@ -2137,7 +2323,7 @@ thx.core.Arrays.equals = function(a,b,equality) {
 	}
 	return true;
 };
-thx.core.Arrays.extract = function(a,predicate) {
+thx_core_Arrays.extract = function(a,predicate) {
 	var _g1 = 0;
 	var _g = a.length;
 	while(_g1 < _g) {
@@ -2146,7 +2332,7 @@ thx.core.Arrays.extract = function(a,predicate) {
 	}
 	return null;
 };
-thx.core.Arrays.find = function(array,predicate) {
+thx_core_Arrays.find = function(array,predicate) {
 	var _g = 0;
 	while(_g < array.length) {
 		var item = array[_g];
@@ -2155,7 +2341,7 @@ thx.core.Arrays.find = function(array,predicate) {
 	}
 	return null;
 };
-thx.core.Arrays.findLast = function(array,predicate) {
+thx_core_Arrays.findLast = function(array,predicate) {
 	var len = array.length;
 	var j;
 	var _g = 0;
@@ -2166,34 +2352,34 @@ thx.core.Arrays.findLast = function(array,predicate) {
 	}
 	return null;
 };
-thx.core.Arrays.first = function(array) {
+thx_core_Arrays.first = function(array) {
 	return array[0];
 };
-thx.core.Arrays.flatMap = function(array,callback) {
-	return thx.core.Arrays.flatten(array.map(callback));
+thx_core_Arrays.flatMap = function(array,callback) {
+	return thx_core_Arrays.flatten(array.map(callback));
 };
-thx.core.Arrays.flatten = function(array) {
+thx_core_Arrays.flatten = function(array) {
 	return Array.prototype.concat.apply([],array);
 };
-thx.core.Arrays.from = function(array,element) {
+thx_core_Arrays.from = function(array,element) {
 	return array.slice(HxOverrides.indexOf(array,element,0));
 };
-thx.core.Arrays.head = function(array) {
+thx_core_Arrays.head = function(array) {
 	return array[0];
 };
-thx.core.Arrays.ifEmpty = function(value,alt) {
+thx_core_Arrays.ifEmpty = function(value,alt) {
 	if(null != value && 0 != value.length) return value; else return alt;
 };
-thx.core.Arrays.initial = function(array) {
+thx_core_Arrays.initial = function(array) {
 	return array.slice(0,array.length - 1);
 };
-thx.core.Arrays.isEmpty = function(array) {
+thx_core_Arrays.isEmpty = function(array) {
 	return array.length == 0;
 };
-thx.core.Arrays.last = function(array) {
+thx_core_Arrays.last = function(array) {
 	return array[array.length - 1];
 };
-thx.core.Arrays.mapi = function(array,callback) {
+thx_core_Arrays.mapi = function(array,callback) {
 	var r = [];
 	var _g1 = 0;
 	var _g = array.length;
@@ -2203,55 +2389,55 @@ thx.core.Arrays.mapi = function(array,callback) {
 	}
 	return r;
 };
-thx.core.Arrays.mapRight = function(array,callback) {
+thx_core_Arrays.mapRight = function(array,callback) {
 	var i = array.length;
 	var result = [];
 	while(--i >= 0) result.push(callback(array[i]));
 	return result;
 };
-thx.core.Arrays.order = function(array,sort) {
+thx_core_Arrays.order = function(array,sort) {
 	var n = array.slice();
 	n.sort(sort);
 	return n;
 };
-thx.core.Arrays.pull = function(array,toRemove,equality) {
+thx_core_Arrays.pull = function(array,toRemove,equality) {
 	var _g = 0;
 	while(_g < toRemove.length) {
 		var item = toRemove[_g];
 		++_g;
-		thx.core.Arrays.removeAll(array,item,equality);
+		thx_core_Arrays.removeAll(array,item,equality);
 	}
 };
-thx.core.Arrays.pushIf = function(array,condition,value) {
+thx_core_Arrays.pushIf = function(array,condition,value) {
 	if(condition) array.push(value);
 	return array;
 };
-thx.core.Arrays.reduce = function(array,callback,initial) {
+thx_core_Arrays.reduce = function(array,callback,initial) {
 	return array.reduce(callback,initial);
 };
-thx.core.Arrays.resize = function(array,length,fill) {
+thx_core_Arrays.resize = function(array,length,fill) {
 	while(array.length < length) array.push(fill);
 	array.splice(length,array.length - length);
 	return array;
 };
-thx.core.Arrays.reducei = function(array,callback,initial) {
+thx_core_Arrays.reducei = function(array,callback,initial) {
 	return array.reduce(callback,initial);
 };
-thx.core.Arrays.reduceRight = function(array,callback,initial) {
+thx_core_Arrays.reduceRight = function(array,callback,initial) {
 	var i = array.length;
 	while(--i >= 0) initial = callback(initial,array[i]);
 	return initial;
 };
-thx.core.Arrays.removeAll = function(array,element,equality) {
-	if(null == equality) equality = thx.core.Functions.equality;
+thx_core_Arrays.removeAll = function(array,element,equality) {
+	if(null == equality) equality = thx_core_Functions.equality;
 	var i = array.length;
 	while(--i >= 0) if(equality(array[i],element)) array.splice(i,1);
 };
-thx.core.Arrays.rest = function(array) {
+thx_core_Arrays.rest = function(array) {
 	return array.slice(1);
 };
-thx.core.Arrays.sample = function(array,n) {
-	n = thx.core.Ints.min(n,array.length);
+thx_core_Arrays.sample = function(array,n) {
+	n = thx_core_Ints.min(n,array.length);
 	var copy = array.slice();
 	var result = [];
 	var _g = 0;
@@ -2261,11 +2447,11 @@ thx.core.Arrays.sample = function(array,n) {
 	}
 	return result;
 };
-thx.core.Arrays.sampleOne = function(array) {
+thx_core_Arrays.sampleOne = function(array) {
 	return array[Std.random(array.length)];
 };
-thx.core.Arrays.shuffle = function(a) {
-	var t = thx.core.Ints.range(a.length);
+thx_core_Arrays.shuffle = function(a) {
+	var t = thx_core_Ints.range(a.length);
 	var array = [];
 	while(t.length > 0) {
 		var pos = Std.random(t.length);
@@ -2275,13 +2461,13 @@ thx.core.Arrays.shuffle = function(a) {
 	}
 	return array;
 };
-thx.core.Arrays.take = function(arr,n) {
+thx_core_Arrays.take = function(arr,n) {
 	return arr.slice(0,n);
 };
-thx.core.Arrays.takeLast = function(arr,n) {
+thx_core_Arrays.takeLast = function(arr,n) {
 	return arr.slice(arr.length - n);
 };
-thx.core.Arrays.rotate = function(arr) {
+thx_core_Arrays.rotate = function(arr) {
 	var result = [];
 	var _g1 = 0;
 	var _g = arr[0].length;
@@ -2298,8 +2484,8 @@ thx.core.Arrays.rotate = function(arr) {
 	}
 	return result;
 };
-thx.core.Arrays.zip = function(array1,array2) {
-	var length = thx.core.Ints.min(array1.length,array2.length);
+thx_core_Arrays.zip = function(array1,array2) {
+	var length = thx_core_Ints.min(array1.length,array2.length);
 	var array = [];
 	var _g = 0;
 	while(_g < length) {
@@ -2308,8 +2494,8 @@ thx.core.Arrays.zip = function(array1,array2) {
 	}
 	return array;
 };
-thx.core.Arrays.zip3 = function(array1,array2,array3) {
-	var length = thx.core.ArrayInts.min([array1.length,array2.length,array3.length]);
+thx_core_Arrays.zip3 = function(array1,array2,array3) {
+	var length = thx_core_ArrayInts.min([array1.length,array2.length,array3.length]);
 	var array = [];
 	var _g = 0;
 	while(_g < length) {
@@ -2318,8 +2504,8 @@ thx.core.Arrays.zip3 = function(array1,array2,array3) {
 	}
 	return array;
 };
-thx.core.Arrays.zip4 = function(array1,array2,array3,array4) {
-	var length = thx.core.ArrayInts.min([array1.length,array2.length,array3.length,array4.length]);
+thx_core_Arrays.zip4 = function(array1,array2,array3,array4) {
+	var length = thx_core_ArrayInts.min([array1.length,array2.length,array3.length,array4.length]);
 	var array = [];
 	var _g = 0;
 	while(_g < length) {
@@ -2328,8 +2514,8 @@ thx.core.Arrays.zip4 = function(array1,array2,array3,array4) {
 	}
 	return array;
 };
-thx.core.Arrays.zip5 = function(array1,array2,array3,array4,array5) {
-	var length = thx.core.ArrayInts.min([array1.length,array2.length,array3.length,array4.length,array5.length]);
+thx_core_Arrays.zip5 = function(array1,array2,array3,array4,array5) {
+	var length = thx_core_ArrayInts.min([array1.length,array2.length,array3.length,array4.length,array5.length]);
 	var array = [];
 	var _g = 0;
 	while(_g < length) {
@@ -2338,7 +2524,7 @@ thx.core.Arrays.zip5 = function(array1,array2,array3,array4,array5) {
 	}
 	return array;
 };
-thx.core.Arrays.unzip = function(array) {
+thx_core_Arrays.unzip = function(array) {
 	var a1 = [];
 	var a2 = [];
 	array.map(function(t) {
@@ -2347,7 +2533,7 @@ thx.core.Arrays.unzip = function(array) {
 	});
 	return { _0 : a1, _1 : a2};
 };
-thx.core.Arrays.unzip3 = function(array) {
+thx_core_Arrays.unzip3 = function(array) {
 	var a1 = [];
 	var a2 = [];
 	var a3 = [];
@@ -2358,7 +2544,7 @@ thx.core.Arrays.unzip3 = function(array) {
 	});
 	return { _0 : a1, _1 : a2, _2 : a3};
 };
-thx.core.Arrays.unzip4 = function(array) {
+thx_core_Arrays.unzip4 = function(array) {
 	var a1 = [];
 	var a2 = [];
 	var a3 = [];
@@ -2371,7 +2557,7 @@ thx.core.Arrays.unzip4 = function(array) {
 	});
 	return { _0 : a1, _1 : a2, _2 : a3, _3 : a4};
 };
-thx.core.Arrays.unzip5 = function(array) {
+thx_core_Arrays.unzip5 = function(array) {
 	var a1 = [];
 	var a2 = [];
 	var a3 = [];
@@ -2386,137 +2572,137 @@ thx.core.Arrays.unzip5 = function(array) {
 	});
 	return { _0 : a1, _1 : a2, _2 : a3, _3 : a4, _4 : a5};
 };
-thx.core.ArrayFloats = function() { };
-thx.core.ArrayFloats.__name__ = ["thx","core","ArrayFloats"];
-thx.core.ArrayFloats.average = function(arr) {
-	return thx.core.ArrayFloats.sum(arr) / arr.length;
+var thx_core_ArrayFloats = function() { };
+thx_core_ArrayFloats.__name__ = ["thx","core","ArrayFloats"];
+thx_core_ArrayFloats.average = function(arr) {
+	return thx_core_ArrayFloats.sum(arr) / arr.length;
 };
-thx.core.ArrayFloats.compact = function(arr) {
+thx_core_ArrayFloats.compact = function(arr) {
 	return arr.filter(function(v) {
 		return null != v && isFinite(v);
 	});
 };
-thx.core.ArrayFloats.max = function(arr) {
+thx_core_ArrayFloats.max = function(arr) {
 	if(arr.length == 0) return null; else return arr.reduce(function(max,v) {
 		if(v > max) return v; else return max;
 	},arr[0]);
 };
-thx.core.ArrayFloats.min = function(arr) {
+thx_core_ArrayFloats.min = function(arr) {
 	if(arr.length == 0) return null; else return arr.reduce(function(min,v) {
 		if(v < min) return v; else return min;
 	},arr[0]);
 };
-thx.core.ArrayFloats.resize = function(array,length,fill) {
+thx_core_ArrayFloats.resize = function(array,length,fill) {
 	if(fill == null) fill = 0.0;
 	while(array.length < length) array.push(fill);
 	array.splice(length,array.length - length);
 	return array;
 };
-thx.core.ArrayFloats.sum = function(arr) {
+thx_core_ArrayFloats.sum = function(arr) {
 	return arr.reduce(function(tot,v) {
 		return tot + v;
 	},0.0);
 };
-thx.core.ArrayInts = function() { };
-thx.core.ArrayInts.__name__ = ["thx","core","ArrayInts"];
-thx.core.ArrayInts.average = function(arr) {
-	return thx.core.ArrayInts.sum(arr) / arr.length;
+var thx_core_ArrayInts = function() { };
+thx_core_ArrayInts.__name__ = ["thx","core","ArrayInts"];
+thx_core_ArrayInts.average = function(arr) {
+	return thx_core_ArrayInts.sum(arr) / arr.length;
 };
-thx.core.ArrayInts.max = function(arr) {
+thx_core_ArrayInts.max = function(arr) {
 	if(arr.length == 0) return null; else return arr.reduce(function(max,v) {
 		if(v > max) return v; else return max;
 	},arr[0]);
 };
-thx.core.ArrayInts.min = function(arr) {
+thx_core_ArrayInts.min = function(arr) {
 	if(arr.length == 0) return null; else return arr.reduce(function(min,v) {
 		if(v < min) return v; else return min;
 	},arr[0]);
 };
-thx.core.ArrayInts.resize = function(array,length,fill) {
+thx_core_ArrayInts.resize = function(array,length,fill) {
 	if(fill == null) fill = 0;
 	while(array.length < length) array.push(fill);
 	array.splice(length,array.length - length);
 	return array;
 };
-thx.core.ArrayInts.sum = function(arr) {
+thx_core_ArrayInts.sum = function(arr) {
 	return arr.reduce(function(tot,v) {
 		return tot + v;
 	},0);
 };
-thx.core.ArrayStrings = function() { };
-thx.core.ArrayStrings.__name__ = ["thx","core","ArrayStrings"];
-thx.core.ArrayStrings.compact = function(arr) {
+var thx_core_ArrayStrings = function() { };
+thx_core_ArrayStrings.__name__ = ["thx","core","ArrayStrings"];
+thx_core_ArrayStrings.compact = function(arr) {
 	return arr.filter(function(v) {
-		return !thx.core.Strings.isEmpty(v);
+		return !thx_core_Strings.isEmpty(v);
 	});
 };
-thx.core.ArrayStrings.max = function(arr) {
+thx_core_ArrayStrings.max = function(arr) {
 	if(arr.length == 0) return null; else return arr.reduce(function(max,v) {
 		if(v > max) return v; else return max;
 	},arr[0]);
 };
-thx.core.ArrayStrings.min = function(arr) {
+thx_core_ArrayStrings.min = function(arr) {
 	if(arr.length == 0) return null; else return arr.reduce(function(min,v) {
 		if(v < min) return v; else return min;
 	},arr[0]);
 };
-thx.core.Functions0 = function() { };
-thx.core.Functions0.__name__ = ["thx","core","Functions0"];
-thx.core.Functions0.after = function(callback,n) {
+var thx_core_Functions0 = function() { };
+thx_core_Functions0.__name__ = ["thx","core","Functions0"];
+thx_core_Functions0.after = function(callback,n) {
 	return function() {
 		if(--n == 0) callback();
 	};
 };
-thx.core.Functions0.join = function(fa,fb) {
+thx_core_Functions0.join = function(fa,fb) {
 	return function() {
 		fa();
 		fb();
 	};
 };
-thx.core.Functions0.once = function(f) {
+thx_core_Functions0.once = function(f) {
 	return function() {
 		var t = f;
-		f = thx.core.Functions.noop;
+		f = thx_core_Functions.noop;
 		t();
 	};
 };
-thx.core.Functions0.negate = function(callback) {
+thx_core_Functions0.negate = function(callback) {
 	return function() {
 		return !callback();
 	};
 };
-thx.core.Functions0.times = function(n,callback) {
+thx_core_Functions0.times = function(n,callback) {
 	return function() {
-		return thx.core.Ints.range(n).map(function(_) {
+		return thx_core_Ints.range(n).map(function(_) {
 			return callback();
 		});
 	};
 };
-thx.core.Functions0.timesi = function(n,callback) {
+thx_core_Functions0.timesi = function(n,callback) {
 	return function() {
-		return thx.core.Ints.range(n).map(function(i) {
+		return thx_core_Ints.range(n).map(function(i) {
 			return callback(i);
 		});
 	};
 };
-thx.core.Functions1 = function() { };
-thx.core.Functions1.__name__ = ["thx","core","Functions1"];
-thx.core.Functions1.compose = function(fa,fb) {
+var thx_core_Functions1 = function() { };
+thx_core_Functions1.__name__ = ["thx","core","Functions1"];
+thx_core_Functions1.compose = function(fa,fb) {
 	return function(v) {
 		return fa(fb(v));
 	};
 };
-thx.core.Functions1.join = function(fa,fb) {
+thx_core_Functions1.join = function(fa,fb) {
 	return function(v) {
 		fa(v);
 		fb(v);
 	};
 };
-thx.core.Functions1.memoize = function(callback,resolver) {
+thx_core_Functions1.memoize = function(callback,resolver) {
 	if(null == resolver) resolver = function(v) {
 		return "" + Std.string(v);
 	};
-	var map = new haxe.ds.StringMap();
+	var map = new haxe_ds_StringMap();
 	return function(v1) {
 		var key = resolver(v1);
 		if(__map_reserved[key] != null?map.existsReserved(key):map.h.hasOwnProperty(key)) return __map_reserved[key] != null?map.getReserved(key):map.h[key];
@@ -2525,39 +2711,39 @@ thx.core.Functions1.memoize = function(callback,resolver) {
 		return result;
 	};
 };
-thx.core.Functions1.negate = function(callback) {
+thx_core_Functions1.negate = function(callback) {
 	return function(v) {
 		return !callback(v);
 	};
 };
-thx.core.Functions1.noop = function(_) {
+thx_core_Functions1.noop = function(_) {
 };
-thx.core.Functions1.times = function(n,callback) {
+thx_core_Functions1.times = function(n,callback) {
 	return function(value) {
-		return thx.core.Ints.range(n).map(function(_) {
+		return thx_core_Ints.range(n).map(function(_) {
 			return callback(value);
 		});
 	};
 };
-thx.core.Functions1.timesi = function(n,callback) {
+thx_core_Functions1.timesi = function(n,callback) {
 	return function(value) {
-		return thx.core.Ints.range(n).map(function(i) {
+		return thx_core_Ints.range(n).map(function(i) {
 			return callback(value,i);
 		});
 	};
 };
-thx.core.Functions1.swapArguments = function(callback) {
+thx_core_Functions1.swapArguments = function(callback) {
 	return function(a2,a1) {
 		return callback(a1,a2);
 	};
 };
-thx.core.Functions2 = function() { };
-thx.core.Functions2.__name__ = ["thx","core","Functions2"];
-thx.core.Functions2.memoize = function(callback,resolver) {
+var thx_core_Functions2 = function() { };
+thx_core_Functions2.__name__ = ["thx","core","Functions2"];
+thx_core_Functions2.memoize = function(callback,resolver) {
 	if(null == resolver) resolver = function(v1,v2) {
 		return "" + Std.string(v1) + ":" + Std.string(v2);
 	};
-	var map = new haxe.ds.StringMap();
+	var map = new haxe_ds_StringMap();
 	return function(v11,v21) {
 		var key = resolver(v11,v21);
 		if(__map_reserved[key] != null?map.existsReserved(key):map.h.hasOwnProperty(key)) return __map_reserved[key] != null?map.getReserved(key):map.h[key];
@@ -2566,18 +2752,18 @@ thx.core.Functions2.memoize = function(callback,resolver) {
 		return result;
 	};
 };
-thx.core.Functions2.negate = function(callback) {
+thx_core_Functions2.negate = function(callback) {
 	return function(v1,v2) {
 		return !callback(v1,v2);
 	};
 };
-thx.core.Functions3 = function() { };
-thx.core.Functions3.__name__ = ["thx","core","Functions3"];
-thx.core.Functions3.memoize = function(callback,resolver) {
+var thx_core_Functions3 = function() { };
+thx_core_Functions3.__name__ = ["thx","core","Functions3"];
+thx_core_Functions3.memoize = function(callback,resolver) {
 	if(null == resolver) resolver = function(v1,v2,v3) {
 		return "" + Std.string(v1) + ":" + Std.string(v2) + ":" + Std.string(v3);
 	};
-	var map = new haxe.ds.StringMap();
+	var map = new haxe_ds_StringMap();
 	return function(v11,v21,v31) {
 		var key = resolver(v11,v21,v31);
 		if(__map_reserved[key] != null?map.existsReserved(key):map.h.hasOwnProperty(key)) return __map_reserved[key] != null?map.getReserved(key):map.h[key];
@@ -2586,67 +2772,67 @@ thx.core.Functions3.memoize = function(callback,resolver) {
 		return result;
 	};
 };
-thx.core.Functions3.negate = function(callback) {
+thx_core_Functions3.negate = function(callback) {
 	return function(v1,v2,v3) {
 		return !callback(v1,v2,v3);
 	};
 };
-thx.core.Functions = function() { };
-thx.core.Functions.__name__ = ["thx","core","Functions"];
-thx.core.Functions.constant = function(v) {
+var thx_core_Functions = function() { };
+thx_core_Functions.__name__ = ["thx","core","Functions"];
+thx_core_Functions.constant = function(v) {
 	return function() {
 		return v;
 	};
 };
-thx.core.Functions.equality = function(a,b) {
+thx_core_Functions.equality = function(a,b) {
 	return a == b;
 };
-thx.core.Functions.identity = function(value) {
+thx_core_Functions.identity = function(value) {
 	return value;
 };
-thx.core.Functions.noop = function() {
+thx_core_Functions.noop = function() {
 };
-thx.core.Ints = function() { };
-thx.core.Ints.__name__ = ["thx","core","Ints"];
-thx.core.Ints.abs = function(v) {
+var thx_core_Ints = function() { };
+thx_core_Ints.__name__ = ["thx","core","Ints"];
+thx_core_Ints.abs = function(v) {
 	if(v < 0) return -v; else return v;
 };
-thx.core.Ints.canParse = function(s) {
-	return thx.core.Ints.pattern_parse.match(s);
+thx_core_Ints.canParse = function(s) {
+	return thx_core_Ints.pattern_parse.match(s);
 };
-thx.core.Ints.clamp = function(v,min,max) {
+thx_core_Ints.clamp = function(v,min,max) {
 	if(v < min) return min; else if(v > max) return max; else return v;
 };
-thx.core.Ints.clampSym = function(v,max) {
-	return thx.core.Ints.clamp(v,-max,max);
+thx_core_Ints.clampSym = function(v,max) {
+	return thx_core_Ints.clamp(v,-max,max);
 };
-thx.core.Ints.compare = function(a,b) {
+thx_core_Ints.compare = function(a,b) {
 	return a - b;
 };
-thx.core.Ints.interpolate = function(f,a,b) {
+thx_core_Ints.interpolate = function(f,a,b) {
 	return Math.round(a + (b - a) * f);
 };
-thx.core.Ints.isEven = function(v) {
+thx_core_Ints.isEven = function(v) {
 	return v % 2 == 0;
 };
-thx.core.Ints.isOdd = function(v) {
+thx_core_Ints.isOdd = function(v) {
 	return v % 2 != 0;
 };
-thx.core.Ints.max = function(a,b) {
+thx_core_Ints.max = function(a,b) {
 	if(a > b) return a; else return b;
 };
-thx.core.Ints.min = function(a,b) {
+thx_core_Ints.min = function(a,b) {
 	if(a < b) return a; else return b;
 };
-thx.core.Ints.parse = function(s,base) {
+thx_core_Ints.parse = function(s,base) {
 	var v = parseInt(s,base);
 	if(isNaN(v)) return null; else return v;
 };
-thx.core.Ints.random = function(min,max) {
+thx_core_Ints.random = function(min,max) {
 	if(min == null) min = 0;
 	return Std.random(max + 1) + min;
 };
-thx.core.Ints.range = function(start,stop,step) {
+thx_core_Ints.range = function(start,stop,step) {
 	if(step == null) step = 1;
 	if(null == stop) {
 		stop = start;
@@ -2659,67 +2845,70 @@ thx.core.Ints.range = function(start,stop,step) {
 	if(step < 0) while((j = start + step * ++i) > stop) range.push(j); else while((j = start + step * ++i) < stop) range.push(j);
 	return range;
 };
-thx.core.Ints.toString = function(value,base) {
+thx_core_Ints.toString = function(value,base) {
 	return value.toString(base);
 };
-thx.core.Ints.sign = function(value) {
+thx_core_Ints.toBool = function(v) {
+	return v != 0;
+};
+thx_core_Ints.sign = function(value) {
 	if(value < 0) return -1; else return 1;
 };
-thx.core.Ints.wrapCircular = function(v,max) {
+thx_core_Ints.wrapCircular = function(v,max) {
 	v = v % max;
 	if(v < 0) v += max;
 	return v;
 };
-thx.core.Iterators = function() { };
-thx.core.Iterators.__name__ = ["thx","core","Iterators"];
-thx.core.Iterators.all = function(it,predicate) {
+var thx_core_Iterators = function() { };
+thx_core_Iterators.__name__ = ["thx","core","Iterators"];
+thx_core_Iterators.all = function(it,predicate) {
 	while( it.hasNext() ) {
 		var item = it.next();
 		if(!predicate(item)) return false;
 	}
 	return true;
 };
-thx.core.Iterators.any = function(it,predicate) {
+thx_core_Iterators.any = function(it,predicate) {
 	while( it.hasNext() ) {
 		var item = it.next();
 		if(predicate(item)) return true;
 	}
 	return false;
 };
-thx.core.Iterators.eachPair = function(it,handler) {
-	thx.core.Arrays.eachPair(thx.core.Iterators.toArray(it),handler);
+thx_core_Iterators.eachPair = function(it,handler) {
+	thx_core_Arrays.eachPair(thx_core_Iterators.toArray(it),handler);
 };
-thx.core.Iterators.filter = function(it,predicate) {
-	return thx.core.Iterators.reduce(it,function(acc,item) {
+thx_core_Iterators.filter = function(it,predicate) {
+	return thx_core_Iterators.reduce(it,function(acc,item) {
 		if(predicate(item)) acc.push(item);
 		return acc;
 	},[]);
 };
-thx.core.Iterators.find = function(it,f) {
+thx_core_Iterators.find = function(it,f) {
 	while( it.hasNext() ) {
 		var item = it.next();
 		if(f(item)) return item;
 	}
 	return null;
 };
-thx.core.Iterators.first = function(it) {
+thx_core_Iterators.first = function(it) {
 	if(it.hasNext()) return it.next(); else return null;
 };
-thx.core.Iterators.isEmpty = function(it) {
+thx_core_Iterators.isEmpty = function(it) {
 	return !it.hasNext();
 };
-thx.core.Iterators.isIterator = function(v) {
+thx_core_Iterators.isIterator = function(v) {
 	var fields;
 	if(Reflect.isObject(v) && null == Type.getClass(v)) fields = Reflect.fields(v); else fields = Type.getInstanceFields(Type.getClass(v));
 	if(!Lambda.has(fields,"next") || !Lambda.has(fields,"hasNext")) return false;
 	return Reflect.isFunction(Reflect.field(v,"next")) && Reflect.isFunction(Reflect.field(v,"hasNext"));
 };
-thx.core.Iterators.last = function(it) {
+thx_core_Iterators.last = function(it) {
 	var buf = null;
 	while(it.hasNext()) buf = it.next();
 	return buf;
 };
-thx.core.Iterators.map = function(it,f) {
+thx_core_Iterators.map = function(it,f) {
 	var acc = [];
 	while( it.hasNext() ) {
 		var v = it.next();
@@ -2727,7 +2916,7 @@ thx.core.Iterators.map = function(it,f) {
 	}
 	return acc;
 };
-thx.core.Iterators.mapi = function(it,f) {
+thx_core_Iterators.mapi = function(it,f) {
 	var acc = [];
 	var i = 0;
 	while( it.hasNext() ) {
@@ -2736,24 +2925,24 @@ thx.core.Iterators.mapi = function(it,f) {
 	}
 	return acc;
 };
-thx.core.Iterators.order = function(it,sort) {
-	var n = thx.core.Iterators.toArray(it);
+thx_core_Iterators.order = function(it,sort) {
+	var n = thx_core_Iterators.toArray(it);
 	n.sort(sort);
 	return n;
 };
-thx.core.Iterators.reduce = function(it,callback,initial) {
-	thx.core.Iterators.map(it,function(v) {
+thx_core_Iterators.reduce = function(it,callback,initial) {
+	thx_core_Iterators.map(it,function(v) {
 		initial = callback(initial,v);
 	});
 	return initial;
 };
-thx.core.Iterators.reducei = function(it,callback,initial) {
-	thx.core.Iterators.mapi(it,function(v,i) {
+thx_core_Iterators.reducei = function(it,callback,initial) {
+	thx_core_Iterators.mapi(it,function(v,i) {
 		initial = callback(initial,v,i);
 	});
 	return initial;
 };
-thx.core.Iterators.toArray = function(it) {
+thx_core_Iterators.toArray = function(it) {
 	var items = [];
 	while( it.hasNext() ) {
 		var item = it.next();
@@ -2761,89 +2950,95 @@ thx.core.Iterators.toArray = function(it) {
 	}
 	return items;
 };
-thx.core.Nil = { __ename__ : ["thx","core","Nil"], __constructs__ : ["nil"] };
-thx.core.Nil.nil = ["nil",0];
-thx.core.Nil.nil.__enum__ = thx.core.Nil;
-thx.core.Strings = function() { };
-thx.core.Strings.__name__ = ["thx","core","Strings"];
-thx.core.Strings.after = function(value,searchFor) {
+var thx_core_Nil = { __ename__ : ["thx","core","Nil"], __constructs__ : ["nil"] };
+thx_core_Nil.nil = ["nil",0];
+thx_core_Nil.nil.toString = $estr;
+thx_core_Nil.nil.__enum__ = thx_core_Nil;
+var thx_core_Strings = function() { };
+thx_core_Strings.__name__ = ["thx","core","Strings"];
+thx_core_Strings.after = function(value,searchFor) {
 	var pos = value.indexOf(searchFor);
 	if(pos < 0) return ""; else return value.substring(pos + searchFor.length);
 };
-thx.core.Strings.capitalize = function(s) {
+thx_core_Strings.capitalize = function(s) {
 	return s.substring(0,1).toUpperCase() + s.substring(1);
 };
-thx.core.Strings.capitalizeWords = function(value,whiteSpaceOnly) {
+thx_core_Strings.capitalizeWords = function(value,whiteSpaceOnly) {
 	if(whiteSpaceOnly == null) whiteSpaceOnly = false;
-	if(whiteSpaceOnly) return thx.core.Strings.UCWORDSWS.map(value.substring(0,1).toUpperCase() + value.substring(1),thx.core.Strings.upperMatch); else return thx.core.Strings.UCWORDS.map(value.substring(0,1).toUpperCase() + value.substring(1),thx.core.Strings.upperMatch);
+	if(whiteSpaceOnly) return thx_core_Strings.UCWORDSWS.map(value.substring(0,1).toUpperCase() + value.substring(1),thx_core_Strings.upperMatch); else return thx_core_Strings.UCWORDS.map(value.substring(0,1).toUpperCase() + value.substring(1),thx_core_Strings.upperMatch);
 };
-thx.core.Strings.collapse = function(value) {
-	return thx.core.Strings.WSG.replace(StringTools.trim(value)," ");
+thx_core_Strings.collapse = function(value) {
+	return thx_core_Strings.WSG.replace(StringTools.trim(value)," ");
 };
-thx.core.Strings.compare = function(a,b) {
+thx_core_Strings.compare = function(a,b) {
 	if(a < b) return -1; else if(a > b) return 1; else return 0;
 };
-thx.core.Strings.contains = function(s,test) {
+thx_core_Strings.contains = function(s,test) {
 	return s.indexOf(test) >= 0;
 };
-thx.core.Strings.dasherize = function(s) {
+thx_core_Strings.dasherize = function(s) {
 	return StringTools.replace(s,"_","-");
 };
-thx.core.Strings.ellipsis = function(s,maxlen,symbol) {
+thx_core_Strings.ellipsis = function(s,maxlen,symbol) {
 	if(symbol == null) symbol = "...";
 	if(maxlen == null) maxlen = 20;
 	if(s.length > maxlen) return s.substring(0,symbol.length > maxlen - symbol.length?symbol.length:maxlen - symbol.length) + symbol; else return s;
 };
-thx.core.Strings.filter = function(s,predicate) {
+thx_core_Strings.filter = function(s,predicate) {
 	return s.split("").filter(predicate).join("");
 };
-thx.core.Strings.filterCharcode = function(s,predicate) {
-	return thx.core.Strings.toCharcodeArray(s).filter(predicate).map(function(i) {
+thx_core_Strings.filterCharcode = function(s,predicate) {
+	return thx_core_Strings.toCharcodeArray(s).filter(predicate).map(function(i) {
 		return String.fromCharCode(i);
 	}).join("");
 };
-thx.core.Strings.from = function(value,searchFor) {
+thx_core_Strings.from = function(value,searchFor) {
 	var pos = value.indexOf(searchFor);
 	if(pos < 0) return ""; else return value.substring(pos);
 };
-thx.core.Strings.humanize = function(s) {
-	return StringTools.replace(thx.core.Strings.underscore(s),"_"," ");
+thx_core_Strings.humanize = function(s) {
+	return StringTools.replace(thx_core_Strings.underscore(s),"_"," ");
 };
-thx.core.Strings.isAlphaNum = function(value) {
-	return thx.core.Strings.ALPHANUM.match(value);
+thx_core_Strings.isAlphaNum = function(value) {
+	return thx_core_Strings.ALPHANUM.match(value);
 };
-thx.core.Strings.isLowerCase = function(value) {
+thx_core_Strings.isLowerCase = function(value) {
 	return value.toLowerCase() == value;
 };
-thx.core.Strings.isUpperCase = function(value) {
+thx_core_Strings.isUpperCase = function(value) {
 	return value.toUpperCase() == value;
 };
-thx.core.Strings.ifEmpty = function(value,alt) {
+thx_core_Strings.ifEmpty = function(value,alt) {
 	if(null != value && "" != value) return value; else return alt;
 };
-thx.core.Strings.isDigitsOnly = function(value) {
-	return thx.core.Strings.DIGITS.match(value);
+thx_core_Strings.isDigitsOnly = function(value) {
+	return thx_core_Strings.DIGITS.match(value);
 };
-thx.core.Strings.isEmpty = function(value) {
+thx_core_Strings.isEmpty = function(value) {
 	return value == null || value == "";
 };
-thx.core.Strings.iterator = function(s) {
+thx_core_Strings.random = function(value,length) {
+	if(length == null) length = 1;
+	var pos = Math.floor((value.length - length + 1) * Math.random());
+	return HxOverrides.substr(value,pos,length);
+};
+thx_core_Strings.iterator = function(s) {
 	var _this = s.split("");
 	return HxOverrides.iter(_this);
 };
-thx.core.Strings.map = function(value,callback) {
+thx_core_Strings.map = function(value,callback) {
 	return value.split("").map(callback);
 };
-thx.core.Strings.remove = function(value,toremove) {
+thx_core_Strings.remove = function(value,toremove) {
 	return StringTools.replace(value,toremove,"");
 };
-thx.core.Strings.removeAfter = function(value,toremove) {
+thx_core_Strings.removeAfter = function(value,toremove) {
 	if(StringTools.endsWith(value,toremove)) return value.substring(0,value.length - toremove.length); else return value;
 };
-thx.core.Strings.removeBefore = function(value,toremove) {
+thx_core_Strings.removeBefore = function(value,toremove) {
 	if(StringTools.startsWith(value,toremove)) return value.substring(toremove.length); else return value;
 };
-thx.core.Strings.repeat = function(s,times) {
+thx_core_Strings.repeat = function(s,times) {
 	return ((function($this) {
 		var $r;
 		var _g = [];
@@ -2858,26 +3053,26 @@ thx.core.Strings.repeat = function(s,times) {
 		return $r;
 	}(this))).join("");
 };
-thx.core.Strings.reverse = function(s) {
+thx_core_Strings.reverse = function(s) {
 	var arr = s.split("");
 	arr.reverse();
 	return arr.join("");
 };
-thx.core.Strings.stripTags = function(s) {
-	return thx.core.Strings.STRIPTAGS.replace(s,"");
+thx_core_Strings.stripTags = function(s) {
+	return thx_core_Strings.STRIPTAGS.replace(s,"");
 };
-thx.core.Strings.surround = function(s,left,right) {
+thx_core_Strings.surround = function(s,left,right) {
 	return "" + left + s + (null == right?left:right);
 };
-thx.core.Strings.toArray = function(s) {
+thx_core_Strings.toArray = function(s) {
 	return s.split("");
 };
-thx.core.Strings.toCharcodeArray = function(s) {
-	return thx.core.Strings.map(s,function(s1) {
+thx_core_Strings.toCharcodeArray = function(s) {
+	return thx_core_Strings.map(s,function(s1) {
 		return HxOverrides.cca(s1,0);
 	});
 };
-thx.core.Strings.toChunks = function(s,len) {
+thx_core_Strings.toChunks = function(s,len) {
 	var chunks = [];
 	while(s.length > 0) {
 		chunks.push(s.substring(0,len));
@@ -2885,20 +3080,20 @@ thx.core.Strings.toChunks = function(s,len) {
 	}
 	return chunks;
 };
-thx.core.Strings.trimChars = function(value,charlist) {
-	return thx.core.Strings.trimCharsRight(thx.core.Strings.trimCharsLeft(value,charlist),charlist);
+thx_core_Strings.trimChars = function(value,charlist) {
+	return thx_core_Strings.trimCharsRight(thx_core_Strings.trimCharsLeft(value,charlist),charlist);
 };
-thx.core.Strings.trimCharsLeft = function(value,charlist) {
+thx_core_Strings.trimCharsLeft = function(value,charlist) {
 	var pos = 0;
 	var _g1 = 0;
 	var _g = value.length;
 	while(_g1 < _g) {
 		var i = _g1++;
-		if(thx.core.Strings.contains(charlist,value.charAt(i))) pos++; else break;
+		if(thx_core_Strings.contains(charlist,value.charAt(i))) pos++; else break;
 	}
 	return value.substring(pos);
 };
-thx.core.Strings.trimCharsRight = function(value,charlist) {
+thx_core_Strings.trimCharsRight = function(value,charlist) {
 	var len = value.length;
 	var pos = len;
 	var i;
@@ -2906,33 +3101,33 @@ thx.core.Strings.trimCharsRight = function(value,charlist) {
 	while(_g < len) {
 		var j = _g++;
 		i = len - j - 1;
-		if(thx.core.Strings.contains(charlist,value.charAt(i))) pos = i; else break;
+		if(thx_core_Strings.contains(charlist,value.charAt(i))) pos = i; else break;
 	}
 	return value.substring(0,pos);
 };
-thx.core.Strings.underscore = function(s) {
+thx_core_Strings.underscore = function(s) {
 	s = new EReg("::","g").replace(s,"/");
 	s = new EReg("([A-Z]+)([A-Z][a-z])","g").replace(s,"$1_$2");
 	s = new EReg("([a-z\\d])([A-Z])","g").replace(s,"$1_$2");
 	s = new EReg("-","g").replace(s,"_");
 	return s.toLowerCase();
 };
-thx.core.Strings.upTo = function(value,searchFor) {
+thx_core_Strings.upTo = function(value,searchFor) {
 	var pos = value.indexOf(searchFor);
 	if(pos < 0) return value; else return value.substring(0,pos);
 };
-thx.core.Strings.wrapColumns = function(s,columns,indent,newline) {
+thx_core_Strings.wrapColumns = function(s,columns,indent,newline) {
 	if(newline == null) newline = "\n";
 	if(indent == null) indent = "";
 	if(columns == null) columns = 78;
-	return thx.core.Strings.SPLIT_LINES.split(s).map(function(part) {
-		return thx.core.Strings.wrapLine(StringTools.trim(thx.core.Strings.WSG.replace(part," ")),columns,indent,newline);
+	return thx_core_Strings.SPLIT_LINES.split(s).map(function(part) {
+		return thx_core_Strings.wrapLine(StringTools.trim(thx_core_Strings.WSG.replace(part," ")),columns,indent,newline);
 	}).join(newline);
 };
-thx.core.Strings.upperMatch = function(re) {
+thx_core_Strings.upperMatch = function(re) {
 	return re.matched(0).toUpperCase();
 };
-thx.core.Strings.wrapLine = function(s,columns,indent,newline) {
+thx_core_Strings.wrapLine = function(s,columns,indent,newline) {
 	var parts = [];
 	var pos = 0;
 	var len = s.length;
@@ -2957,147 +3152,164 @@ thx.core.Strings.wrapLine = function(s,columns,indent,newline) {
 	}
 	return indent + parts.join(newline + indent);
 };
-thx.core._Tuple = {};
-thx.core._Tuple.Tuple0_Impl_ = {};
-thx.core._Tuple.Tuple0_Impl_.__name__ = ["thx","core","_Tuple","Tuple0_Impl_"];
-thx.core._Tuple.Tuple0_Impl_._new = function() {
-	return thx.core.Nil.nil;
+var thx_core__$Tuple_Tuple0_$Impl_$ = {};
+thx_core__$Tuple_Tuple0_$Impl_$.__name__ = ["thx","core","_Tuple","Tuple0_Impl_"];
+thx_core__$Tuple_Tuple0_$Impl_$._new = function() {
+	return thx_core_Nil.nil;
 };
-thx.core._Tuple.Tuple0_Impl_["with"] = function(this1,v) {
+thx_core__$Tuple_Tuple0_$Impl_$["with"] = function(this1,v) {
 	return v;
 };
-thx.core._Tuple.Tuple0_Impl_.toString = function(this1) {
+thx_core__$Tuple_Tuple0_$Impl_$.toString = function(this1) {
 	return "Tuple0()";
 };
-thx.core._Tuple.Tuple0_Impl_.toNil = function(this1) {
+thx_core__$Tuple_Tuple0_$Impl_$.toNil = function(this1) {
 	return this1;
 };
-thx.core._Tuple.Tuple0_Impl_.nilToTuple = function(v) {
-	return thx.core.Nil.nil;
+thx_core__$Tuple_Tuple0_$Impl_$.nilToTuple = function(v) {
+	return thx_core_Nil.nil;
 };
-thx.core._Tuple.Tuple1_Impl_ = {};
-thx.core._Tuple.Tuple1_Impl_.__name__ = ["thx","core","_Tuple","Tuple1_Impl_"];
-thx.core._Tuple.Tuple1_Impl_._new = function(_0) {
+var thx_core__$Tuple_Tuple1_$Impl_$ = {};
+thx_core__$Tuple_Tuple1_$Impl_$.__name__ = ["thx","core","_Tuple","Tuple1_Impl_"];
+thx_core__$Tuple_Tuple1_$Impl_$._new = function(_0) {
 	return _0;
 };
-thx.core._Tuple.Tuple1_Impl_.get__0 = function(this1) {
+thx_core__$Tuple_Tuple1_$Impl_$.get__0 = function(this1) {
 	return this1;
 };
-thx.core._Tuple.Tuple1_Impl_["with"] = function(this1,v) {
+thx_core__$Tuple_Tuple1_$Impl_$["with"] = function(this1,v) {
 	return { _0 : this1, _1 : v};
 };
-thx.core._Tuple.Tuple1_Impl_.toString = function(this1) {
+thx_core__$Tuple_Tuple1_$Impl_$.toString = function(this1) {
 	return "Tuple1(" + Std.string(this1) + ")";
 };
-thx.core._Tuple.Tuple2_Impl_ = {};
-thx.core._Tuple.Tuple2_Impl_.__name__ = ["thx","core","_Tuple","Tuple2_Impl_"];
-thx.core._Tuple.Tuple2_Impl_._new = function(_0,_1) {
+thx_core__$Tuple_Tuple1_$Impl_$.arrayToTuple = function(v) {
+	return v[0];
+};
+var thx_core__$Tuple_Tuple2_$Impl_$ = {};
+thx_core__$Tuple_Tuple2_$Impl_$.__name__ = ["thx","core","_Tuple","Tuple2_Impl_"];
+thx_core__$Tuple_Tuple2_$Impl_$._new = function(_0,_1) {
 	return { _0 : _0, _1 : _1};
 };
-thx.core._Tuple.Tuple2_Impl_.get_left = function(this1) {
+thx_core__$Tuple_Tuple2_$Impl_$.get_left = function(this1) {
 	return this1._0;
 };
-thx.core._Tuple.Tuple2_Impl_.get_right = function(this1) {
+thx_core__$Tuple_Tuple2_$Impl_$.get_right = function(this1) {
 	return this1._1;
 };
-thx.core._Tuple.Tuple2_Impl_.flip = function(this1) {
+thx_core__$Tuple_Tuple2_$Impl_$.flip = function(this1) {
 	return { _0 : this1._1, _1 : this1._0};
 };
-thx.core._Tuple.Tuple2_Impl_.dropLeft = function(this1) {
+thx_core__$Tuple_Tuple2_$Impl_$.dropLeft = function(this1) {
 	return this1._1;
 };
-thx.core._Tuple.Tuple2_Impl_.dropRight = function(this1) {
+thx_core__$Tuple_Tuple2_$Impl_$.dropRight = function(this1) {
 	return this1._0;
 };
-thx.core._Tuple.Tuple2_Impl_["with"] = function(this1,v) {
+thx_core__$Tuple_Tuple2_$Impl_$["with"] = function(this1,v) {
 	return { _0 : this1._0, _1 : this1._1, _2 : v};
 };
-thx.core._Tuple.Tuple2_Impl_.toString = function(this1) {
+thx_core__$Tuple_Tuple2_$Impl_$.toString = function(this1) {
 	return "Tuple2(" + Std.string(this1._0) + "," + Std.string(this1._1) + ")";
 };
-thx.core._Tuple.Tuple3_Impl_ = {};
-thx.core._Tuple.Tuple3_Impl_.__name__ = ["thx","core","_Tuple","Tuple3_Impl_"];
-thx.core._Tuple.Tuple3_Impl_._new = function(_0,_1,_2) {
+thx_core__$Tuple_Tuple2_$Impl_$.arrayToTuple2 = function(v) {
+	return { _0 : v[0], _1 : v[1]};
+};
+var thx_core__$Tuple_Tuple3_$Impl_$ = {};
+thx_core__$Tuple_Tuple3_$Impl_$.__name__ = ["thx","core","_Tuple","Tuple3_Impl_"];
+thx_core__$Tuple_Tuple3_$Impl_$._new = function(_0,_1,_2) {
 	return { _0 : _0, _1 : _1, _2 : _2};
 };
-thx.core._Tuple.Tuple3_Impl_.flip = function(this1) {
+thx_core__$Tuple_Tuple3_$Impl_$.flip = function(this1) {
 	return { _0 : this1._2, _1 : this1._1, _2 : this1._0};
 };
-thx.core._Tuple.Tuple3_Impl_.dropLeft = function(this1) {
+thx_core__$Tuple_Tuple3_$Impl_$.dropLeft = function(this1) {
 	return { _0 : this1._1, _1 : this1._2};
 };
-thx.core._Tuple.Tuple3_Impl_.dropRight = function(this1) {
+thx_core__$Tuple_Tuple3_$Impl_$.dropRight = function(this1) {
 	return { _0 : this1._0, _1 : this1._1};
 };
-thx.core._Tuple.Tuple3_Impl_["with"] = function(this1,v) {
+thx_core__$Tuple_Tuple3_$Impl_$["with"] = function(this1,v) {
 	return { _0 : this1._0, _1 : this1._1, _2 : this1._2, _3 : v};
 };
-thx.core._Tuple.Tuple3_Impl_.toString = function(this1) {
+thx_core__$Tuple_Tuple3_$Impl_$.toString = function(this1) {
 	return "Tuple3(" + Std.string(this1._0) + "," + Std.string(this1._1) + "," + Std.string(this1._2) + ")";
 };
-thx.core._Tuple.Tuple4_Impl_ = {};
-thx.core._Tuple.Tuple4_Impl_.__name__ = ["thx","core","_Tuple","Tuple4_Impl_"];
-thx.core._Tuple.Tuple4_Impl_._new = function(_0,_1,_2,_3) {
+thx_core__$Tuple_Tuple3_$Impl_$.arrayToTuple3 = function(v) {
+	return { _0 : v[0], _1 : v[1], _2 : v[2]};
+};
+var thx_core__$Tuple_Tuple4_$Impl_$ = {};
+thx_core__$Tuple_Tuple4_$Impl_$.__name__ = ["thx","core","_Tuple","Tuple4_Impl_"];
+thx_core__$Tuple_Tuple4_$Impl_$._new = function(_0,_1,_2,_3) {
 	return { _0 : _0, _1 : _1, _2 : _2, _3 : _3};
 };
-thx.core._Tuple.Tuple4_Impl_.flip = function(this1) {
+thx_core__$Tuple_Tuple4_$Impl_$.flip = function(this1) {
 	return { _0 : this1._3, _1 : this1._2, _2 : this1._1, _3 : this1._0};
 };
-thx.core._Tuple.Tuple4_Impl_.dropLeft = function(this1) {
+thx_core__$Tuple_Tuple4_$Impl_$.dropLeft = function(this1) {
 	return { _0 : this1._1, _1 : this1._2, _2 : this1._3};
 };
-thx.core._Tuple.Tuple4_Impl_.dropRight = function(this1) {
+thx_core__$Tuple_Tuple4_$Impl_$.dropRight = function(this1) {
 	return { _0 : this1._0, _1 : this1._1, _2 : this1._2};
 };
-thx.core._Tuple.Tuple4_Impl_["with"] = function(this1,v) {
+thx_core__$Tuple_Tuple4_$Impl_$["with"] = function(this1,v) {
 	return { _0 : this1._0, _1 : this1._1, _2 : this1._2, _3 : this1._3, _4 : v};
 };
-thx.core._Tuple.Tuple4_Impl_.toString = function(this1) {
+thx_core__$Tuple_Tuple4_$Impl_$.toString = function(this1) {
 	return "Tuple4(" + Std.string(this1._0) + "," + Std.string(this1._1) + "," + Std.string(this1._2) + "," + Std.string(this1._3) + ")";
 };
-thx.core._Tuple.Tuple5_Impl_ = {};
-thx.core._Tuple.Tuple5_Impl_.__name__ = ["thx","core","_Tuple","Tuple5_Impl_"];
-thx.core._Tuple.Tuple5_Impl_._new = function(_0,_1,_2,_3,_4) {
+thx_core__$Tuple_Tuple4_$Impl_$.arrayToTuple4 = function(v) {
+	return { _0 : v[0], _1 : v[1], _2 : v[2], _3 : v[3]};
+};
+var thx_core__$Tuple_Tuple5_$Impl_$ = {};
+thx_core__$Tuple_Tuple5_$Impl_$.__name__ = ["thx","core","_Tuple","Tuple5_Impl_"];
+thx_core__$Tuple_Tuple5_$Impl_$._new = function(_0,_1,_2,_3,_4) {
 	return { _0 : _0, _1 : _1, _2 : _2, _3 : _3, _4 : _4};
 };
-thx.core._Tuple.Tuple5_Impl_.flip = function(this1) {
+thx_core__$Tuple_Tuple5_$Impl_$.flip = function(this1) {
 	return { _0 : this1._4, _1 : this1._3, _2 : this1._2, _3 : this1._1, _4 : this1._0};
 };
-thx.core._Tuple.Tuple5_Impl_.dropLeft = function(this1) {
+thx_core__$Tuple_Tuple5_$Impl_$.dropLeft = function(this1) {
 	return { _0 : this1._1, _1 : this1._2, _2 : this1._3, _3 : this1._4};
 };
-thx.core._Tuple.Tuple5_Impl_.dropRight = function(this1) {
+thx_core__$Tuple_Tuple5_$Impl_$.dropRight = function(this1) {
 	return { _0 : this1._0, _1 : this1._1, _2 : this1._2, _3 : this1._3};
 };
-thx.core._Tuple.Tuple5_Impl_["with"] = function(this1,v) {
+thx_core__$Tuple_Tuple5_$Impl_$["with"] = function(this1,v) {
 	return { _0 : this1._0, _1 : this1._1, _2 : this1._2, _3 : this1._3, _4 : this1._4, _5 : v};
 };
-thx.core._Tuple.Tuple5_Impl_.toString = function(this1) {
+thx_core__$Tuple_Tuple5_$Impl_$.toString = function(this1) {
 	return "Tuple5(" + Std.string(this1._0) + "," + Std.string(this1._1) + "," + Std.string(this1._2) + "," + Std.string(this1._3) + "," + Std.string(this1._4) + ")";
 };
-thx.core._Tuple.Tuple6_Impl_ = {};
-thx.core._Tuple.Tuple6_Impl_.__name__ = ["thx","core","_Tuple","Tuple6_Impl_"];
-thx.core._Tuple.Tuple6_Impl_._new = function(_0,_1,_2,_3,_4,_5) {
+thx_core__$Tuple_Tuple5_$Impl_$.arrayToTuple5 = function(v) {
+	return { _0 : v[0], _1 : v[1], _2 : v[2], _3 : v[3], _4 : v[4]};
+};
+var thx_core__$Tuple_Tuple6_$Impl_$ = {};
+thx_core__$Tuple_Tuple6_$Impl_$.__name__ = ["thx","core","_Tuple","Tuple6_Impl_"];
+thx_core__$Tuple_Tuple6_$Impl_$._new = function(_0,_1,_2,_3,_4,_5) {
 	return { _0 : _0, _1 : _1, _2 : _2, _3 : _3, _4 : _4, _5 : _5};
 };
-thx.core._Tuple.Tuple6_Impl_.flip = function(this1) {
+thx_core__$Tuple_Tuple6_$Impl_$.flip = function(this1) {
 	return { _0 : this1._5, _1 : this1._4, _2 : this1._3, _3 : this1._2, _4 : this1._1, _5 : this1._0};
 };
-thx.core._Tuple.Tuple6_Impl_.dropLeft = function(this1) {
+thx_core__$Tuple_Tuple6_$Impl_$.dropLeft = function(this1) {
 	return { _0 : this1._1, _1 : this1._2, _2 : this1._3, _3 : this1._4, _4 : this1._5};
 };
-thx.core._Tuple.Tuple6_Impl_.dropRight = function(this1) {
+thx_core__$Tuple_Tuple6_$Impl_$.dropRight = function(this1) {
 	return { _0 : this1._0, _1 : this1._1, _2 : this1._2, _3 : this1._3, _4 : this1._4};
 };
-thx.core._Tuple.Tuple6_Impl_.toString = function(this1) {
+thx_core__$Tuple_Tuple6_$Impl_$.toString = function(this1) {
 	return "Tuple6(" + Std.string(this1._0) + "," + Std.string(this1._1) + "," + Std.string(this1._2) + "," + Std.string(this1._3) + "," + Std.string(this1._4) + "," + Std.string(this1._5) + ")";
 };
-thx.core.Types = function() { };
-thx.core.Types.__name__ = ["thx","core","Types"];
-thx.core.Types.isAnonymousObject = function(v) {
+thx_core__$Tuple_Tuple6_$Impl_$.arrayToTuple6 = function(v) {
+	return { _0 : v[0], _1 : v[1], _2 : v[2], _3 : v[3], _4 : v[4], _5 : v[5]};
+};
+var thx_core_Types = function() { };
+thx_core_Types.__name__ = ["thx","core","Types"];
+thx_core_Types.isAnonymousObject = function(v) {
 	return Reflect.isObject(v) && null == Type.getClass(v);
 };
-thx.core.Types.isPrimitive = function(v) {
+thx_core_Types.isPrimitive = function(v) {
 	{
 		var _g = Type["typeof"](v);
 		switch(_g[1]) {
@@ -3111,17 +3323,17 @@ thx.core.Types.isPrimitive = function(v) {
 		}
 	}
 };
-thx.core.Types.hasSuperClass = function(cls,sup) {
+thx_core_Types.hasSuperClass = function(cls,sup) {
 	while(null != cls) {
 		if(cls == sup) return true;
 		cls = Type.getSuperClass(cls);
 	}
 	return false;
 };
-thx.core.Types.sameType = function(a,b) {
-	return thx.core.Types.typeToString(Type["typeof"](a)) == thx.core.Types.typeToString(Type["typeof"](b));
+thx_core_Types.sameType = function(a,b) {
+	return thx_core_Types.typeToString(Type["typeof"](a)) == thx_core_Types.typeToString(Type["typeof"](b));
 };
-thx.core.Types.typeInheritance = function(type) {
+thx_core_Types.typeInheritance = function(type) {
 	switch(type[1]) {
 	case 1:
 		return ["Int"];
@@ -3148,7 +3360,7 @@ thx.core.Types.typeInheritance = function(type) {
 		throw "invalid type " + Std.string(type);
 	}
 };
-thx.core.Types.typeToString = function(type) {
+thx_core_Types.typeToString = function(type) {
 	switch(type[1]) {
 	case 0:
 		return "Null";
@@ -3172,59 +3384,58 @@ thx.core.Types.typeToString = function(type) {
 		throw "invalid type " + Std.string(type);
 	}
 };
-thx.core.Types.valueTypeInheritance = function(value) {
-	return thx.core.Types.typeInheritance(Type["typeof"](value));
+thx_core_Types.valueTypeInheritance = function(value) {
+	return thx_core_Types.typeInheritance(Type["typeof"](value));
 };
-thx.core.Types.valueTypeToString = function(value) {
-	return thx.core.Types.typeToString(Type["typeof"](value));
+thx_core_Types.valueTypeToString = function(value) {
+	return thx_core_Types.typeToString(Type["typeof"](value));
 };
-var utest = {};
-utest.Assert = function() { };
-utest.Assert.__name__ = ["utest","Assert"];
-utest.Assert.isTrue = function(cond,msg,pos) {
-	if(utest.Assert.results == null) throw "Assert.results is not currently bound to any assert context";
+var utest_Assert = function() { };
+utest_Assert.__name__ = ["utest","Assert"];
+utest_Assert.isTrue = function(cond,msg,pos) {
+	if(utest_Assert.results == null) throw "Assert.results is not currently bound to any assert context";
 	if(null == msg) msg = "expected true";
-	if(cond) utest.Assert.results.add(utest.Assertation.Success(pos)); else utest.Assert.results.add(utest.Assertation.Failure(msg,pos));
+	if(cond) utest_Assert.results.add(utest_Assertation.Success(pos)); else utest_Assert.results.add(utest_Assertation.Failure(msg,pos));
 };
-utest.Assert.isFalse = function(value,msg,pos) {
+utest_Assert.isFalse = function(value,msg,pos) {
 	if(null == msg) msg = "expected false";
-	utest.Assert.isTrue(value == false,msg,pos);
+	utest_Assert.isTrue(value == false,msg,pos);
 };
-utest.Assert.isNull = function(value,msg,pos) {
-	if(msg == null) msg = "expected null but was " + utest.Assert.q(value);
-	utest.Assert.isTrue(value == null,msg,pos);
+utest_Assert.isNull = function(value,msg,pos) {
+	if(msg == null) msg = "expected null but was " + utest_Assert.q(value);
+	utest_Assert.isTrue(value == null,msg,pos);
 };
-utest.Assert.notNull = function(value,msg,pos) {
+utest_Assert.notNull = function(value,msg,pos) {
 	if(null == msg) msg = "expected not null";
-	utest.Assert.isTrue(value != null,msg,pos);
+	utest_Assert.isTrue(value != null,msg,pos);
 };
-utest.Assert["is"] = function(value,type,msg,pos) {
-	if(msg == null) msg = "expected type " + utest.Assert.typeToString(type) + " but was " + utest.Assert.typeToString(value);
-	utest.Assert.isTrue(js.Boot.__instanceof(value,type),msg,pos);
+utest_Assert["is"] = function(value,type,msg,pos) {
+	if(msg == null) msg = "expected type " + utest_Assert.typeToString(type) + " but was " + utest_Assert.typeToString(value);
+	utest_Assert.isTrue(js_Boot.__instanceof(value,type),msg,pos);
 };
-utest.Assert.notEquals = function(expected,value,msg,pos) {
-	if(msg == null) msg = "expected " + utest.Assert.q(expected) + " and testa value " + utest.Assert.q(value) + " should be different";
-	utest.Assert.isFalse(expected == value,msg,pos);
+utest_Assert.notEquals = function(expected,value,msg,pos) {
+	if(msg == null) msg = "expected " + utest_Assert.q(expected) + " and testa value " + utest_Assert.q(value) + " should be different";
+	utest_Assert.isFalse(expected == value,msg,pos);
 };
-utest.Assert.equals = function(expected,value,msg,pos) {
-	if(msg == null) msg = "expected " + utest.Assert.q(expected) + " but was " + utest.Assert.q(value);
-	utest.Assert.isTrue(expected == value,msg,pos);
+utest_Assert.equals = function(expected,value,msg,pos) {
+	if(msg == null) msg = "expected " + utest_Assert.q(expected) + " but was " + utest_Assert.q(value);
+	utest_Assert.isTrue(expected == value,msg,pos);
 };
-utest.Assert.match = function(pattern,value,msg,pos) {
-	if(msg == null) msg = "the value " + utest.Assert.q(value) + "does not match the provided pattern";
-	utest.Assert.isTrue(pattern.match(value),msg,pos);
+utest_Assert.match = function(pattern,value,msg,pos) {
+	if(msg == null) msg = "the value " + utest_Assert.q(value) + "does not match the provided pattern";
+	utest_Assert.isTrue(pattern.match(value),msg,pos);
 };
-utest.Assert.floatEquals = function(expected,value,approx,msg,pos) {
-	if(msg == null) msg = "expected " + utest.Assert.q(expected) + " but was " + utest.Assert.q(value);
-	utest.Assert.isTrue(utest.Assert._floatEquals(expected,value,approx),msg,pos);
+utest_Assert.floatEquals = function(expected,value,approx,msg,pos) {
+	if(msg == null) msg = "expected " + utest_Assert.q(expected) + " but was " + utest_Assert.q(value);
+	utest_Assert.isTrue(utest_Assert._floatEquals(expected,value,approx),msg,pos);
 	return;
 };
-utest.Assert._floatEquals = function(expected,value,approx) {
+utest_Assert._floatEquals = function(expected,value,approx) {
 	if(isNaN(expected)) return isNaN(value); else if(isNaN(value)) return false; else if(!isFinite(expected) && !isFinite(value)) return expected > 0 == value > 0;
 	if(null == approx) approx = 1e-5;
 	return Math.abs(value - expected) < approx;
 };
-utest.Assert.getTypeName = function(v) {
+utest_Assert.getTypeName = function(v) {
 	{
 		var _g = Type["typeof"](v);
 		switch(_g[1]) {
@@ -3251,21 +3462,21 @@ utest.Assert.getTypeName = function(v) {
 		}
 	}
 };
-utest.Assert.isIterable = function(v,isAnonym) {
+utest_Assert.isIterable = function(v,isAnonym) {
 	var fields;
 	if(isAnonym) fields = Reflect.fields(v); else fields = Type.getInstanceFields(Type.getClass(v));
 	if(!Lambda.has(fields,"iterator")) return false;
 	return Reflect.isFunction(Reflect.field(v,"iterator"));
 };
-utest.Assert.isIterator = function(v,isAnonym) {
+utest_Assert.isIterator = function(v,isAnonym) {
 	var fields;
 	if(isAnonym) fields = Reflect.fields(v); else fields = Type.getInstanceFields(Type.getClass(v));
 	if(!Lambda.has(fields,"next") || !Lambda.has(fields,"hasNext")) return false;
 	return Reflect.isFunction(Reflect.field(v,"next")) && Reflect.isFunction(Reflect.field(v,"hasNext"));
 };
-utest.Assert.sameAs = function(expected,value,status) {
-	var texpected = utest.Assert.getTypeName(expected);
-	var tvalue = utest.Assert.getTypeName(value);
+utest_Assert.sameAs = function(expected,value,status) {
+	var texpected = utest_Assert.getTypeName(expected);
+	var tvalue = utest_Assert.getTypeName(value);
 	if(texpected != tvalue) {
 		status.error = "expected type " + texpected + " but it is " + tvalue + (status.path == ""?"":" for field " + status.path);
 		return false;
@@ -3274,14 +3485,14 @@ utest.Assert.sameAs = function(expected,value,status) {
 		var _g = Type["typeof"](expected);
 		switch(_g[1]) {
 		case 2:
-			if(!utest.Assert._floatEquals(expected,value)) {
-				status.error = "expected " + utest.Assert.q(expected) + " but it is " + utest.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+			if(!utest_Assert._floatEquals(expected,value)) {
+				status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 				return false;
 			}
 			return true;
 		case 0:case 1:case 3:
 			if(expected != value) {
-				status.error = "expected " + utest.Assert.q(expected) + " but it is " + utest.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+				status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 				return false;
 			}
 			return true;
@@ -3296,7 +3507,7 @@ utest.Assert.sameAs = function(expected,value,status) {
 			var cexpected = Type.getClassName(c);
 			var cvalue = Type.getClassName(Type.getClass(value));
 			if(cexpected != cvalue) {
-				status.error = "expected instance of " + utest.Assert.q(cexpected) + " but it is " + utest.Assert.q(cvalue) + (status.path == ""?"":" for field " + status.path);
+				status.error = "expected instance of " + utest_Assert.q(cexpected) + " but it is " + utest_Assert.q(cvalue) + (status.path == ""?"":" for field " + status.path);
 				return false;
 			}
 			if(typeof(expected) == "string" && expected != value) {
@@ -3315,22 +3526,22 @@ utest.Assert.sameAs = function(expected,value,status) {
 					while(_g2 < _g1) {
 						var i = _g2++;
 						if(path == "") status.path = "array[" + i + "]"; else status.path = path + "[" + i + "]";
-						if(!utest.Assert.sameAs(expected[i],value[i],status)) {
-							status.error = "expected " + utest.Assert.q(expected) + " but it is " + utest.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+						if(!utest_Assert.sameAs(expected[i],value[i],status)) {
+							status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 							return false;
 						}
 					}
 				}
 				return true;
 			}
-			if(js.Boot.__instanceof(expected,Date)) {
+			if(js_Boot.__instanceof(expected,Date)) {
 				if(expected.getTime() != value.getTime()) {
-					status.error = "expected " + utest.Assert.q(expected) + " but it is " + utest.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+					status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 					return false;
 				}
 				return true;
 			}
-			if(js.Boot.__instanceof(expected,haxe.io.Bytes)) {
+			if(js_Boot.__instanceof(expected,haxe_io_Bytes)) {
 				if(status.recursive || status.path == "") {
 					var ebytes = expected;
 					var vbytes = value;
@@ -3347,12 +3558,12 @@ utest.Assert.sameAs = function(expected,value,status) {
 				}
 				return true;
 			}
-			if(js.Boot.__instanceof(expected,haxe.IMap)) {
+			if(js_Boot.__instanceof(expected,haxe_IMap)) {
 				if(status.recursive || status.path == "") {
 					var map;
-					map = js.Boot.__cast(expected , haxe.IMap);
+					map = js_Boot.__cast(expected , haxe_IMap);
 					var vmap;
-					vmap = js.Boot.__cast(value , haxe.IMap);
+					vmap = js_Boot.__cast(value , haxe_IMap);
 					var keys;
 					var _g12 = [];
 					var $it0 = map.keys();
@@ -3379,15 +3590,15 @@ utest.Assert.sameAs = function(expected,value,status) {
 						var key = keys[_g3];
 						++_g3;
 						if(path1 == "") status.path = "hash[" + Std.string(key) + "]"; else status.path = path1 + "[" + Std.string(key) + "]";
-						if(!utest.Assert.sameAs(map.get(key),vmap.get(key),status)) {
-							status.error = "expected " + utest.Assert.q(expected) + " but it is " + utest.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+						if(!utest_Assert.sameAs(map.get(key),vmap.get(key),status)) {
+							status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 							return false;
 						}
 					}
 				}
 				return true;
 			}
-			if(utest.Assert.isIterator(expected,false)) {
+			if(utest_Assert.isIterator(expected,false)) {
 				if(status.recursive || status.path == "") {
 					var evalues = Lambda.array({ iterator : function() {
 						return expected;
@@ -3405,15 +3616,15 @@ utest.Assert.sameAs = function(expected,value,status) {
 					while(_g23 < _g13) {
 						var i2 = _g23++;
 						if(path2 == "") status.path = "iterator[" + i2 + "]"; else status.path = path2 + "[" + i2 + "]";
-						if(!utest.Assert.sameAs(evalues[i2],vvalues[i2],status)) {
-							status.error = "expected " + utest.Assert.q(expected) + " but it is " + utest.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+						if(!utest_Assert.sameAs(evalues[i2],vvalues[i2],status)) {
+							status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 							return false;
 						}
 					}
 				}
 				return true;
 			}
-			if(utest.Assert.isIterable(expected,false)) {
+			if(utest_Assert.isIterable(expected,false)) {
 				if(status.recursive || status.path == "") {
 					var evalues1 = Lambda.array(expected);
 					var vvalues1 = Lambda.array(value);
@@ -3427,7 +3638,7 @@ utest.Assert.sameAs = function(expected,value,status) {
 					while(_g24 < _g14) {
 						var i3 = _g24++;
 						if(path3 == "") status.path = "iterable[" + i3 + "]"; else status.path = path3 + "[" + i3 + "]";
-						if(!utest.Assert.sameAs(evalues1[i3],vvalues1[i3],status)) return false;
+						if(!utest_Assert.sameAs(evalues1[i3],vvalues1[i3],status)) return false;
 					}
 				}
 				return true;
@@ -3443,7 +3654,7 @@ utest.Assert.sameAs = function(expected,value,status) {
 					var e = Reflect.field(expected,field);
 					if(Reflect.isFunction(e)) continue;
 					var v = Reflect.field(value,field);
-					if(!utest.Assert.sameAs(e,v,status)) return false;
+					if(!utest_Assert.sameAs(e,v,status)) return false;
 				}
 			}
 			return true;
@@ -3452,12 +3663,12 @@ utest.Assert.sameAs = function(expected,value,status) {
 			var eexpected = Type.getEnumName(e1);
 			var evalue = Type.getEnumName(Type.getEnum(value));
 			if(eexpected != evalue) {
-				status.error = "expected enumeration of " + utest.Assert.q(eexpected) + " but it is " + utest.Assert.q(evalue) + (status.path == ""?"":" for field " + status.path);
+				status.error = "expected enumeration of " + utest_Assert.q(eexpected) + " but it is " + utest_Assert.q(evalue) + (status.path == ""?"":" for field " + status.path);
 				return false;
 			}
 			if(status.recursive || status.path == "") {
 				if(Type.enumIndex(expected) != Type.enumIndex(value)) {
-					status.error = "expected " + utest.Assert.q(Type.enumConstructor(expected)) + " but is " + utest.Assert.q(Type.enumConstructor(value)) + (status.path == ""?"":" for field " + status.path);
+					status.error = "expected " + utest_Assert.q(Type.enumConstructor(expected)) + " but is " + utest_Assert.q(Type.enumConstructor(value)) + (status.path == ""?"":" for field " + status.path);
 					return false;
 				}
 				var eparams = Type.enumParameters(expected);
@@ -3468,8 +3679,8 @@ utest.Assert.sameAs = function(expected,value,status) {
 				while(_g25 < _g16) {
 					var i4 = _g25++;
 					if(path5 == "") status.path = "enum[" + i4 + "]"; else status.path = path5 + "[" + i4 + "]";
-					if(!utest.Assert.sameAs(eparams[i4],vparams[i4],status)) {
-						status.error = "expected " + utest.Assert.q(expected) + " but it is " + utest.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+					if(!utest_Assert.sameAs(eparams[i4],vparams[i4],status)) {
+						status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 						return false;
 					}
 				}
@@ -3487,21 +3698,21 @@ utest.Assert.sameAs = function(expected,value,status) {
 					HxOverrides.remove(tfields,field1);
 					if(path6 == "") status.path = field1; else status.path = path6 + "." + field1;
 					if(!Object.prototype.hasOwnProperty.call(value,field1)) {
-						status.error = "expected field " + status.path + " does not exist in " + utest.Assert.q(value);
+						status.error = "expected field " + status.path + " does not exist in " + utest_Assert.q(value);
 						return false;
 					}
 					var e2 = Reflect.field(expected,field1);
 					if(Reflect.isFunction(e2)) continue;
 					var v1 = Reflect.field(value,field1);
-					if(!utest.Assert.sameAs(e2,v1,status)) return false;
+					if(!utest_Assert.sameAs(e2,v1,status)) return false;
 				}
 				if(tfields.length > 0) {
 					status.error = "the tested object has extra field(s) (" + tfields.join(", ") + ") not included in the expected ones";
 					return false;
 				}
 			}
-			if(utest.Assert.isIterator(expected,true)) {
-				if(!utest.Assert.isIterator(value,true)) {
+			if(utest_Assert.isIterator(expected,true)) {
+				if(!utest_Assert.isIterator(value,true)) {
 					status.error = "expected Iterable but it is not " + (status.path == ""?"":" for field " + status.path);
 					return false;
 				}
@@ -3522,16 +3733,16 @@ utest.Assert.sameAs = function(expected,value,status) {
 					while(_g26 < _g18) {
 						var i5 = _g26++;
 						if(path7 == "") status.path = "iterator[" + i5 + "]"; else status.path = path7 + "[" + i5 + "]";
-						if(!utest.Assert.sameAs(evalues2[i5],vvalues2[i5],status)) {
-							status.error = "expected " + utest.Assert.q(expected) + " but it is " + utest.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+						if(!utest_Assert.sameAs(evalues2[i5],vvalues2[i5],status)) {
+							status.error = "expected " + utest_Assert.q(expected) + " but it is " + utest_Assert.q(value) + (status.path == ""?"":" for field " + status.path);
 							return false;
 						}
 					}
 				}
 				return true;
 			}
-			if(utest.Assert.isIterable(expected,true)) {
-				if(!utest.Assert.isIterable(value,true)) {
+			if(utest_Assert.isIterable(expected,true)) {
+				if(!utest_Assert.isIterable(value,true)) {
 					status.error = "expected Iterator but it is not " + (status.path == ""?"":" for field " + status.path);
 					return false;
 				}
@@ -3548,7 +3759,7 @@ utest.Assert.sameAs = function(expected,value,status) {
 					while(_g27 < _g19) {
 						var i6 = _g27++;
 						if(path8 == "") status.path = "iterable[" + i6 + "]"; else status.path = path8 + "[" + i6 + "]";
-						if(!utest.Assert.sameAs(evalues3[i6],vvalues3[i6],status)) return false;
+						if(!utest_Assert.sameAs(evalues3[i6],vvalues3[i6],status)) return false;
 					}
 				}
 				return true;
@@ -3559,45 +3770,45 @@ utest.Assert.sameAs = function(expected,value,status) {
 			break;
 		}
 	}
-	throw "Unable to compare values: " + utest.Assert.q(expected) + " and " + utest.Assert.q(value);
+	throw "Unable to compare values: " + utest_Assert.q(expected) + " and " + utest_Assert.q(value);
 };
-utest.Assert.q = function(v) {
+utest_Assert.q = function(v) {
 	if(typeof(v) == "string") return "\"" + StringTools.replace(v,"\"","\\\"") + "\""; else return Std.string(v);
 };
-utest.Assert.same = function(expected,value,recursive,msg,pos) {
+utest_Assert.same = function(expected,value,recursive,msg,pos) {
 	var status = { recursive : null == recursive?true:recursive, path : "", error : null};
-	if(utest.Assert.sameAs(expected,value,status)) utest.Assert.isTrue(true,msg,pos); else utest.Assert.fail(msg == null?status.error:msg,pos);
+	if(utest_Assert.sameAs(expected,value,status)) utest_Assert.isTrue(true,msg,pos); else utest_Assert.fail(msg == null?status.error:msg,pos);
 };
-utest.Assert.raises = function(method,type,msgNotThrown,msgWrongType,pos) {
+utest_Assert.raises = function(method,type,msgNotThrown,msgWrongType,pos) {
 	if(type == null) type = String;
 	try {
 		method();
 		var name = Type.getClassName(type);
 		if(name == null) name = "" + Std.string(type);
 		if(null == msgNotThrown) msgNotThrown = "exception of type " + name + " not raised";
-		utest.Assert.fail(msgNotThrown,pos);
+		utest_Assert.fail(msgNotThrown,pos);
 	} catch( ex ) {
 		var name1 = Type.getClassName(type);
 		if(name1 == null) name1 = "" + Std.string(type);
 		if(null == msgWrongType) msgWrongType = "expected throw of type " + name1 + " but was " + Std.string(ex);
-		utest.Assert.isTrue(js.Boot.__instanceof(ex,type),msgWrongType,pos);
+		utest_Assert.isTrue(js_Boot.__instanceof(ex,type),msgWrongType,pos);
 	}
 };
-utest.Assert.allows = function(possibilities,value,msg,pos) {
-	if(Lambda.has(possibilities,value)) utest.Assert.isTrue(true,msg,pos); else utest.Assert.fail(msg == null?"value " + utest.Assert.q(value) + " not found in the expected possibilities " + Std.string(possibilities):msg,pos);
+utest_Assert.allows = function(possibilities,value,msg,pos) {
+	if(Lambda.has(possibilities,value)) utest_Assert.isTrue(true,msg,pos); else utest_Assert.fail(msg == null?"value " + utest_Assert.q(value) + " not found in the expected possibilities " + Std.string(possibilities):msg,pos);
 };
-utest.Assert.contains = function(match,values,msg,pos) {
-	if(Lambda.has(values,match)) utest.Assert.isTrue(true,msg,pos); else utest.Assert.fail(msg == null?"values " + utest.Assert.q(values) + " do not contain " + Std.string(match):msg,pos);
+utest_Assert.contains = function(match,values,msg,pos) {
+	if(Lambda.has(values,match)) utest_Assert.isTrue(true,msg,pos); else utest_Assert.fail(msg == null?"values " + utest_Assert.q(values) + " do not contain " + Std.string(match):msg,pos);
 };
-utest.Assert.notContains = function(match,values,msg,pos) {
-	if(!Lambda.has(values,match)) utest.Assert.isTrue(true,msg,pos); else utest.Assert.fail(msg == null?"values " + utest.Assert.q(values) + " do contain " + Std.string(match):msg,pos);
+utest_Assert.notContains = function(match,values,msg,pos) {
+	if(!Lambda.has(values,match)) utest_Assert.isTrue(true,msg,pos); else utest_Assert.fail(msg == null?"values " + utest_Assert.q(values) + " do contain " + Std.string(match):msg,pos);
 };
-utest.Assert.stringContains = function(match,value,msg,pos) {
-	if(value != null && value.indexOf(match) >= 0) utest.Assert.isTrue(true,msg,pos); else utest.Assert.fail(msg == null?"value " + utest.Assert.q(value) + " does not contain " + utest.Assert.q(match):msg,pos);
+utest_Assert.stringContains = function(match,value,msg,pos) {
+	if(value != null && value.indexOf(match) >= 0) utest_Assert.isTrue(true,msg,pos); else utest_Assert.fail(msg == null?"value " + utest_Assert.q(value) + " does not contain " + utest_Assert.q(match):msg,pos);
 };
-utest.Assert.stringSequence = function(sequence,value,msg,pos) {
+utest_Assert.stringSequence = function(sequence,value,msg,pos) {
 	if(null == value) {
-		utest.Assert.fail(msg == null?"null argument value":msg,pos);
+		utest_Assert.fail(msg == null?"null argument value":msg,pos);
 		return;
 	}
 	var p = 0;
@@ -3615,29 +3826,29 @@ utest.Assert.stringSequence = function(sequence,value,msg,pos) {
 					msg += " '" + cut + "'";
 				} else msg += " begin";
 			}
-			utest.Assert.fail(msg,pos);
+			utest_Assert.fail(msg,pos);
 			return;
 		}
 		p = p2 + s.length;
 	}
-	utest.Assert.isTrue(true,msg,pos);
+	utest_Assert.isTrue(true,msg,pos);
 };
-utest.Assert.fail = function(msg,pos) {
+utest_Assert.fail = function(msg,pos) {
 	if(msg == null) msg = "failure expected";
-	utest.Assert.isTrue(false,msg,pos);
+	utest_Assert.isTrue(false,msg,pos);
 };
-utest.Assert.warn = function(msg) {
-	utest.Assert.results.add(utest.Assertation.Warning(msg));
+utest_Assert.warn = function(msg) {
+	utest_Assert.results.add(utest_Assertation.Warning(msg));
 };
-utest.Assert.createAsync = function(f,timeout) {
+utest_Assert.createAsync = function(f,timeout) {
 	return function() {
 	};
 };
-utest.Assert.createEvent = function(f,timeout) {
+utest_Assert.createEvent = function(f,timeout) {
 	return function(e) {
 	};
 };
-utest.Assert.typeToString = function(t) {
+utest_Assert.typeToString = function(t) {
 	try {
 		var _t = Type.getClass(t);
 		if(_t != null) t = _t;
@@ -3666,27 +3877,27 @@ utest.Assert.typeToString = function(t) {
 	}
 	return "<unable to retrieve type name>";
 };
-utest.Assertation = { __ename__ : ["utest","Assertation"], __constructs__ : ["Success","Failure","Error","SetupError","TeardownError","TimeoutError","AsyncError","Warning"] };
-utest.Assertation.Success = function(pos) { var $x = ["Success",0,pos]; $x.__enum__ = utest.Assertation; return $x; };
-utest.Assertation.Failure = function(msg,pos) { var $x = ["Failure",1,msg,pos]; $x.__enum__ = utest.Assertation; return $x; };
-utest.Assertation.Error = function(e,stack) { var $x = ["Error",2,e,stack]; $x.__enum__ = utest.Assertation; return $x; };
-utest.Assertation.SetupError = function(e,stack) { var $x = ["SetupError",3,e,stack]; $x.__enum__ = utest.Assertation; return $x; };
-utest.Assertation.TeardownError = function(e,stack) { var $x = ["TeardownError",4,e,stack]; $x.__enum__ = utest.Assertation; return $x; };
-utest.Assertation.TimeoutError = function(missedAsyncs,stack) { var $x = ["TimeoutError",5,missedAsyncs,stack]; $x.__enum__ = utest.Assertation; return $x; };
-utest.Assertation.AsyncError = function(e,stack) { var $x = ["AsyncError",6,e,stack]; $x.__enum__ = utest.Assertation; return $x; };
-utest.Assertation.Warning = function(msg) { var $x = ["Warning",7,msg]; $x.__enum__ = utest.Assertation; return $x; };
-utest._Dispatcher = {};
-utest._Dispatcher.EventException = { __ename__ : ["utest","_Dispatcher","EventException"], __constructs__ : ["StopPropagation"] };
-utest._Dispatcher.EventException.StopPropagation = ["StopPropagation",0];
-utest._Dispatcher.EventException.StopPropagation.__enum__ = utest._Dispatcher.EventException;
-utest.Dispatcher = function() {
+var utest_Assertation = { __ename__ : ["utest","Assertation"], __constructs__ : ["Success","Failure","Error","SetupError","TeardownError","TimeoutError","AsyncError","Warning"] };
+utest_Assertation.Success = function(pos) { var $x = ["Success",0,pos]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
+utest_Assertation.Failure = function(msg,pos) { var $x = ["Failure",1,msg,pos]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
+utest_Assertation.Error = function(e,stack) { var $x = ["Error",2,e,stack]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
+utest_Assertation.SetupError = function(e,stack) { var $x = ["SetupError",3,e,stack]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
+utest_Assertation.TeardownError = function(e,stack) { var $x = ["TeardownError",4,e,stack]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
+utest_Assertation.TimeoutError = function(missedAsyncs,stack) { var $x = ["TimeoutError",5,missedAsyncs,stack]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
+utest_Assertation.AsyncError = function(e,stack) { var $x = ["AsyncError",6,e,stack]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
+utest_Assertation.Warning = function(msg) { var $x = ["Warning",7,msg]; $x.__enum__ = utest_Assertation; $x.toString = $estr; return $x; };
+var utest__$Dispatcher_EventException = { __ename__ : ["utest","_Dispatcher","EventException"], __constructs__ : ["StopPropagation"] };
+utest__$Dispatcher_EventException.StopPropagation = ["StopPropagation",0];
+utest__$Dispatcher_EventException.StopPropagation.toString = $estr;
+utest__$Dispatcher_EventException.StopPropagation.__enum__ = utest__$Dispatcher_EventException;
+var utest_Dispatcher = function() {
 	this.handlers = [];
 };
-utest.Dispatcher.__name__ = ["utest","Dispatcher"];
-utest.Dispatcher.stop = function() {
-	throw utest._Dispatcher.EventException.StopPropagation;
+utest_Dispatcher.__name__ = ["utest","Dispatcher"];
+utest_Dispatcher.stop = function() {
+	throw utest__$Dispatcher_EventException.StopPropagation;
 };
-utest.Dispatcher.prototype = {
+utest_Dispatcher.prototype = {
 	handlers: null
 	,add: function(h) {
 		this.handlers.push(h);
@@ -3715,7 +3926,7 @@ utest.Dispatcher.prototype = {
 			}
 			return true;
 		} catch( exc ) {
-			if( js.Boot.__instanceof(exc,utest._Dispatcher.EventException) ) {
+			if( js_Boot.__instanceof(exc,utest__$Dispatcher_EventException) ) {
 				return false;
 			} else throw(exc);
 		}
@@ -3723,16 +3934,16 @@ utest.Dispatcher.prototype = {
 	,has: function() {
 		return this.handlers.length > 0;
 	}
-	,__class__: utest.Dispatcher
+	,__class__: utest_Dispatcher
 };
-utest.Notifier = function() {
+var utest_Notifier = function() {
 	this.handlers = [];
 };
-utest.Notifier.__name__ = ["utest","Notifier"];
-utest.Notifier.stop = function() {
-	throw utest._Dispatcher.EventException.StopPropagation;
+utest_Notifier.__name__ = ["utest","Notifier"];
+utest_Notifier.stop = function() {
+	throw utest__$Dispatcher_EventException.StopPropagation;
 };
-utest.Notifier.prototype = {
+utest_Notifier.prototype = {
 	handlers: null
 	,add: function(h) {
 		this.handlers.push(h);
@@ -3761,7 +3972,7 @@ utest.Notifier.prototype = {
 			}
 			return true;
 		} catch( exc ) {
-			if( js.Boot.__instanceof(exc,utest._Dispatcher.EventException) ) {
+			if( js_Boot.__instanceof(exc,utest__$Dispatcher_EventException) ) {
 				return false;
 			} else throw(exc);
 		}
@@ -3769,18 +3980,18 @@ utest.Notifier.prototype = {
 	,has: function() {
 		return this.handlers.length > 0;
 	}
-	,__class__: utest.Notifier
+	,__class__: utest_Notifier
 };
-utest.Runner = function() {
+var utest_Runner = function() {
 	this.fixtures = [];
-	this.onProgress = new utest.Dispatcher();
-	this.onStart = new utest.Dispatcher();
-	this.onComplete = new utest.Dispatcher();
-	this.onPrecheck = new utest.Dispatcher();
+	this.onProgress = new utest_Dispatcher();
+	this.onStart = new utest_Dispatcher();
+	this.onComplete = new utest_Dispatcher();
+	this.onPrecheck = new utest_Dispatcher();
 	this.length = 0;
 };
-utest.Runner.__name__ = ["utest","Runner"];
-utest.Runner.prototype = {
+utest_Runner.__name__ = ["utest","Runner"];
+utest_Runner.prototype = {
 	fixtures: null
 	,onProgress: null
 	,onStart: null
@@ -3802,7 +4013,7 @@ utest.Runner.prototype = {
 				++_g;
 				if(!StringTools.startsWith(field,prefix)) continue;
 				if(!this.isMethod(test,field)) continue;
-				this.addFixture(new utest.TestFixture(test,field,setup,teardown));
+				this.addFixture(new utest_TestFixture(test,field,setup,teardown));
 			}
 		} else {
 			var _g1 = 0;
@@ -3811,7 +4022,7 @@ utest.Runner.prototype = {
 				++_g1;
 				if(!pattern.match(field1)) continue;
 				if(!this.isMethod(test,field1)) continue;
-				this.addFixture(new utest.TestFixture(test,field1,setup,teardown));
+				this.addFixture(new utest_TestFixture(test,field1,setup,teardown));
 			}
 		}
 	}
@@ -3839,25 +4050,25 @@ utest.Runner.prototype = {
 		if(this.fixtures.length > this.pos) this.runFixture(this.fixtures[this.pos++]); else this.onComplete.dispatch(this);
 	}
 	,runFixture: function(fixture) {
-		var handler = new utest.TestHandler(fixture);
+		var handler = new utest_TestHandler(fixture);
 		handler.onComplete.add($bind(this,this.testComplete));
 		handler.onPrecheck.add(($_=this.onPrecheck,$bind($_,$_.dispatch)));
 		handler.execute();
 	}
 	,testComplete: function(h) {
-		this.onProgress.dispatch({ result : utest.TestResult.ofHandler(h), done : this.pos, totals : this.length});
+		this.onProgress.dispatch({ result : utest_TestResult.ofHandler(h), done : this.pos, totals : this.length});
 		this.runNext();
 	}
-	,__class__: utest.Runner
+	,__class__: utest_Runner
 };
-utest.TestFixture = function(target,method,setup,teardown) {
+var utest_TestFixture = function(target,method,setup,teardown) {
 	this.target = target;
 	this.method = method;
 	this.setup = setup;
 	this.teardown = teardown;
 };
-utest.TestFixture.__name__ = ["utest","TestFixture"];
-utest.TestFixture.prototype = {
+utest_TestFixture.__name__ = ["utest","TestFixture"];
+utest_TestFixture.prototype = {
 	target: null
 	,method: null
 	,setup: null
@@ -3867,26 +4078,26 @@ utest.TestFixture.prototype = {
 		if(field == null) throw arg + " function " + name + " is not a field of target";
 		if(!Reflect.isFunction(field)) throw arg + " function " + name + " is not a function";
 	}
-	,__class__: utest.TestFixture
+	,__class__: utest_TestFixture
 };
-utest.TestHandler = function(fixture) {
+var utest_TestHandler = function(fixture) {
 	if(fixture == null) throw "fixture argument is null";
 	this.fixture = fixture;
 	this.results = new List();
 	this.asyncStack = new List();
-	this.onTested = new utest.Dispatcher();
-	this.onTimeout = new utest.Dispatcher();
-	this.onComplete = new utest.Dispatcher();
-	this.onPrecheck = new utest.Dispatcher();
+	this.onTested = new utest_Dispatcher();
+	this.onTimeout = new utest_Dispatcher();
+	this.onComplete = new utest_Dispatcher();
+	this.onPrecheck = new utest_Dispatcher();
 };
-utest.TestHandler.__name__ = ["utest","TestHandler"];
-utest.TestHandler.exceptionStack = function(pops) {
+utest_TestHandler.__name__ = ["utest","TestHandler"];
+utest_TestHandler.exceptionStack = function(pops) {
 	if(pops == null) pops = 2;
-	var stack = haxe.CallStack.exceptionStack();
+	var stack = haxe_CallStack.exceptionStack();
 	while(pops-- > 0) stack.pop();
 	return stack;
 };
-utest.TestHandler.prototype = {
+utest_TestHandler.prototype = {
 	results: null
 	,fixture: null
 	,asyncStack: null
@@ -3901,34 +4112,34 @@ utest.TestHandler.prototype = {
 			try {
 				this.executeMethod(this.fixture.method);
 			} catch( e ) {
-				this.results.add(utest.Assertation.Error(e,utest.TestHandler.exceptionStack()));
+				this.results.add(utest_Assertation.Error(e,utest_TestHandler.exceptionStack()));
 			}
 		} catch( e1 ) {
-			this.results.add(utest.Assertation.SetupError(e1,utest.TestHandler.exceptionStack()));
+			this.results.add(utest_Assertation.SetupError(e1,utest_TestHandler.exceptionStack()));
 		}
 		this.onPrecheck.dispatch(this);
 		this.checkTested();
 	}
 	,checkTested: function() {
-		if(this.expireson == null || this.asyncStack.length == 0) this.tested(); else if(haxe.Timer.stamp() > this.expireson) this.timeout(); else haxe.Timer.delay($bind(this,this.checkTested),10);
+		if(this.expireson == null || this.asyncStack.length == 0) this.tested(); else if(haxe_Timer.stamp() > this.expireson) this.timeout(); else haxe_Timer.delay($bind(this,this.checkTested),10);
 	}
 	,expireson: null
 	,setTimeout: function(timeout) {
-		var newexpire = haxe.Timer.stamp() + timeout / 1000;
+		var newexpire = haxe_Timer.stamp() + timeout / 1000;
 		if(this.expireson == null) this.expireson = newexpire; else if(newexpire > this.expireson) this.expireson = newexpire; else this.expireson = this.expireson;
 	}
 	,bindHandler: function() {
-		utest.Assert.results = this.results;
-		utest.Assert.createAsync = $bind(this,this.addAsync);
-		utest.Assert.createEvent = $bind(this,this.addEvent);
+		utest_Assert.results = this.results;
+		utest_Assert.createAsync = $bind(this,this.addAsync);
+		utest_Assert.createEvent = $bind(this,this.addEvent);
 	}
 	,unbindHandler: function() {
-		utest.Assert.results = null;
-		utest.Assert.createAsync = function(f,t) {
+		utest_Assert.results = null;
+		utest_Assert.createAsync = function(f,t) {
 			return function() {
 			};
 		};
-		utest.Assert.createEvent = function(f1,t1) {
+		utest_Assert.createEvent = function(f1,t1) {
 			return function(e) {
 			};
 		};
@@ -3942,14 +4153,14 @@ utest.TestHandler.prototype = {
 		this.setTimeout(timeout);
 		return function() {
 			if(!handler.asyncStack.remove(f)) {
-				handler.results.add(utest.Assertation.AsyncError("async function already executed",[]));
+				handler.results.add(utest_Assertation.AsyncError("async function already executed",[]));
 				return;
 			}
 			try {
 				handler.bindHandler();
 				f();
 			} catch( e ) {
-				handler.results.add(utest.Assertation.AsyncError(e,utest.TestHandler.exceptionStack(0)));
+				handler.results.add(utest_Assertation.AsyncError(e,utest_TestHandler.exceptionStack(0)));
 			}
 		};
 	}
@@ -3960,14 +4171,14 @@ utest.TestHandler.prototype = {
 		this.setTimeout(timeout);
 		return function(e) {
 			if(!handler.asyncStack.remove(f)) {
-				handler.results.add(utest.Assertation.AsyncError("event already executed",[]));
+				handler.results.add(utest_Assertation.AsyncError("event already executed",[]));
 				return;
 			}
 			try {
 				handler.bindHandler();
 				f(e);
 			} catch( e1 ) {
-				handler.results.add(utest.Assertation.AsyncError(e1,utest.TestHandler.exceptionStack(0)));
+				handler.results.add(utest_Assertation.AsyncError(e1,utest_TestHandler.exceptionStack(0)));
 			}
 		};
 	}
@@ -3977,12 +4188,12 @@ utest.TestHandler.prototype = {
 		Reflect.callMethod(this.fixture.target,Reflect.field(this.fixture.target,name),[]);
 	}
 	,tested: function() {
-		if(this.results.length == 0) this.results.add(utest.Assertation.Warning("no assertions"));
+		if(this.results.length == 0) this.results.add(utest_Assertation.Warning("no assertions"));
 		this.onTested.dispatch(this);
 		this.completed();
 	}
 	,timeout: function() {
-		this.results.add(utest.Assertation.TimeoutError(this.asyncStack.length,[]));
+		this.results.add(utest_Assertation.TimeoutError(this.asyncStack.length,[]));
 		this.onTimeout.dispatch(this);
 		this.completed();
 	}
@@ -3990,18 +4201,18 @@ utest.TestHandler.prototype = {
 		try {
 			this.executeMethod(this.fixture.teardown);
 		} catch( e ) {
-			this.results.add(utest.Assertation.TeardownError(e,utest.TestHandler.exceptionStack(2)));
+			this.results.add(utest_Assertation.TeardownError(e,utest_TestHandler.exceptionStack(2)));
 		}
 		this.unbindHandler();
 		this.onComplete.dispatch(this);
 	}
-	,__class__: utest.TestHandler
+	,__class__: utest_TestHandler
 };
-utest.TestResult = function() {
+var utest_TestResult = function() {
 };
-utest.TestResult.__name__ = ["utest","TestResult"];
-utest.TestResult.ofHandler = function(handler) {
-	var r = new utest.TestResult();
+utest_TestResult.__name__ = ["utest","TestResult"];
+utest_TestResult.ofHandler = function(handler) {
+	var r = new utest_TestResult();
 	var path = Type.getClassName(Type.getClass(handler.fixture.target)).split(".");
 	r.cls = path.pop();
 	r.pack = path.join(".");
@@ -4011,7 +4222,7 @@ utest.TestResult.ofHandler = function(handler) {
 	r.assertations = handler.results;
 	return r;
 };
-utest.TestResult.prototype = {
+utest_TestResult.prototype = {
 	pack: null
 	,cls: null
 	,method: null
@@ -4042,31 +4253,29 @@ utest.TestResult.prototype = {
 		} catch( e ) { if( e != "__break__" ) throw e; }
 		return true;
 	}
-	,__class__: utest.TestResult
+	,__class__: utest_TestResult
 };
-utest.ui = {};
-utest.ui.Report = function() { };
-utest.ui.Report.__name__ = ["utest","ui","Report"];
-utest.ui.Report.create = function(runner,displaySuccessResults,headerDisplayMode) {
+var utest_ui_Report = function() { };
+utest_ui_Report.__name__ = ["utest","ui","Report"];
+utest_ui_Report.create = function(runner,displaySuccessResults,headerDisplayMode) {
 	var report;
-	if(typeof window != 'undefined') report = new utest.ui.text.HtmlReport(runner,null,true); else report = new utest.ui.text.PrintReport(runner);
-	if(null == displaySuccessResults) report.displaySuccessResults = utest.ui.common.SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors; else report.displaySuccessResults = displaySuccessResults;
-	if(null == headerDisplayMode) report.displayHeader = utest.ui.common.HeaderDisplayMode.ShowHeaderWithResults; else report.displayHeader = headerDisplayMode;
+	if(typeof window != 'undefined') report = new utest_ui_text_HtmlReport(runner,null,true); else report = new utest_ui_text_PrintReport(runner);
+	if(null == displaySuccessResults) report.displaySuccessResults = utest_ui_common_SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors; else report.displaySuccessResults = displaySuccessResults;
+	if(null == headerDisplayMode) report.displayHeader = utest_ui_common_HeaderDisplayMode.ShowHeaderWithResults; else report.displayHeader = headerDisplayMode;
 	return report;
 };
-utest.ui.common = {};
-utest.ui.common.ClassResult = function(className,setupName,teardownName) {
-	this.fixtures = new haxe.ds.StringMap();
+var utest_ui_common_ClassResult = function(className,setupName,teardownName) {
+	this.fixtures = new haxe_ds_StringMap();
 	this.className = className;
 	this.setupName = setupName;
 	this.hasSetup = setupName != null;
 	this.teardownName = teardownName;
 	this.hasTeardown = teardownName != null;
 	this.methods = 0;
-	this.stats = new utest.ui.common.ResultStats();
+	this.stats = new utest_ui_common_ResultStats();
 };
-utest.ui.common.ClassResult.__name__ = ["utest","ui","common","ClassResult"];
-utest.ui.common.ClassResult.prototype = {
+utest_ui_common_ClassResult.__name__ = ["utest","ui","common","ClassResult"];
+utest_ui_common_ClassResult.prototype = {
 	fixtures: null
 	,className: null
 	,setupName: null
@@ -4107,9 +4316,9 @@ utest.ui.common.ClassResult.prototype = {
 		});
 		return names;
 	}
-	,__class__: utest.ui.common.ClassResult
+	,__class__: utest_ui_common_ClassResult
 };
-utest.ui.common.FixtureResult = function(methodName) {
+var utest_ui_common_FixtureResult = function(methodName) {
 	this.methodName = methodName;
 	this.list = new List();
 	this.hasTestError = false;
@@ -4117,10 +4326,10 @@ utest.ui.common.FixtureResult = function(methodName) {
 	this.hasTeardownError = false;
 	this.hasTimeoutError = false;
 	this.hasAsyncError = false;
-	this.stats = new utest.ui.common.ResultStats();
+	this.stats = new utest_ui_common_ResultStats();
 };
-utest.ui.common.FixtureResult.__name__ = ["utest","ui","common","FixtureResult"];
-utest.ui.common.FixtureResult.prototype = {
+utest_ui_common_FixtureResult.__name__ = ["utest","ui","common","FixtureResult"];
+utest_ui_common_FixtureResult.prototype = {
 	methodName: null
 	,hasTestError: null
 	,hasSetupError: null
@@ -4130,7 +4339,7 @@ utest.ui.common.FixtureResult.prototype = {
 	,stats: null
 	,list: null
 	,iterator: function() {
-		return new _List.ListIterator(this.list.h);
+		return new _$List_ListIterator(this.list.h);
 	}
 	,add: function(assertation) {
 		this.list.add(assertation);
@@ -4165,38 +4374,44 @@ utest.ui.common.FixtureResult.prototype = {
 			break;
 		}
 	}
-	,__class__: utest.ui.common.FixtureResult
+	,__class__: utest_ui_common_FixtureResult
 };
-utest.ui.common.HeaderDisplayMode = { __ename__ : ["utest","ui","common","HeaderDisplayMode"], __constructs__ : ["AlwaysShowHeader","NeverShowHeader","ShowHeaderWithResults"] };
-utest.ui.common.HeaderDisplayMode.AlwaysShowHeader = ["AlwaysShowHeader",0];
-utest.ui.common.HeaderDisplayMode.AlwaysShowHeader.__enum__ = utest.ui.common.HeaderDisplayMode;
-utest.ui.common.HeaderDisplayMode.NeverShowHeader = ["NeverShowHeader",1];
-utest.ui.common.HeaderDisplayMode.NeverShowHeader.__enum__ = utest.ui.common.HeaderDisplayMode;
-utest.ui.common.HeaderDisplayMode.ShowHeaderWithResults = ["ShowHeaderWithResults",2];
-utest.ui.common.HeaderDisplayMode.ShowHeaderWithResults.__enum__ = utest.ui.common.HeaderDisplayMode;
-utest.ui.common.SuccessResultsDisplayMode = { __ename__ : ["utest","ui","common","SuccessResultsDisplayMode"], __constructs__ : ["AlwaysShowSuccessResults","NeverShowSuccessResults","ShowSuccessResultsWithNoErrors"] };
-utest.ui.common.SuccessResultsDisplayMode.AlwaysShowSuccessResults = ["AlwaysShowSuccessResults",0];
-utest.ui.common.SuccessResultsDisplayMode.AlwaysShowSuccessResults.__enum__ = utest.ui.common.SuccessResultsDisplayMode;
-utest.ui.common.SuccessResultsDisplayMode.NeverShowSuccessResults = ["NeverShowSuccessResults",1];
-utest.ui.common.SuccessResultsDisplayMode.NeverShowSuccessResults.__enum__ = utest.ui.common.SuccessResultsDisplayMode;
-utest.ui.common.SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors = ["ShowSuccessResultsWithNoErrors",2];
-utest.ui.common.SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors.__enum__ = utest.ui.common.SuccessResultsDisplayMode;
-utest.ui.common.IReport = function() { };
-utest.ui.common.IReport.__name__ = ["utest","ui","common","IReport"];
-utest.ui.common.IReport.prototype = {
+var utest_ui_common_HeaderDisplayMode = { __ename__ : ["utest","ui","common","HeaderDisplayMode"], __constructs__ : ["AlwaysShowHeader","NeverShowHeader","ShowHeaderWithResults"] };
+utest_ui_common_HeaderDisplayMode.AlwaysShowHeader = ["AlwaysShowHeader",0];
+utest_ui_common_HeaderDisplayMode.AlwaysShowHeader.toString = $estr;
+utest_ui_common_HeaderDisplayMode.AlwaysShowHeader.__enum__ = utest_ui_common_HeaderDisplayMode;
+utest_ui_common_HeaderDisplayMode.NeverShowHeader = ["NeverShowHeader",1];
+utest_ui_common_HeaderDisplayMode.NeverShowHeader.toString = $estr;
+utest_ui_common_HeaderDisplayMode.NeverShowHeader.__enum__ = utest_ui_common_HeaderDisplayMode;
+utest_ui_common_HeaderDisplayMode.ShowHeaderWithResults = ["ShowHeaderWithResults",2];
+utest_ui_common_HeaderDisplayMode.ShowHeaderWithResults.toString = $estr;
+utest_ui_common_HeaderDisplayMode.ShowHeaderWithResults.__enum__ = utest_ui_common_HeaderDisplayMode;
+var utest_ui_common_SuccessResultsDisplayMode = { __ename__ : ["utest","ui","common","SuccessResultsDisplayMode"], __constructs__ : ["AlwaysShowSuccessResults","NeverShowSuccessResults","ShowSuccessResultsWithNoErrors"] };
+utest_ui_common_SuccessResultsDisplayMode.AlwaysShowSuccessResults = ["AlwaysShowSuccessResults",0];
+utest_ui_common_SuccessResultsDisplayMode.AlwaysShowSuccessResults.toString = $estr;
+utest_ui_common_SuccessResultsDisplayMode.AlwaysShowSuccessResults.__enum__ = utest_ui_common_SuccessResultsDisplayMode;
+utest_ui_common_SuccessResultsDisplayMode.NeverShowSuccessResults = ["NeverShowSuccessResults",1];
+utest_ui_common_SuccessResultsDisplayMode.NeverShowSuccessResults.toString = $estr;
+utest_ui_common_SuccessResultsDisplayMode.NeverShowSuccessResults.__enum__ = utest_ui_common_SuccessResultsDisplayMode;
+utest_ui_common_SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors = ["ShowSuccessResultsWithNoErrors",2];
+utest_ui_common_SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors.toString = $estr;
+utest_ui_common_SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors.__enum__ = utest_ui_common_SuccessResultsDisplayMode;
+var utest_ui_common_IReport = function() { };
+utest_ui_common_IReport.__name__ = ["utest","ui","common","IReport"];
+utest_ui_common_IReport.prototype = {
 	displaySuccessResults: null
 	,displayHeader: null
 	,setHandler: null
-	,__class__: utest.ui.common.IReport
+	,__class__: utest_ui_common_IReport
 };
-utest.ui.common.PackageResult = function(packageName) {
+var utest_ui_common_PackageResult = function(packageName) {
 	this.packageName = packageName;
-	this.classes = new haxe.ds.StringMap();
-	this.packages = new haxe.ds.StringMap();
-	this.stats = new utest.ui.common.ResultStats();
+	this.classes = new haxe_ds_StringMap();
+	this.packages = new haxe_ds_StringMap();
+	this.stats = new utest_ui_common_ResultStats();
 };
-utest.ui.common.PackageResult.__name__ = ["utest","ui","common","PackageResult"];
-utest.ui.common.PackageResult.prototype = {
+utest_ui_common_PackageResult.__name__ = ["utest","ui","common","PackageResult"];
+utest_ui_common_PackageResult.prototype = {
 	packageName: null
 	,classes: null
 	,packages: null
@@ -4270,7 +4485,7 @@ utest.ui.common.PackageResult.prototype = {
 		return names;
 	}
 	,createFixture: function(method,assertations) {
-		var f = new utest.ui.common.FixtureResult(method);
+		var f = new utest_ui_common_FixtureResult(method);
 		var $it0 = $iterator(assertations)();
 		while( $it0.hasNext() ) {
 			var assertation = $it0.next();
@@ -4280,7 +4495,7 @@ utest.ui.common.PackageResult.prototype = {
 	}
 	,getOrCreateClass: function(pack,cls,setup,teardown) {
 		if(pack.existsClass(cls)) return pack.getClass(cls);
-		var c = new utest.ui.common.ClassResult(cls,setup,teardown);
+		var c = new utest_ui_common_ClassResult(cls,setup,teardown);
 		pack.addClass(c);
 		return c;
 	}
@@ -4288,7 +4503,7 @@ utest.ui.common.PackageResult.prototype = {
 		if(pack == null || pack == "") return ref;
 		if(flat) {
 			if(ref.existsPackage(pack)) return ref.getPackage(pack);
-			var p = new utest.ui.common.PackageResult(pack);
+			var p = new utest_ui_common_PackageResult(pack);
 			ref.addPackage(p);
 			return p;
 		} else {
@@ -4302,11 +4517,11 @@ utest.ui.common.PackageResult.prototype = {
 			return ref;
 		}
 	}
-	,__class__: utest.ui.common.PackageResult
+	,__class__: utest_ui_common_PackageResult
 };
-utest.ui.common.ReportTools = function() { };
-utest.ui.common.ReportTools.__name__ = ["utest","ui","common","ReportTools"];
-utest.ui.common.ReportTools.hasHeader = function(report,stats) {
+var utest_ui_common_ReportTools = function() { };
+utest_ui_common_ReportTools.__name__ = ["utest","ui","common","ReportTools"];
+utest_ui_common_ReportTools.hasHeader = function(report,stats) {
 	var _g = report.displayHeader;
 	switch(_g[1]) {
 	case 1:
@@ -4325,7 +4540,7 @@ utest.ui.common.ReportTools.hasHeader = function(report,stats) {
 		return true;
 	}
 };
-utest.ui.common.ReportTools.skipResult = function(report,stats,isOk) {
+utest_ui_common_ReportTools.skipResult = function(report,stats,isOk) {
 	if(!stats.isOk) return false;
 	var _g = report.displaySuccessResults;
 	switch(_g[1]) {
@@ -4337,11 +4552,11 @@ utest.ui.common.ReportTools.skipResult = function(report,stats,isOk) {
 		return !isOk;
 	}
 };
-utest.ui.common.ReportTools.hasOutput = function(report,stats) {
+utest_ui_common_ReportTools.hasOutput = function(report,stats) {
 	if(!stats.isOk) return true;
-	return utest.ui.common.ReportTools.hasHeader(report,stats);
+	return utest_ui_common_ReportTools.hasHeader(report,stats);
 };
-utest.ui.common.ResultAggregator = function(runner,flattenPackage) {
+var utest_ui_common_ResultAggregator = function(runner,flattenPackage) {
 	if(flattenPackage == null) flattenPackage = false;
 	if(runner == null) throw "runner argument is null";
 	this.flattenPackage = flattenPackage;
@@ -4349,12 +4564,12 @@ utest.ui.common.ResultAggregator = function(runner,flattenPackage) {
 	runner.onStart.add($bind(this,this.start));
 	runner.onProgress.add($bind(this,this.progress));
 	runner.onComplete.add($bind(this,this.complete));
-	this.onStart = new utest.Notifier();
-	this.onComplete = new utest.Dispatcher();
-	this.onProgress = new utest.Dispatcher();
+	this.onStart = new utest_Notifier();
+	this.onComplete = new utest_Dispatcher();
+	this.onProgress = new utest_Dispatcher();
 };
-utest.ui.common.ResultAggregator.__name__ = ["utest","ui","common","ResultAggregator"];
-utest.ui.common.ResultAggregator.prototype = {
+utest_ui_common_ResultAggregator.__name__ = ["utest","ui","common","ResultAggregator"];
+utest_ui_common_ResultAggregator.prototype = {
 	runner: null
 	,flattenPackage: null
 	,root: null
@@ -4362,7 +4577,7 @@ utest.ui.common.ResultAggregator.prototype = {
 	,onComplete: null
 	,onProgress: null
 	,start: function(runner) {
-		this.root = new utest.ui.common.PackageResult(null);
+		this.root = new utest_ui_common_PackageResult(null);
 		this.onStart.dispatch();
 	}
 	,getOrCreatePackage: function(pack,flat,ref) {
@@ -4370,7 +4585,7 @@ utest.ui.common.ResultAggregator.prototype = {
 		if(pack == null || pack == "") return ref;
 		if(flat) {
 			if(ref.existsPackage(pack)) return ref.getPackage(pack);
-			var p = new utest.ui.common.PackageResult(pack);
+			var p = new utest_ui_common_PackageResult(pack);
 			ref.addPackage(p);
 			return p;
 		} else {
@@ -4386,12 +4601,12 @@ utest.ui.common.ResultAggregator.prototype = {
 	}
 	,getOrCreateClass: function(pack,cls,setup,teardown) {
 		if(pack.existsClass(cls)) return pack.getClass(cls);
-		var c = new utest.ui.common.ClassResult(cls,setup,teardown);
+		var c = new utest_ui_common_ClassResult(cls,setup,teardown);
 		pack.addClass(c);
 		return c;
 	}
 	,createFixture: function(result) {
-		var f = new utest.ui.common.FixtureResult(result.method);
+		var f = new utest_ui_common_FixtureResult(result.method);
 		var _g_head = result.assertations.h;
 		var _g_val = null;
 		while(_g_head != null) {
@@ -4414,9 +4629,9 @@ utest.ui.common.ResultAggregator.prototype = {
 	,complete: function(runner) {
 		this.onComplete.dispatch(this.root);
 	}
-	,__class__: utest.ui.common.ResultAggregator
+	,__class__: utest_ui_common_ResultAggregator
 };
-utest.ui.common.ResultStats = function() {
+var utest_ui_common_ResultStats = function() {
 	this.assertations = 0;
 	this.successes = 0;
 	this.failures = 0;
@@ -4426,13 +4641,13 @@ utest.ui.common.ResultStats = function() {
 	this.hasFailures = false;
 	this.hasErrors = false;
 	this.hasWarnings = false;
-	this.onAddSuccesses = new utest.Dispatcher();
-	this.onAddFailures = new utest.Dispatcher();
-	this.onAddErrors = new utest.Dispatcher();
-	this.onAddWarnings = new utest.Dispatcher();
+	this.onAddSuccesses = new utest_Dispatcher();
+	this.onAddFailures = new utest_Dispatcher();
+	this.onAddErrors = new utest_Dispatcher();
+	this.onAddWarnings = new utest_Dispatcher();
 };
-utest.ui.common.ResultStats.__name__ = ["utest","ui","common","ResultStats"];
-utest.ui.common.ResultStats.prototype = {
+utest_ui_common_ResultStats.__name__ = ["utest","ui","common","ResultStats"];
+utest_ui_common_ResultStats.prototype = {
 	assertations: null
 	,successes: null
 	,failures: null
@@ -4502,22 +4717,21 @@ utest.ui.common.ResultStats.prototype = {
 		dependant.onAddWarnings.remove($bind(this,this.addWarnings));
 		this.subtract(dependant);
 	}
-	,__class__: utest.ui.common.ResultStats
+	,__class__: utest_ui_common_ResultStats
 };
-utest.ui.text = {};
-utest.ui.text.HtmlReport = function(runner,outputHandler,traceRedirected) {
+var utest_ui_text_HtmlReport = function(runner,outputHandler,traceRedirected) {
 	if(traceRedirected == null) traceRedirected = true;
-	this.aggregator = new utest.ui.common.ResultAggregator(runner,true);
+	this.aggregator = new utest_ui_common_ResultAggregator(runner,true);
 	runner.onStart.add($bind(this,this.start));
 	this.aggregator.onComplete.add($bind(this,this.complete));
 	if(null == outputHandler) this.setHandler($bind(this,this._handler)); else this.setHandler(outputHandler);
 	if(traceRedirected) this.redirectTrace();
-	this.displaySuccessResults = utest.ui.common.SuccessResultsDisplayMode.AlwaysShowSuccessResults;
-	this.displayHeader = utest.ui.common.HeaderDisplayMode.AlwaysShowHeader;
+	this.displaySuccessResults = utest_ui_common_SuccessResultsDisplayMode.AlwaysShowSuccessResults;
+	this.displayHeader = utest_ui_common_HeaderDisplayMode.AlwaysShowHeader;
 };
-utest.ui.text.HtmlReport.__name__ = ["utest","ui","text","HtmlReport"];
-utest.ui.text.HtmlReport.__interfaces__ = [utest.ui.common.IReport];
-utest.ui.text.HtmlReport.prototype = {
+utest_ui_text_HtmlReport.__name__ = ["utest","ui","text","HtmlReport"];
+utest_ui_text_HtmlReport.__interfaces__ = [utest_ui_common_IReport];
+utest_ui_text_HtmlReport.prototype = {
 	traceRedirected: null
 	,displaySuccessResults: null
 	,displayHeader: null
@@ -4531,24 +4745,24 @@ utest.ui.text.HtmlReport.prototype = {
 	,redirectTrace: function() {
 		if(this.traceRedirected) return;
 		this._traces = [];
-		this.oldTrace = haxe.Log.trace;
-		haxe.Log.trace = $bind(this,this._trace);
+		this.oldTrace = haxe_Log.trace;
+		haxe_Log.trace = $bind(this,this._trace);
 	}
 	,restoreTrace: function() {
 		if(!this.traceRedirected) return;
-		haxe.Log.trace = this.oldTrace;
+		haxe_Log.trace = this.oldTrace;
 	}
 	,_traceTime: null
 	,_trace: function(v,infos) {
-		var time = haxe.Timer.stamp();
+		var time = haxe_Timer.stamp();
 		var delta;
 		if(this._traceTime == null) delta = 0; else delta = time - this._traceTime;
-		this._traces.push({ msg : StringTools.htmlEscape(Std.string(v)), infos : infos, time : time - this.startTime, delta : delta, stack : haxe.CallStack.callStack()});
-		this._traceTime = haxe.Timer.stamp();
+		this._traces.push({ msg : StringTools.htmlEscape(Std.string(v)), infos : infos, time : time - this.startTime, delta : delta, stack : haxe_CallStack.callStack()});
+		this._traceTime = haxe_Timer.stamp();
 	}
 	,startTime: null
 	,start: function(e) {
-		this.startTime = haxe.Timer.stamp();
+		this.startTime = haxe_Timer.stamp();
 	}
 	,cls: function(stats) {
 		if(stats.hasErrors) return "error"; else if(stats.hasFailures) return "failure"; else if(stats.hasWarnings) return "warn"; else return "ok";
@@ -4577,7 +4791,7 @@ utest.ui.text.HtmlReport.prototype = {
 		var last = null;
 		var count = 1;
 		var _g = 0;
-		var _g1 = haxe.CallStack.toString(stack).split("\n");
+		var _g1 = haxe_CallStack.toString(stack).split("\n");
 		while(_g < _g1.length) {
 			var part = _g1[_g];
 			++_g;
@@ -4592,7 +4806,7 @@ utest.ui.text.HtmlReport.prototype = {
 		return "<div>" + s + "</div>" + nl;
 	}
 	,addFixture: function(buf,result,name,isOk) {
-		if(utest.ui.common.ReportTools.skipResult(this,result.stats,isOk)) return;
+		if(utest_ui_common_ReportTools.skipResult(this,result.stats,isOk)) return;
 		buf.b += "<li class=\"fixture\"><div class=\"li\">";
 		buf.add("<span class=\"" + this.cls(result.stats) + "bg fixtureresult\">");
 		if(result.stats.isOk) buf.b += "OK "; else if(result.stats.hasErrors) buf.b += "ERROR "; else if(result.stats.hasFailures) buf.b += "FAILURE "; else if(result.stats.hasWarnings) buf.b += "WARNING ";
@@ -4665,7 +4879,7 @@ utest.ui.text.HtmlReport.prototype = {
 		return this.formatStack(s);
 	}
 	,addClass: function(buf,result,name,isOk) {
-		if(utest.ui.common.ReportTools.skipResult(this,result.stats,isOk)) return;
+		if(utest_ui_common_ReportTools.skipResult(this,result.stats,isOk)) return;
 		buf.b += "<li>";
 		buf.b += Std.string("<h2 class=\"classname\">" + name + "</h2>");
 		this.blockNumbers(buf,result.stats);
@@ -4681,7 +4895,7 @@ utest.ui.text.HtmlReport.prototype = {
 		buf.b += "</li>\n";
 	}
 	,addPackages: function(buf,result,isOk) {
-		if(utest.ui.common.ReportTools.skipResult(this,result.stats,isOk)) return;
+		if(utest_ui_common_ReportTools.skipResult(this,result.stats,isOk)) return;
 		buf.b += "<ul id=\"utest-results-packages\">\n";
 		var _g = 0;
 		var _g1 = result.packageNames(false);
@@ -4693,7 +4907,7 @@ utest.ui.text.HtmlReport.prototype = {
 		buf.b += "</ul>\n";
 	}
 	,addPackage: function(buf,result,name,isOk) {
-		if(utest.ui.common.ReportTools.skipResult(this,result.stats,isOk)) return;
+		if(utest_ui_common_ReportTools.skipResult(this,result.stats,isOk)) return;
 		if(name == "" && result.classNames().length == 0) return;
 		buf.b += "<li>";
 		buf.b += Std.string("<h2>" + name + "</h2>");
@@ -4711,15 +4925,15 @@ utest.ui.text.HtmlReport.prototype = {
 	}
 	,getHeader: function() {
 		var buf = new StringBuf();
-		if(!utest.ui.common.ReportTools.hasHeader(this,this.result.stats)) return "";
-		var end = haxe.Timer.stamp();
+		if(!utest_ui_common_ReportTools.hasHeader(this,this.result.stats)) return "";
+		var end = haxe_Timer.stamp();
 		var time = ((end - this.startTime) * 1000 | 0) / 1000;
 		var msg = "TEST OK";
 		if(this.result.stats.hasErrors) msg = "TEST ERRORS"; else if(this.result.stats.hasFailures) msg = "TEST FAILED"; else if(this.result.stats.hasWarnings) msg = "WARNING REPORTED";
 		buf.add("<h1 class=\"" + this.cls(this.result.stats) + "bg header\">" + msg + "</h1>\n");
 		buf.b += "<div class=\"headerinfo\">";
 		this.resultNumbers(buf,this.result.stats);
-		buf.b += Std.string(" performed on <strong>" + utest.ui.text.HtmlReport.platform + "</strong>, executed in <strong> " + time + " sec. </strong></div >\n ");
+		buf.b += Std.string(" performed on <strong>" + utest_ui_text_HtmlReport.platform + "</strong>, executed in <strong> " + time + " sec. </strong></div >\n ");
 		return buf.b;
 	}
 	,getTrace: function() {
@@ -4752,10 +4966,10 @@ utest.ui.text.HtmlReport.prototype = {
 		return buf.b;
 	}
 	,getAll: function() {
-		if(!utest.ui.common.ReportTools.hasOutput(this,this.result.stats)) return ""; else return this.getHeader() + this.getTrace() + this.getResults();
+		if(!utest_ui_common_ReportTools.hasOutput(this,this.result.stats)) return ""; else return this.getHeader() + this.getTrace() + this.getResults();
 	}
 	,getHtml: function(title) {
-		if(null == title) title = "utest: " + utest.ui.text.HtmlReport.platform;
+		if(null == title) title = "utest: " + utest_ui_text_HtmlReport.platform;
 		var s = this.getAll();
 		if("" == s) return ""; else return this.wrapHtml(title,s);
 	}
@@ -4805,19 +5019,19 @@ utest.ui.text.HtmlReport.prototype = {
 		}
 		el.innerHTML = report.getAll();
 	}
-	,__class__: utest.ui.text.HtmlReport
+	,__class__: utest_ui_text_HtmlReport
 };
-utest.ui.text.PlainTextReport = function(runner,outputHandler) {
-	this.aggregator = new utest.ui.common.ResultAggregator(runner,true);
+var utest_ui_text_PlainTextReport = function(runner,outputHandler) {
+	this.aggregator = new utest_ui_common_ResultAggregator(runner,true);
 	runner.onStart.add($bind(this,this.start));
 	this.aggregator.onComplete.add($bind(this,this.complete));
 	if(null != outputHandler) this.setHandler(outputHandler);
-	this.displaySuccessResults = utest.ui.common.SuccessResultsDisplayMode.AlwaysShowSuccessResults;
-	this.displayHeader = utest.ui.common.HeaderDisplayMode.AlwaysShowHeader;
+	this.displaySuccessResults = utest_ui_common_SuccessResultsDisplayMode.AlwaysShowSuccessResults;
+	this.displayHeader = utest_ui_common_HeaderDisplayMode.AlwaysShowHeader;
 };
-utest.ui.text.PlainTextReport.__name__ = ["utest","ui","text","PlainTextReport"];
-utest.ui.text.PlainTextReport.__interfaces__ = [utest.ui.common.IReport];
-utest.ui.text.PlainTextReport.prototype = {
+utest_ui_text_PlainTextReport.__name__ = ["utest","ui","text","PlainTextReport"];
+utest_ui_text_PlainTextReport.__interfaces__ = [utest_ui_common_IReport];
+utest_ui_text_PlainTextReport.prototype = {
 	displaySuccessResults: null
 	,displayHeader: null
 	,handler: null
@@ -4829,7 +5043,7 @@ utest.ui.text.PlainTextReport.prototype = {
 	}
 	,startTime: null
 	,start: function(e) {
-		this.startTime = haxe.Timer.stamp();
+		this.startTime = haxe_Timer.stamp();
 	}
 	,indents: function(c) {
 		var s = "";
@@ -4842,7 +5056,7 @@ utest.ui.text.PlainTextReport.prototype = {
 	}
 	,dumpStack: function(stack) {
 		if(stack.length == 0) return "";
-		var parts = haxe.CallStack.toString(stack).split("\n");
+		var parts = haxe_CallStack.toString(stack).split("\n");
 		var r = [];
 		var _g = 0;
 		while(_g < parts.length) {
@@ -4854,8 +5068,8 @@ utest.ui.text.PlainTextReport.prototype = {
 		return r.join(this.newline);
 	}
 	,addHeader: function(buf,result) {
-		if(!utest.ui.common.ReportTools.hasHeader(this,result.stats)) return;
-		var end = haxe.Timer.stamp();
+		if(!utest_ui_common_ReportTools.hasHeader(this,result.stats)) return;
+		var end = haxe_Timer.stamp();
 		var time = ((end - this.startTime) * 1000 | 0) / 1000;
 		buf.b += Std.string("\nassertations: " + result.stats.assertations + this.newline);
 		buf.b += Std.string("successes: " + result.stats.successes + this.newline);
@@ -4877,14 +5091,14 @@ utest.ui.text.PlainTextReport.prototype = {
 			var pname = _g1[_g];
 			++_g;
 			var pack = this.result.getPackage(pname);
-			if(utest.ui.common.ReportTools.skipResult(this,pack.stats,this.result.stats.isOk)) continue;
+			if(utest_ui_common_ReportTools.skipResult(this,pack.stats,this.result.stats.isOk)) continue;
 			var _g2 = 0;
 			var _g3 = pack.classNames();
 			while(_g2 < _g3.length) {
 				var cname = _g3[_g2];
 				++_g2;
 				var cls = pack.getClass(cname);
-				if(utest.ui.common.ReportTools.skipResult(this,cls.stats,this.result.stats.isOk)) continue;
+				if(utest_ui_common_ReportTools.skipResult(this,cls.stats,this.result.stats.isOk)) continue;
 				buf.b += Std.string((pname == ""?"":pname + ".") + cname + this.newline);
 				var _g4 = 0;
 				var _g5 = cls.methodNames();
@@ -4892,7 +5106,7 @@ utest.ui.text.PlainTextReport.prototype = {
 					var mname = _g5[_g4];
 					++_g4;
 					var fix = cls.get(mname);
-					if(utest.ui.common.ReportTools.skipResult(this,fix.stats,this.result.stats.isOk)) continue;
+					if(utest_ui_common_ReportTools.skipResult(this,fix.stats,this.result.stats.isOk)) continue;
 					buf.add(this.indents(1) + mname + ": ");
 					if(fix.stats.isOk) buf.b += "OK "; else if(fix.stats.hasErrors) buf.b += "ERROR "; else if(fix.stats.hasFailures) buf.b += "FAILURE "; else if(fix.stats.hasWarnings) buf.b += "WARNING ";
 					var messages = "";
@@ -4965,16 +5179,16 @@ utest.ui.text.PlainTextReport.prototype = {
 		this.handler(this);
 		if(typeof process != "undefined") process.exit(result.stats.isOk?0:1);
 	}
-	,__class__: utest.ui.text.PlainTextReport
+	,__class__: utest_ui_text_PlainTextReport
 };
-utest.ui.text.PrintReport = function(runner) {
-	utest.ui.text.PlainTextReport.call(this,runner,$bind(this,this._handler));
+var utest_ui_text_PrintReport = function(runner) {
+	utest_ui_text_PlainTextReport.call(this,runner,$bind(this,this._handler));
 	this.newline = "\n";
 	this.indent = "  ";
 };
-utest.ui.text.PrintReport.__name__ = ["utest","ui","text","PrintReport"];
-utest.ui.text.PrintReport.__super__ = utest.ui.text.PlainTextReport;
-utest.ui.text.PrintReport.prototype = $extend(utest.ui.text.PlainTextReport.prototype,{
+utest_ui_text_PrintReport.__name__ = ["utest","ui","text","PrintReport"];
+utest_ui_text_PrintReport.__super__ = utest_ui_text_PlainTextReport;
+utest_ui_text_PrintReport.prototype = $extend(utest_ui_text_PlainTextReport.prototype,{
 	useTrace: null
 	,_handler: function(report) {
 		this._trace(report.getResults());
@@ -4982,9 +5196,9 @@ utest.ui.text.PrintReport.prototype = $extend(utest.ui.text.PlainTextReport.prot
 	,_trace: function(s) {
 		s = StringTools.replace(s,"  ",this.indent);
 		s = StringTools.replace(s,"\n",this.newline);
-		haxe.Log.trace(s,{ fileName : "PrintReport.hx", lineNumber : 59, className : "utest.ui.text.PrintReport", methodName : "_trace"});
+		haxe_Log.trace(s,{ fileName : "PrintReport.hx", lineNumber : 59, className : "utest.ui.text.PrintReport", methodName : "_trace"});
 	}
-	,__class__: utest.ui.text.PrintReport
+	,__class__: utest_ui_text_PrintReport
 });
 function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 var $_, $fid = 0;
@@ -5027,9 +5241,10 @@ if(Array.prototype.filter == null) Array.prototype.filter = function(f1) {
 	return a1;
 };
 var __map_reserved = {}
-var ArrayBuffer = typeof(window) != "undefined" && window.ArrayBuffer || typeof(global) != "undefined" && global.ArrayBuffer || js.html.compat.ArrayBuffer;
-if(ArrayBuffer.prototype.slice == null) ArrayBuffer.prototype.slice = js.html.compat.ArrayBuffer.sliceImpl;
-var Uint8Array = typeof(window) != "undefined" && window.Uint8Array || typeof(global) != "undefined" && global.Uint8Array || js.html.compat.Uint8Array._new;
+var ArrayBuffer = typeof(window) != "undefined" && window.ArrayBuffer || typeof(global) != "undefined" && global.ArrayBuffer || js_html_compat_ArrayBuffer;
+if(ArrayBuffer.prototype.slice == null) ArrayBuffer.prototype.slice = js_html_compat_ArrayBuffer.sliceImpl;
+var DataView = typeof(window) != "undefined" && window.DataView || typeof(global) != "undefined" && global.DataView || js_html_compat_DataView;
+var Uint8Array = typeof(window) != "undefined" && window.Uint8Array || typeof(global) != "undefined" && global.Uint8Array || js_html_compat_Uint8Array._new;
 
       // Production steps of ECMA-262, Edition 5, 15.4.4.21
       // Reference: http://es5.github.io/#x15.4.4.21
@@ -5063,19 +5278,25 @@ var Uint8Array = typeof(window) != "undefined" && window.Uint8Array || typeof(gl
         };
       }
     ;
-haxe.ds.ObjectMap.count = 0;
-js.Boot.__toStr = {}.toString;
-js.html.compat.Uint8Array.BYTES_PER_ELEMENT = 1;
-thx.core.Ints.pattern_parse = new EReg("^[+-]?(\\d+|0x[0-9A-F]+)$","i");
-thx.core.Ints.BASE = "0123456789abcdefghijklmnopqrstuvwxyz";
-thx.core.Strings.UCWORDS = new EReg("[^a-zA-Z]([a-z])","g");
-thx.core.Strings.UCWORDSWS = new EReg("\\s[a-z]","g");
-thx.core.Strings.ALPHANUM = new EReg("^[a-z0-9]+$","i");
-thx.core.Strings.DIGITS = new EReg("^[0-9]+$","");
-thx.core.Strings.STRIPTAGS = new EReg("</?[a-z]+[^>]*?/?>","gi");
-thx.core.Strings.WSG = new EReg("\\s+","g");
-thx.core.Strings.SPLIT_LINES = new EReg("\r\n|\n\r|\n|\r","g");
-utest.TestHandler.POLLING_TIME = 10;
-utest.ui.text.HtmlReport.platform = "javascript";
+haxe_ds_ObjectMap.count = 0;
+haxe_io_FPHelper.i64tmp = (function($this) {
+	var $r;
+	var x = new haxe__$Int64__$_$_$Int64(0,0);
+	$r = x;
+	return $r;
+}(this));
+js_Boot.__toStr = {}.toString;
+js_html_compat_Uint8Array.BYTES_PER_ELEMENT = 1;
+thx_core_Ints.pattern_parse = new EReg("^[+-]?(\\d+|0x[0-9A-F]+)$","i");
+thx_core_Ints.BASE = "0123456789abcdefghijklmnopqrstuvwxyz";
+thx_core_Strings.UCWORDS = new EReg("[^a-zA-Z]([a-z])","g");
+thx_core_Strings.UCWORDSWS = new EReg("\\s[a-z]","g");
+thx_core_Strings.ALPHANUM = new EReg("^[a-z0-9]+$","i");
+thx_core_Strings.DIGITS = new EReg("^[0-9]+$","");
+thx_core_Strings.STRIPTAGS = new EReg("</?[a-z]+[^>]*?/?>","gi");
+thx_core_Strings.WSG = new EReg("\\s+","g");
+thx_core_Strings.SPLIT_LINES = new EReg("\r\n|\n\r|\n|\r","g");
+utest_TestHandler.POLLING_TIME = 10;
+utest_ui_text_HtmlReport.platform = "javascript";
 TestAll.main();
 })(typeof console != "undefined" ? console : {log:function(){}});
