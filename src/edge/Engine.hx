@@ -80,13 +80,15 @@ class Engine {
 //      Reflect.setField(system, "engine", this);
 //    if(info.hasDelta)
 //      Reflect.setField(system, "timeDelta", t);
+    process.before();
     if(info.hasComponents) {
-      if(info.hasBefore)
-        Reflect.callMethod(system, info.update, emptyArgs);
+//      if(info.hasBefore)
+//        Reflect.callMethod(system, info.before, emptyArgs);
       for(entity in info.components.keys()) {
         var components = info.components.get(entity);
-        if(info.hasEntity)
-          Reflect.setField(system, "entity", entity);
+        process.setEntity(entity);
+//        if(info.hasEntity)
+//          Reflect.setField(system, "entity", entity);
         Reflect.callMethod(system, info.update, components);
       }
     } else {

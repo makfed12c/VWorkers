@@ -4,8 +4,8 @@ using thx.core.Arrays;
 
 class SystemInfo {
   public var hasComponents(default, null) : Bool;
-  public var hasEntity(default, null) : Bool;
-  public var hasBefore(default, null) : Bool;
+//  public var hasEntity(default, null) : Bool;
+//  public var hasBefore(default, null) : Bool;
   public var before(default, null) : Dynamic;
   public var update(default, null) : Dynamic;
   public var components(default, null) : Map<Entity, Array<Dynamic>>;
@@ -22,8 +22,8 @@ class SystemInfo {
     this.process = process;
     this.system        = system;
     this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
-    this.hasEntity     = hasField(system, "entity");
-    this.hasBefore     = hasField(system, "before");
+//    this.hasEntity     = hasField(system, "entity");
+//    this.hasBefore     = hasField(system, "before");
     this.update        = Reflect.field(system, "update");
     this.before        = null;
     this.components    = new Map();
@@ -38,10 +38,10 @@ class SystemInfo {
       Reflect.setField(system, "entities", view);
     }
 
-    if(hasBefore)
-      before = Reflect.field(system, "before");
+//    if(hasBefore)
+//      before = Reflect.field(system, "before");
   }
 
-  static function hasField(o : {}, field : String)
-    return Type.getInstanceFields(Type.getClass(o)).contains(field);
+//  static function hasField(o : {}, field : String)
+//    return Type.getInstanceFields(Type.getClass(o)).contains(field);
 }

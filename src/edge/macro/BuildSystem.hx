@@ -20,6 +20,7 @@ class BuildSystem {
     injectToString(fields);
     injectConstructor(fields);
     makePublic(fields, "engine");
+    makePublic(fields, "entity");
     makePublic(fields, "timeDelta");
     var cls = Context.getLocalClass();
     injectSystemProcess(fields, cls);
@@ -59,6 +60,16 @@ class BuildSystem {
     for(field in fields)
       if(field.name == fieldName && switch field.kind {
         case FVar(_, _): true;
+        case _: false;
+      })
+        return true;
+    return false;
+  }
+
+  public static function hasFunField(fields : Array<Field>, fieldName : String) {
+    for(field in fields)
+      if(field.name == fieldName && switch field.kind {
+        case FFun(_): true;
         case _: false;
       })
         return true;

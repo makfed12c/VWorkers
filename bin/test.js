@@ -9,7 +9,9 @@ var edge = {};
 edge.ISystemProcess = function() { };
 edge.ISystemProcess.__name__ = ["edge","ISystemProcess"];
 edge.ISystemProcess.prototype = {
-	update: null
+	before: null
+	,update: null
+	,setEntity: null
 	,__class__: edge.ISystemProcess
 };
 var Components1System_SystemProcess = function(system) {
@@ -19,8 +21,13 @@ Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
 Components1System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components1System_SystemProcess.prototype = {
 	system: null
+	,before: function() {
+	}
 	,update: function(engine,delta) {
 		this.system.engine = engine;
+	}
+	,setEntity: function(entity) {
+		this.system.entity = entity;
 	}
 	,__class__: Components1System_SystemProcess
 };
@@ -31,7 +38,11 @@ Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
 Components2System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components2System_SystemProcess.prototype = {
 	system: null
+	,before: function() {
+	}
 	,update: function(engine,delta) {
+	}
+	,setEntity: function(entity) {
 	}
 	,__class__: Components2System_SystemProcess
 };
@@ -42,7 +53,11 @@ ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_Sys
 ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 ComponentsEntitiesSystem_SystemProcess.prototype = {
 	system: null
+	,before: function() {
+	}
 	,update: function(engine,delta) {
+	}
+	,setEntity: function(entity) {
 	}
 	,__class__: ComponentsEntitiesSystem_SystemProcess
 };
@@ -232,7 +247,11 @@ NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"]
 NoComponentsSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 NoComponentsSystem_SystemProcess.prototype = {
 	system: null
+	,before: function() {
+	}
 	,update: function(engine,delta) {
+	}
+	,setEntity: function(entity) {
 	}
 	,__class__: NoComponentsSystem_SystemProcess
 };
@@ -780,13 +799,13 @@ edge.Engine.prototype = {
 		if(info == null) return;
 		var process = info.process;
 		process.update(this,t);
+		process.before();
 		if(info.hasComponents) {
-			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);
 			var $it0 = info.components.keys();
 			while( $it0.hasNext() ) {
 				var entity = $it0.next();
 				var components = info.components.h[entity.__id__];
-				if(info.hasEntity) system.entity = entity;
+				process.setEntity(entity);
 				Reflect.callMethod(system,info.update,components);
 			}
 		} else Reflect.callMethod(system,info.update,this.emptyArgs);
@@ -1077,8 +1096,6 @@ edge.SystemInfo = function(system,process) {
 	this.process = process;
 	this.system = system;
 	this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
-	this.hasEntity = edge.SystemInfo.hasField(system,"entity");
-	this.hasBefore = edge.SystemInfo.hasField(system,"before");
 	this.update = Reflect.field(system,"update");
 	this.before = null;
 	this.components = new haxe.ds.ObjectMap();
@@ -1093,16 +1110,10 @@ edge.SystemInfo = function(system,process) {
 		this.collections.set("entities",value);
 		system.entities = view;
 	}
-	if(this.hasBefore) this.before = Reflect.field(system,"before");
 };
 edge.SystemInfo.__name__ = ["edge","SystemInfo"];
-edge.SystemInfo.hasField = function(o,field) {
-	return thx.core.Arrays.contains(Type.getInstanceFields(Type.getClass(o)),field);
-};
 edge.SystemInfo.prototype = {
 	hasComponents: null
-	,hasEntity: null
-	,hasBefore: null
 	,before: null
 	,update: null
 	,components: null

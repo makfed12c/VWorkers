@@ -23,7 +23,9 @@ class BuildSystemProcess {
 
     injectConstructor(system, fields);
     injectSystemField(system, fields);
+    injectBefore(systemFields, fields);
     injectSetEngine(systemFields, fields);
+    injectSetEntity(systemFields, fields);
 
     Context.defineType({
       pos : Context.currentPos(),
@@ -34,6 +36,24 @@ class BuildSystemProcess {
       kind : kind,
       isExtern : false,
       fields : fields
+    });
+  }
+
+  static function injectBefore(systemFields : Array<Field>, fields : Array<Field>) {
+    var exprs = [];
+    if(BuildSystem.hasFunField(systemFields, "before"))
+      exprs.push(macro system.before());
+
+    fields.push({
+      name : "before",
+      access: [APublic],
+      kind: FFun({
+        ret : macro : Void,
+        params : null,
+        expr : macro $b{exprs},
+        args : []
+      }),
+      pos: Context.currentPos()
     });
   }
 
@@ -57,6 +77,27 @@ class BuildSystemProcess {
         }, {
           name : "delta",
           type : macro : Float
+        }]
+      }),
+      pos: Context.currentPos()
+    });
+  }
+
+  static function injectSetEntity(systemFields : Array<Field>, fields : Array<Field>) {
+    var exprs = [];
+    if(BuildSystem.hasVarField(systemFields, "entity"))
+      exprs.push(macro system.entity = entity);
+
+    fields.push({
+      name : "setEntity",
+      access: [APublic],
+      kind: FFun({
+        ret : macro : Void,
+        params : null,
+        expr : macro $b{exprs},
+        args : [{
+          name : "entity",
+          type : macro : edge.Entity
         }]
       }),
       pos: Context.currentPos()
