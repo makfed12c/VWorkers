@@ -3,15 +3,14 @@ package edge;
 import edge.Entity;
 
 @:access(edge.Entity)
-@:access(edge.View)
 @:access(edge.ISystem)
 class Engine {
   // TODO remove
-  var mapInfo : Map<ISystem, ISystemProcess>;
+  var mapProcess : Map<ISystem, ISystemProcess>;
   var mapEntities : Map<Entity, Bool>;
   var listPhases : Array<Phase>;
   public function new() {
-    mapInfo = new Map();
+    mapProcess = new Map();
     mapEntities = new Map();
     listPhases = [];
   }
@@ -29,12 +28,11 @@ class Engine {
       remove(entity);
 
   function remove(entity : Entity) {
-    for(process in mapInfo) {
+    for(process in mapProcess)
       process.removeEntity(entity);
 //      info.components.remove(entity);
-    }
 /*
-    for(info in mapInfo)
+    for(info in mapProcess)
       for(collection in info.process.collections)
         collection.view.remove(entity);
 */
@@ -55,14 +53,14 @@ class Engine {
     return listPhases.iterator();
 
   public function systems() : Iterator<ISystem>
-    return mapInfo.keys();
+    return mapProcess.keys();
 
   // private methods
   function addSystem(phase : Phase, system : ISystem) {
-    if(mapInfo.exists(system))
+    if(mapProcess.exists(system))
       throw 'System "$system" already exists in Engine';
 //    var process = new SystemInfo(system, system.__systemProcess);
-    mapInfo.set(system, system.__systemProcess);
+    mapProcess.set(system, system.__systemProcess);
 /*
     if(info.process.hasUpdateItems)
       for(entity in mapEntities.keys())
@@ -76,11 +74,11 @@ class Engine {
   }
 
   function removeSystem(system : ISystem)
-    mapInfo.remove(system);
+    mapProcess.remove(system);
 
   var emptyArgs = [];
   function updateSystem(system : ISystem, t : Float) {
-    var process = mapInfo.get(system);
+    var process = mapProcess.get(system);
     if(process == null)
       return;
 //    var process = info.process;
@@ -108,20 +106,20 @@ class Engine {
   }
 
   function matchSystems(entity : Entity)
-    for(system in mapInfo.keys())
+    for(system in mapProcess.keys())
 //      matchSystem(entity, system);
       match(entity, system);
 
 /*
   function matchEntities(entity : Entity)
-    for(system in mapInfo.keys())
+    for(system in mapProcess.keys())
       matchEntity(entity, system);
 */
   function match(entity : Entity, system : ISystem)
-    mapInfo.get(system).addEntity(entity);
+    mapProcess.get(system).addEntity(entity);
 
 //  function matchSystem(entity : Entity, system : ISystem) {
-//    var info = mapInfo.get(system);
+//    var info = mapProcess.get(system);
 /*
     info.components.remove(entity);
     if(info.hasComponents) {
@@ -134,7 +132,7 @@ class Engine {
 //  }
 
 //  function matchEntity(entity : Entity, system : ISystem) {
-//    var info = mapInfo.get(system);
+//    var info = mapProcess.get(system);
     /*
     if(!info.process.collections.iterator().hasNext()) return;
     for(name in info.process.collections.keys()) {

@@ -802,13 +802,13 @@ Type.enumIndex = function(e) {
 };
 edge.Engine = function() {
 	this.emptyArgs = [];
-	this.mapInfo = new haxe.ds.ObjectMap();
+	this.mapProcess = new haxe.ds.ObjectMap();
 	this.mapEntities = new haxe.ds.ObjectMap();
 	this.listPhases = [];
 };
 edge.Engine.__name__ = ["edge","Engine"];
 edge.Engine.prototype = {
-	mapInfo: null
+	mapProcess: null
 	,mapEntities: null
 	,listPhases: null
 	,create: function(components) {
@@ -825,7 +825,7 @@ edge.Engine.prototype = {
 		}
 	}
 	,remove: function(entity) {
-		var $it0 = this.mapInfo.iterator();
+		var $it0 = this.mapProcess.iterator();
 		while( $it0.hasNext() ) {
 			var process = $it0.next();
 			process.removeEntity(entity);
@@ -845,11 +845,11 @@ edge.Engine.prototype = {
 		return HxOverrides.iter(this.listPhases);
 	}
 	,systems: function() {
-		return this.mapInfo.keys();
+		return this.mapProcess.keys();
 	}
 	,addSystem: function(phase,system) {
-		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		this.mapInfo.set(system,system.__systemProcess);
+		if(this.mapProcess.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
+		this.mapProcess.set(system,system.__systemProcess);
 		var $it0 = this.mapEntities.keys();
 		while( $it0.hasNext() ) {
 			var entity = $it0.next();
@@ -857,23 +857,23 @@ edge.Engine.prototype = {
 		}
 	}
 	,removeSystem: function(system) {
-		this.mapInfo.remove(system);
+		this.mapProcess.remove(system);
 	}
 	,emptyArgs: null
 	,updateSystem: function(system,t) {
-		var process = this.mapInfo.h[system.__id__];
+		var process = this.mapProcess.h[system.__id__];
 		if(process == null) return;
 		process.update(this,t);
 	}
 	,matchSystems: function(entity) {
-		var $it0 = this.mapInfo.keys();
+		var $it0 = this.mapProcess.keys();
 		while( $it0.hasNext() ) {
 			var system = $it0.next();
 			this.match(entity,system);
 		}
 	}
 	,match: function(entity,system) {
-		this.mapInfo.h[system.__id__].addEntity(entity);
+		this.mapProcess.h[system.__id__].addEntity(entity);
 	}
 	,__class__: edge.Engine
 };
