@@ -19,28 +19,10 @@ class BuildComponent {
     var field = findField(fields, "new");
     if(null != field) return;
     var info = getVarInfo(fields),
-        cls  = clsName().split(".").pop(),
         init = info
           .map(function(arg) return arg.name)
           .map(function(name) return macro this.$name = $i{name});
-    fields.push({
-      name: "new",
-      doc: null,
-      meta: [],
-      access: [APublic],
-      kind: FFun({
-        ret : macro : Void,
-        params : null,
-        expr : macro $b{init},
-        args : info.map(function(arg) return {
-          value : null,
-          type : arg.type,
-          opt : false,
-          name : arg.name
-        })
-      }),
-      pos: Context.currentPos()
-    });
+    fields.push(createFunctionField("new", info, macro : Void, macro $b{init}));
   }
 
   static function injectToString(fields : Array<Field>) {
@@ -67,11 +49,11 @@ class BuildComponent {
     });
   }
 
-  static function getVarInfo(fields : Array<Field>) {
+  static function getVarInfo(fields : Array<Field>) : Array<FunctionArg> {
     return fields
       .map(function(field) return switch field.kind {
         case FVar(t, _) if(!field.isStatic()):
-          { name : field.name, type : t }
+          { name : field.name, type : t, opt : null, value : null }
         case _:
           null;
       })
