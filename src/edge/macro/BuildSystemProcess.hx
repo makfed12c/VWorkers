@@ -48,6 +48,9 @@ class BuildSystemProcess {
     if(BuildSystem.hasFunField(systemFields, "before"))
       exprs.push(macro system.before());
 
+    if(!fieldFunctionHasArguments(BuildSystem.findField(systemFields, "update")))
+      exprs.push(macro system.update());
+
     fields.push({
       name : "update",
       access: [APublic],
@@ -140,6 +143,15 @@ class BuildSystemProcess {
         var exprs = [o.expr, expr];
         o.expr = macro $b{exprs};
       case _:
+    }
+  }
+
+  static function fieldFunctionHasArguments(field : Field) {
+    switch field.kind {
+      case FFun(o):
+        return o.args.length > 0;
+      case _:
+        return false;
     }
   }
 }

@@ -249,6 +249,7 @@ NoComponentsSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 NoComponentsSystem_SystemProcess.prototype = {
 	system: null
 	,update: function(engine,delta) {
+		this.system.update();
 	}
 	,setEntity: function(entity) {
 	}
@@ -801,7 +802,7 @@ edge.Engine.prototype = {
 				process.setEntity(entity);
 				Reflect.callMethod(system,info.update,components);
 			}
-		} else Reflect.callMethod(system,info.update,this.emptyArgs);
+		}
 	}
 	,matchSystems: function(entity) {
 		var $it0 = this.mapInfo.keys();
