@@ -1413,22 +1413,31 @@ edge_Entity.prototype = {
 		return this.map.iterator();
 	}
 	,_add: function(component) {
-		var type = Type.getClassName(component == null?null:js_Boot.getClass(component));
+		var type = this.key(component);
 		if(this.map.exists(type)) this.remove(this.map.get(type));
 		this.map.set(type,component);
 	}
 	,_remove: function(component) {
-		var type = Type.getClassName(component == null?null:js_Boot.getClass(component));
+		var type = this.key(component);
 		this._removeTypeName(type);
 	}
 	,_removeTypeName: function(type) {
 		this.map.remove(type);
 	}
 	,key: function(component) {
-		return Type.getClassName(component == null?null:js_Boot.getClass(component));
+		var t;
+		if(component == null) t = null; else t = js_Boot.getClass(component);
+		var s = Type.getSuperClass(t);
+		while(s != null && s != edge_IComponent) {
+			t = s;
+			s = Type.getSuperClass(t);
+		}
+		return Type.getClassName(t);
 	}
 	,__class__: edge_Entity
 };
+var edge_IComponent = function() { };
+edge_IComponent.__name__ = ["edge","IComponent"];
 var edge_Phase = function(engine) {
 	this.engine = engine;
 	this.mapSystem = new haxe_ds_ObjectMap();

@@ -75,6 +75,13 @@ class Entity {
   function _removeTypeName(type : String)
     map.remove(type);
 
-  inline function key(component : {})
-    return Type.getClassName(Type.getClass(component));
+  function key(component : {}) {
+    var t : Class<Dynamic> = Type.getClass(component),
+        s = Type.getSuperClass(t);
+    while(s != null && s != edge.IComponent) {
+      t = s;
+      s = Type.getSuperClass(t);
+    }
+    return Type.getClassName(t);
+  }
 }
