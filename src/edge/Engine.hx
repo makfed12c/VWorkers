@@ -56,7 +56,7 @@ class Engine {
   function addSystem(phase : Phase, system : ISystem) {
     if(mapInfo.exists(system))
       throw 'System "$system" already exists in Engine';
-    var info = new SystemInfo(system, system.__getSystemProcess());
+    var info = new SystemInfo(system, system.__getSystemProcess(this));
     mapInfo.set(system, info);
     if(info.hasComponents)
       for(entity in mapEntities.keys())
@@ -74,8 +74,8 @@ class Engine {
     var info = mapInfo.get(system);
     if(info == null)
       return;
-    if(info.hasEngine)
-      Reflect.setField(system, "engine", this);
+//    if(info.hasEngine)
+//      Reflect.setField(system, "engine", this);
     if(info.hasDelta)
       Reflect.setField(system, "timeDelta", t);
     if(info.hasComponents) {

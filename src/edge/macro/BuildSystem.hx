@@ -28,21 +28,41 @@ class BuildSystem {
     if(null != field) return;
 
     var s = cls.toString(),
+        type = Context.getType(s),
+        system = type.toComplexType(),
         p = '$s${PROCESS_SUFFIX}';
 
     BuildSystemProcess.createProcessType(s, p, fields);
+
+    var exprs = [Context.parse('return new $p(this)', Context.currentPos())];
+
+    if(hasVarField(fields, 'engine'))
+      exprs.unshift(macro this.engine = engine);
 
     fields.push({
       name: "__getSystemProcess",
       access: [],
       kind: FFun({
-        ret : macro : edge.SystemProcess,
+        ret : macro : edge.ISystemProcess,
         params : null,
-        expr : Context.parse('return new $p(this)', Context.currentPos()),
-        args : []
+        expr : macro $b{exprs},
+        args : [{
+          name : "engine",
+          type : macro : edge.Engine
+        }]
       }),
       pos: Context.currentPos()
     });
+  }
+
+  static function hasVarField(fields : Array<Field>, fieldName : String) {
+    for(field in fields)
+      if(field.name == fieldName && switch field.kind {
+        case FVar(_, _): true;
+        case _: false;
+      })
+        return true;
+    return false;
   }
 
   static function injectEntityRequirements(fields : Array<Field>) {

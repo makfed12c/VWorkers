@@ -12,7 +12,7 @@ class SystemInfo {
   public var update(default, null) : Dynamic;
   public var components(default, null) : Map<Entity, Array<Dynamic>>;
   public var system(default, null) : ISystem;
-  public var process(default, null) : SystemProcess;
+  public var process(default, null) : ISystemProcess;
 
   public var collections(default, null) : Map<String, {
     classes : Array<Class<Dynamic>>,
@@ -20,7 +20,7 @@ class SystemInfo {
     view : View<Dynamic>
   }>;
 
-  public function new(system : ISystem, process : SystemProcess) {
+  public function new(system : ISystem, process : ISystemProcess) {
     this.process = process;
     this.system        = system;
     this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;

@@ -6,42 +6,35 @@ function $extend(from, fields) {
 	return proto;
 }
 var edge = {};
-edge.SystemProcess = function() {
-};
-edge.SystemProcess.__name__ = ["edge","SystemProcess"];
-edge.SystemProcess.prototype = {
-	__class__: edge.SystemProcess
-};
+edge.ISystemProcess = function() { };
+edge.ISystemProcess.__name__ = ["edge","ISystemProcess"];
 var Components1System_SystemProcess = function(system) {
-	edge.SystemProcess.call(this);
 	this.system = system;
 };
 Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
-Components1System_SystemProcess.__super__ = edge.SystemProcess;
-Components1System_SystemProcess.prototype = $extend(edge.SystemProcess.prototype,{
+Components1System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
+Components1System_SystemProcess.prototype = {
 	system: null
 	,__class__: Components1System_SystemProcess
-});
+};
 var Components2System_SystemProcess = function(system) {
-	edge.SystemProcess.call(this);
 	this.system = system;
 };
 Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
-Components2System_SystemProcess.__super__ = edge.SystemProcess;
-Components2System_SystemProcess.prototype = $extend(edge.SystemProcess.prototype,{
+Components2System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
+Components2System_SystemProcess.prototype = {
 	system: null
 	,__class__: Components2System_SystemProcess
-});
+};
 var ComponentsEntitiesSystem_SystemProcess = function(system) {
-	edge.SystemProcess.call(this);
 	this.system = system;
 };
 ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_SystemProcess"];
-ComponentsEntitiesSystem_SystemProcess.__super__ = edge.SystemProcess;
-ComponentsEntitiesSystem_SystemProcess.prototype = $extend(edge.SystemProcess.prototype,{
+ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
+ComponentsEntitiesSystem_SystemProcess.prototype = {
 	system: null
 	,__class__: ComponentsEntitiesSystem_SystemProcess
-});
+};
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
 	this.r = new RegExp(r,opt);
@@ -222,15 +215,14 @@ _List.ListIterator.prototype = {
 };
 Math.__name__ = ["Math"];
 var NoComponentsSystem_SystemProcess = function(system) {
-	edge.SystemProcess.call(this);
 	this.system = system;
 };
 NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"];
-NoComponentsSystem_SystemProcess.__super__ = edge.SystemProcess;
-NoComponentsSystem_SystemProcess.prototype = $extend(edge.SystemProcess.prototype,{
+NoComponentsSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
+NoComponentsSystem_SystemProcess.prototype = {
 	system: null
 	,__class__: NoComponentsSystem_SystemProcess
-});
+};
 var Reflect = function() { };
 Reflect.__name__ = ["Reflect"];
 Reflect.field = function(o,field) {
@@ -513,7 +505,7 @@ NoComponentsSystem.prototype = {
 	,toString: function() {
 		return "NoComponentsSystem";
 	}
-	,__getSystemProcess: function() {
+	,__getSystemProcess: function(engine) {
 		return new NoComponentsSystem_SystemProcess(this);
 	}
 	,__class__: NoComponentsSystem
@@ -537,7 +529,7 @@ Components2System.prototype = {
 	,toString: function() {
 		return "Components2System";
 	}
-	,__getSystemProcess: function() {
+	,__getSystemProcess: function(engine) {
 		return new Components2System_SystemProcess(this);
 	}
 	,__class__: Components2System
@@ -552,8 +544,9 @@ Components1System.__interfaces__ = [edge.ISystem];
 Components1System.prototype = {
 	count: null
 	,entity: null
+	,engine: null
 	,update: function(b) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 201, className : "Components1System", methodName : "update"});
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 202, className : "Components1System", methodName : "update"});
 		this.count++;
 	}
 	,componentRequirements: null
@@ -561,7 +554,8 @@ Components1System.prototype = {
 	,toString: function() {
 		return "Components1System";
 	}
-	,__getSystemProcess: function() {
+	,__getSystemProcess: function(engine) {
+		this.engine = engine;
 		return new Components1System_SystemProcess(this);
 	}
 	,__class__: Components1System
@@ -577,7 +571,7 @@ ComponentsEntitiesSystem.prototype = {
 	count: null
 	,entities: null
 	,update: function(b) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 210, className : "ComponentsEntitiesSystem", methodName : "update"});
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 211, className : "ComponentsEntitiesSystem", methodName : "update"});
 		this.count++;
 	}
 	,componentRequirements: null
@@ -585,7 +579,7 @@ ComponentsEntitiesSystem.prototype = {
 	,toString: function() {
 		return "ComponentsEntitiesSystem";
 	}
-	,__getSystemProcess: function() {
+	,__getSystemProcess: function(engine) {
 		return new ComponentsEntitiesSystem_SystemProcess(this);
 	}
 	,__class__: ComponentsEntitiesSystem
@@ -748,7 +742,7 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = new edge.SystemInfo(system,system.__getSystemProcess());
+		var info = new edge.SystemInfo(system,system.__getSystemProcess(this));
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
 			var $it0 = this.mapEntities.keys();
@@ -772,7 +766,6 @@ edge.Engine.prototype = {
 	,updateSystem: function(system,t) {
 		var info = this.mapInfo.h[system.__id__];
 		if(info == null) return;
-		if(info.hasEngine) system.engine = this;
 		if(info.hasDelta) system.timeDelta = t;
 		if(info.hasComponents) {
 			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);

@@ -197,6 +197,7 @@ class Components2System implements ISystem {
 class Components1System implements ISystem {
   public var count(default, null) = 0;
   public var entity : Entity;
+  public var engine : Engine;
   public function update(b : B) {
     Assert.is(b, B);
     count++;
