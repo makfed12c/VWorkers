@@ -32,10 +32,10 @@ class Entity {
   }
 
   public function exists(component : {})
-    return existsType(key(component));
+    return existsType(Type.getClass(component));
 
-  public function existsType(type : String)
-    return map.exists(type);
+  public function existsType(type : Class<{}>)
+    return map.exists(Type.getClassName(type));
 
   public function remove(component : {}) {
     _remove(component);
