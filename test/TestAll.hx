@@ -1,7 +1,7 @@
 using utest.Assert;
 import utest.Runner;
 import utest.ui.Report;
-using thx.core.Iterators;
+using thx.Iterators;
 
 import edge.*;
 

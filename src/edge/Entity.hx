@@ -1,6 +1,6 @@
 package edge;
 
-using thx.core.Arrays;
+using thx.Arrays;
 
 @:access(edge.Engine)
 class Entity {

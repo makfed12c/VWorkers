@@ -1,6 +1,6 @@
 package edge;
 
-import thx.core.Timer;
+import thx.Timer;
 
 class World {
   public var frame(default, null) : Phase;
