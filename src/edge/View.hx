@@ -39,7 +39,3 @@ class View<T : {}> {
     return true;
   }
 }
-typedef ViewData<T : {}> = {
-  entity : Entity,
-  data : T
-}
