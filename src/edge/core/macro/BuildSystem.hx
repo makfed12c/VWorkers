@@ -86,15 +86,15 @@ class BuildSystem {
           ret = macro : Void;
         }
         switch ret {
-        case macro : Void: // change return type to Bool
-          var exprs = [
-                changeReturnFromVoidToBool(f.expr),
-                macro return true
-              ];
-          f.expr = macro $b{exprs};
-          f.ret = macro : Bool;
-        case macro : Bool: // you are good to go
-        case _: Context.error('${clsName()}.update() return type is invalid: ${ret}', Context.currentPos());
+          case macro : Void: // change return type to Bool
+            var exprs = [
+                  changeReturnFromVoidToBool(f.expr),
+                  macro return true
+                ];
+            f.expr = macro $b{exprs};
+            f.ret = macro : Bool;
+          case macro : Bool: // you are good to go
+          case _: Context.error('${clsName()}.update() return type is invalid: ${ret}', Context.currentPos());
         }
       case _:
     }
@@ -105,13 +105,13 @@ class BuildSystem {
   static function changeReturnFromVoidToBool(expr) {
     return ExprTools.map(expr, function(e) {
       switch e.expr {
-      case EReturn(v) if(v == null):
-        return macro return true;
-      case EReturn(v):
-        return e;
-      case ex:
-        return changeReturnFromVoidToBool(e);
-      };
+        case EReturn(v) if(v == null):
+          return macro return true;
+        case EReturn(v):
+          return e;
+        case ex:
+          return changeReturnFromVoidToBool(e);
+        };
     });
   }
 }
