@@ -2,6 +2,7 @@ package edge.core.macro;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import haxe.macro.Type;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 import edge.core.macro.Macros.*;
@@ -10,7 +11,9 @@ class BuildSystemProcess {
   public static function createProcessType(systemName : String, processName : String, systemFields : Array<Field>) {
     var pack = processName.split('.'),
         name = pack.pop(),
-        system = Context.getType(systemName).toComplexType(),
+        type = Context.getType(systemName),
+        system = type.toComplexType(),
+        classType = switch type { case TInst(cls, _): cls.get(); case _: null; },
         fields = [],
         kind = TDClass(
           null,
@@ -22,7 +25,7 @@ class BuildSystemProcess {
     injectRemoveEntity(fields);
     injectAddEntity(fields);
     injectSystemField(system, fields);
-    injectUpdate(systemFields, fields);
+    injectUpdate(classType, systemFields, fields);
     injectViews(systemFields, fields);
     injectUpdateMatchRequirements(systemFields, fields);
 
@@ -115,7 +118,7 @@ class BuildSystemProcess {
     );
   }
 
-  static function injectUpdate(systemFields : Array<Field>, fields : Array<Field>) {
+  static function injectUpdate(systemType : ClassType, systemFields : Array<Field>, fields : Array<Field>) {
     var exprs = [];
     if(hasVarField(systemFields, "engine"))
       exprs.push(macro system.engine = engine);
@@ -156,7 +159,7 @@ class BuildSystemProcess {
         macro updateItems = new edge.View()
       );
 
-      if(hasFunField(systemFields, "before"))
+      if(hasFunField(systemFields, "before") || isFieldInHirearchy(systemType, "before"))
         exprs.push(macro if(updateItems.count > 0) system.before());
       // create loop expression
       exprs.push(macro var data);
@@ -172,12 +175,14 @@ class BuildSystemProcess {
       expr += '}';
       exprs.push(Context.parse(expr, Context.currentPos()));
     } else {
-      if(hasFunField(systemFields, "before"))
+      if(hasFunField(systemFields, "before") || isFieldInHirearchy(systemType, "before"))
         exprs.push(macro system.before());
       exprs.push(macro system.update());
     }
-    if(hasFunField(systemFields, "after"))
+    if(hasFunField(systemFields, "after") || isFieldInHirearchy(systemType, "after"))
       exprs.push(macro system.after());
+
+    //trace(haxe.macro.ExprTools.toString(macro $b{exprs}));
 
     fields.push(createFunctionField(
         "update",
