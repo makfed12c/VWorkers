@@ -1,4 +1,4 @@
-# JenkinsCICD
+# boostpow
 
 Entity system for Haxe
 
