@@ -7,7 +7,7 @@ import edge.Entity;
 @:access(edge.ISystem)
 class Engine {
   // TODO remove
-  var mapInfo : Map<ISystem, SystemInfo>;
+  var mapInfo : Map<ISystem, ISystemProcess>;
   var mapEntities : Map<Entity, Bool>;
   var listPhases : Array<Phase>;
   public function new() {
@@ -29,8 +29,8 @@ class Engine {
       remove(entity);
 
   function remove(entity : Entity) {
-    for(info in mapInfo) {
-      info.process.removeEntity(entity);
+    for(process in mapInfo) {
+      process.removeEntity(entity);
 //      info.components.remove(entity);
     }
 /*
@@ -61,8 +61,8 @@ class Engine {
   function addSystem(phase : Phase, system : ISystem) {
     if(mapInfo.exists(system))
       throw 'System "$system" already exists in Engine';
-    var info = new SystemInfo(system, system.__systemProcess);
-    mapInfo.set(system, info);
+//    var process = new SystemInfo(system, system.__systemProcess);
+    mapInfo.set(system, system.__systemProcess);
 /*
     if(info.process.hasUpdateItems)
       for(entity in mapEntities.keys())
@@ -80,10 +80,10 @@ class Engine {
 
   var emptyArgs = [];
   function updateSystem(system : ISystem, t : Float) {
-    var info = mapInfo.get(system);
-    if(info == null)
+    var process = mapInfo.get(system);
+    if(process == null)
       return;
-    var process = info.process;
+//    var process = info.process;
     process.update(this, t);
 //    if(info.hasEngine)
 //      Reflect.setField(system, "engine", this);
@@ -117,10 +117,8 @@ class Engine {
     for(system in mapInfo.keys())
       matchEntity(entity, system);
 */
-  function match(entity : Entity, system : ISystem) {
-    var info = mapInfo.get(system);
-    info.process.addEntity(entity);
-  }
+  function match(entity : Entity, system : ISystem)
+    mapInfo.get(system).addEntity(entity);
 
 //  function matchSystem(entity : Entity, system : ISystem) {
 //    var info = mapInfo.get(system);

@@ -836,8 +836,8 @@ edge.Engine.prototype = {
 	,remove: function(entity) {
 		var $it0 = this.mapInfo.iterator();
 		while( $it0.hasNext() ) {
-			var info = $it0.next();
-			info.process.removeEntity(entity);
+			var process = $it0.next();
+			process.removeEntity(entity);
 		}
 		this.mapEntities.remove(entity);
 		entity.engine = null;
@@ -858,8 +858,7 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = new edge.SystemInfo(system,system.__systemProcess);
-		this.mapInfo.set(system,info);
+		this.mapInfo.set(system,system.__systemProcess);
 		var $it0 = this.mapEntities.keys();
 		while( $it0.hasNext() ) {
 			var entity = $it0.next();
@@ -871,9 +870,8 @@ edge.Engine.prototype = {
 	}
 	,emptyArgs: null
 	,updateSystem: function(system,t) {
-		var info = this.mapInfo.h[system.__id__];
-		if(info == null) return;
-		var process = info.process;
+		var process = this.mapInfo.h[system.__id__];
+		if(process == null) return;
 		process.update(this,t);
 	}
 	,matchSystems: function(entity) {
@@ -884,8 +882,7 @@ edge.Engine.prototype = {
 		}
 	}
 	,match: function(entity,system) {
-		var info = this.mapInfo.h[system.__id__];
-		info.process.addEntity(entity);
+		this.mapInfo.h[system.__id__].addEntity(entity);
 	}
 	,__class__: edge.Engine
 };
@@ -1105,14 +1102,6 @@ edge.NodeSystemIterator.prototype = {
 		return system;
 	}
 	,__class__: edge.NodeSystemIterator
-};
-edge.SystemInfo = function(system,process) {
-	this.process = process;
-};
-edge.SystemInfo.__name__ = ["edge","SystemInfo"];
-edge.SystemInfo.prototype = {
-	process: null
-	,__class__: edge.SystemInfo
 };
 edge.View = function() {
 	this.map = new haxe.ds.ObjectMap();
