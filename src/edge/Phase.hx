@@ -1,9 +1,12 @@
 package edge;
 
+import edge.core.NodeSystem;
+import edge.core.NodeSystemIterator;
+
 @:access(edge.Engine.addSystem)
 @:access(edge.Engine.removeSystem)
 @:access(edge.Engine.updateSystem)
-@:access(edge.NodeSystem)
+@:access(edge.core.NodeSystem)
 class Phase {
   var first : NodeSystem;
   var last : NodeSystem;
@@ -118,30 +121,4 @@ class Phase {
 
   function key(system : ISystem)
     return Type.getClassName(Type.getClass(system));
-}
-
-class NodeSystem {
-  public var system(default, null) : ISystem;
-  public var next(default, null) : NodeSystem;
-  public var prev(default, null) : NodeSystem;
-
-  public function new(system : ISystem) {
-    this.system = system;
-  }
-}
-
-class NodeSystemIterator {
-  var node : NodeSystem;
-  public function new(node : NodeSystem) {
-    this.node = node;
-  }
-
-  public function hasNext()
-    return null != node;
-
-  public function next() {
-    var system = node.system;
-    node = node.next;
-    return system;
-  }
 }

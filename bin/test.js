@@ -1047,7 +1047,7 @@ edge.Phase.prototype = {
 		return;
 	}
 	,systems: function() {
-		return new edge.NodeSystemIterator(this.first);
+		return new edge.core.NodeSystemIterator(this.first);
 	}
 	,update: function(t) {
 		if(null == this.engine) return;
@@ -1058,7 +1058,7 @@ edge.Phase.prototype = {
 		}
 	}
 	,createNode: function(system) {
-		var node = new edge.NodeSystem(system);
+		var node = new edge.core.NodeSystem(system);
 		this.mapSystem.set(system,node);
 		var key = this.key(system);
 		this.mapType.set(key,system);
@@ -1069,32 +1069,6 @@ edge.Phase.prototype = {
 		return Type.getClassName(Type.getClass(system));
 	}
 	,__class__: edge.Phase
-};
-edge.NodeSystem = function(system) {
-	this.system = system;
-};
-edge.NodeSystem.__name__ = ["edge","NodeSystem"];
-edge.NodeSystem.prototype = {
-	system: null
-	,next: null
-	,prev: null
-	,__class__: edge.NodeSystem
-};
-edge.NodeSystemIterator = function(node) {
-	this.node = node;
-};
-edge.NodeSystemIterator.__name__ = ["edge","NodeSystemIterator"];
-edge.NodeSystemIterator.prototype = {
-	node: null
-	,hasNext: function() {
-		return null != this.node;
-	}
-	,next: function() {
-		var system = this.node.system;
-		this.node = this.node.next;
-		return system;
-	}
-	,__class__: edge.NodeSystemIterator
 };
 edge.View = function() {
 	this.map = new haxe.ds.ObjectMap();
@@ -1128,6 +1102,32 @@ edge.View.prototype = {
 		this.count--;
 	}
 	,__class__: edge.View
+};
+edge.core.NodeSystem = function(system) {
+	this.system = system;
+};
+edge.core.NodeSystem.__name__ = ["edge","core","NodeSystem"];
+edge.core.NodeSystem.prototype = {
+	system: null
+	,next: null
+	,prev: null
+	,__class__: edge.core.NodeSystem
+};
+edge.core.NodeSystemIterator = function(node) {
+	this.node = node;
+};
+edge.core.NodeSystemIterator.__name__ = ["edge","core","NodeSystemIterator"];
+edge.core.NodeSystemIterator.prototype = {
+	node: null
+	,hasNext: function() {
+		return null != this.node;
+	}
+	,next: function() {
+		var system = this.node.system;
+		this.node = this.node.next;
+		return system;
+	}
+	,__class__: edge.core.NodeSystemIterator
 };
 var haxe = {};
 haxe.StackItem = { __ename__ : ["haxe","StackItem"], __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
