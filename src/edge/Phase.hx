@@ -37,12 +37,12 @@ class Phase {
   }
 
   public function createPhase() {
-    var phase = new Phase(engine);
+    var phase = engine.createPhase();
     phases.push(phase);
     return phase;
   }
 
-  public function clear()
+  public function clearSystems()
     for(system in systems())
       remove(system);
 

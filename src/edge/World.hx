@@ -46,10 +46,4 @@ class World {
     running = false;
     cancel();
   }
-
-  public function clear() {
-    for(phase in engine.phases())
-      phase.clear();
-    engine.clear();
-  }
 }
