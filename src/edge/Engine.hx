@@ -62,9 +62,8 @@ class Engine {
     for(entity in mapEntities.keys())
       system.__process__.removeEntity(entity);
 
-  function updateSystem(system : ISystem, t : Float) {
-    system.__process__.update(this, t);
-  }
+  function updateSystem(system : ISystem, t : Float)
+    return system.__process__.update(this, t);
 
   function matchSystems(entity : Entity)
     eachSystem(function(system) match(entity, system));

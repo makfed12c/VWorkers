@@ -90,15 +90,8 @@ class BuildSystem {
         }
         switch ret {
         case macro : Void: // change return type to Bool
-          var exprs = [ExprTools.map(f.expr, function(e) {
-                  switch e {
-                  case macro return:
-                    trace(e);
-                    return macro return true;
-                  case _:
-                  }
-                  return e;
-                }),
+          var exprs = [
+                changeReturnFromVoidToBool(f.expr),
                 macro return true
               ];
           f.expr = macro $b{exprs};
@@ -110,5 +103,28 @@ class BuildSystem {
     }
     if(!fieldHasMeta(field, ":keep"))
       field.meta.push({ name : ":keep", pos : Context.currentPos() });
+  }
+
+  static function changeReturnFromVoidToBool(expr) {
+    return ExprTools.map(expr, function(e) {
+      switch e.expr {
+      case EReturn(v) if(v == null):
+        trace(v);
+        /*
+        switch Context.follow(Context.typeof(v)) {
+        case t:
+          trace(t);
+          return e;
+        //case _:
+        }
+        */
+        return macro return true;
+      case EReturn(v):
+        trace(v);
+        return e;
+      case ex:
+        return changeReturnFromVoidToBool(e);
+      };
+    });
   }
 }

@@ -128,6 +128,7 @@ class BuildSystemProcess {
     var update = findField(systemFields, "update"),
         constructor = findField(fields, "new");
 
+    exprs.push(macro var result = true);
     if(fieldFunctionHasArguments(update)) {
       var args = fieldFunctionArguments(update),
           fieldTypes = args.map(function(arg) : Field {
@@ -169,18 +170,20 @@ class BuildSystemProcess {
         expr += '  system.entity = item.entity;\n';
       // call update
       expr += '  data = item.data;\n';
-      expr += '  system.update(' + args.map(function(arg) {
+      expr += '  result = system.update(' + args.map(function(arg) {
           return 'data.${arg.name}';
         }).join(", ") + ');\n';
+      expr += '  if(!result) break;';
       expr += '}';
       exprs.push(Context.parse(expr, Context.currentPos()));
     } else {
       if(hasFunField(systemFields, "before") || isFieldInHirearchy(systemType, "before"))
         exprs.push(macro system.before());
-      exprs.push(macro system.update());
+      exprs.push(macro result = system.update());
     }
     if(hasFunField(systemFields, "after") || isFieldInHirearchy(systemType, "after"))
       exprs.push(macro system.after());
+    exprs.push(macro return result);
 
     //trace(haxe.macro.ExprTools.toString(macro $b{exprs}));
 
@@ -188,6 +191,7 @@ class BuildSystemProcess {
         "update",
         [{ name : "engine", type : macro : edge.Engine },
          { name : "delta", type : macro : Float }],
+        macro : Bool,
         macro $b{exprs}
       ));
   }

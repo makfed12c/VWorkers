@@ -115,19 +115,22 @@ class Phase {
     return new NodeSystemIterator(first);
 
   public function update(t : Float) {
-    if(null == engine || !enabled) return;
-    for(system in systems())
-      engine.updateSystem(system, t);
-    for(phase in phases)
+    if(!enabled) return;
+    var result;
+    for(system in systems()) {
+      result = engine.updateSystem(system, t);
+      if(!result) return;
+    }
+    for(phase in phases) {
       phase.update(t);
+    }
   }
 
   function createNode(system : ISystem) {
     var node = new NodeSystem(system);
     mapSystem.set(system, node);
     mapType.set(key(system), system);
-    if(null != engine)
-      engine.addSystem(this, system);
+    engine.addSystem(this, system);
     return node;
   }
 

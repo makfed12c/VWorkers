@@ -81,7 +81,8 @@ class TestAll {
   }
 
   public function testPhaseNodes() {
-    var phase = new Phase(null),
+    var engine = new Engine(),
+        phase = engine.createPhase(),
         it = phase.systems();
     Assert.isFalse(it.hasNext());
     phase.add(new Components2System());
