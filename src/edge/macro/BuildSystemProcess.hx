@@ -23,16 +23,37 @@ class BuildSystemProcess {
 
     injectConstructor(system, fields);
     injectSystemField(system, fields);
+    injectSetEngine(systemFields, fields);
 
     Context.defineType({
       pos : Context.currentPos(),
       params : [],
       pack : pack,
       name : name,
-      meta : null,
+      meta : [],
       kind : kind,
       isExtern : false,
       fields : fields
+    });
+  }
+
+  static function injectSetEngine(systemFields : Array<Field>, fields : Array<Field>) {
+    fields.push({
+      name : "setEngine",
+      access: [APublic],
+      kind: FFun({
+        ret : macro : Void,
+        params : null,
+        expr :
+          BuildSystem.hasVarField(systemFields, "engine") ?
+            macro system.engine = engine :
+            macro {},
+        args : [{
+          name : "engine",
+          type : macro : edge.Engine
+        }]
+      }),
+      pos: Context.currentPos()
     });
   }
 

@@ -3,6 +3,7 @@ package edge.macro;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
+import Type in RType;
 using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 using thx.macro.MacroFields;
@@ -18,6 +19,7 @@ class BuildSystem {
     injectEntityRequirements(fields);
     injectToString(fields);
     injectConstructor(fields);
+    makePublic(fields, "engine");
     var cls = Context.getLocalClass();
     injectSystemProcess(fields, cls);
     return fields;
@@ -36,9 +38,6 @@ class BuildSystem {
 
     var exprs = [Context.parse('return new $p(this)', Context.currentPos())];
 
-    if(hasVarField(fields, 'engine'))
-      exprs.unshift(macro this.engine = engine);
-
     fields.push({
       name: "__getSystemProcess",
       access: [],
@@ -55,7 +54,7 @@ class BuildSystem {
     });
   }
 
-  static function hasVarField(fields : Array<Field>, fieldName : String) {
+  public static function hasVarField(fields : Array<Field>, fieldName : String) {
     for(field in fields)
       if(field.name == fieldName && switch field.kind {
         case FVar(_, _): true;
@@ -240,11 +239,23 @@ class BuildSystem {
   public static function clsName()
     return Context.getLocalClass().toString();
 
+  public static function makePublic(fields : Array<Field>, name : String) {
+    var field = findField(fields, name);
+    if(null == field || isPublic(field)) return;
+    field.access.push(APublic);
+  }
+
+  public static function isPublic(field : Field) {
+    for(a in field.access)
+      if(RType.enumEq(a, APublic))
+        return true;
+    return false;
+  }
+
   public static function findField(fields : Array<Field>, name : String) {
-    for(field in fields) {
+    for(field in fields)
       if(field.name == name)
         return field;
-    }
     return null;
   }
 

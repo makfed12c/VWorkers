@@ -8,6 +8,10 @@ function $extend(from, fields) {
 var edge = {};
 edge.ISystemProcess = function() { };
 edge.ISystemProcess.__name__ = ["edge","ISystemProcess"];
+edge.ISystemProcess.prototype = {
+	setEngine: null
+	,__class__: edge.ISystemProcess
+};
 var Components1System_SystemProcess = function(system) {
 	this.system = system;
 };
@@ -15,6 +19,9 @@ Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
 Components1System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components1System_SystemProcess.prototype = {
 	system: null
+	,setEngine: function(engine) {
+		this.system.engine = engine;
+	}
 	,__class__: Components1System_SystemProcess
 };
 var Components2System_SystemProcess = function(system) {
@@ -24,6 +31,8 @@ Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
 Components2System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components2System_SystemProcess.prototype = {
 	system: null
+	,setEngine: function(engine) {
+	}
 	,__class__: Components2System_SystemProcess
 };
 var ComponentsEntitiesSystem_SystemProcess = function(system) {
@@ -33,6 +42,8 @@ ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_Sys
 ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 ComponentsEntitiesSystem_SystemProcess.prototype = {
 	system: null
+	,setEngine: function(engine) {
+	}
 	,__class__: ComponentsEntitiesSystem_SystemProcess
 };
 var EReg = function(r,opt) {
@@ -221,6 +232,8 @@ NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"]
 NoComponentsSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 NoComponentsSystem_SystemProcess.prototype = {
 	system: null
+	,setEngine: function(engine) {
+	}
 	,__class__: NoComponentsSystem_SystemProcess
 };
 var Reflect = function() { };
@@ -555,7 +568,6 @@ Components1System.prototype = {
 		return "Components1System";
 	}
 	,__getSystemProcess: function(engine) {
-		this.engine = engine;
 		return new Components1System_SystemProcess(this);
 	}
 	,__class__: Components1System
@@ -766,6 +778,8 @@ edge.Engine.prototype = {
 	,updateSystem: function(system,t) {
 		var info = this.mapInfo.h[system.__id__];
 		if(info == null) return;
+		var process = info.process;
+		process.setEngine(this);
 		if(info.hasDelta) system.timeDelta = t;
 		if(info.hasComponents) {
 			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);

@@ -74,6 +74,8 @@ class Engine {
     var info = mapInfo.get(system);
     if(info == null)
       return;
+    var process = info.process;
+    process.setEngine(this);
 //    if(info.hasEngine)
 //      Reflect.setField(system, "engine", this);
     if(info.hasDelta)
