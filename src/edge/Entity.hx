@@ -1,6 +1,7 @@
 package edge;
 
 using thx.Arrays;
+using thx.Functions;
 
 @:access(edge.Engine)
 class Entity {
@@ -21,7 +22,7 @@ class Entity {
 
   public function addMany(components : Array<{}>) {
     if(null == engine) return;
-    components.pluck(_add(_));
+    components.map.fn(_add(_));
     engine.matchSystems(this);
   }
 
@@ -43,7 +44,7 @@ class Entity {
   }
 
   public function removeMany(components : Array<{}>) {
-    components.pluck(_remove(_));
+    components.map.fn(_remove(_));
     engine.matchSystems(this);
   }
 
@@ -53,7 +54,7 @@ class Entity {
   }
 
   public function removeTypes(types : Array<Class<{}>>) {
-    types.pluck(_removeTypeName(Type.getClassName(_)));
+    types.map.fn(_removeTypeName(Type.getClassName(_)));
     engine.matchSystems(this);
   }
 
