@@ -96,7 +96,7 @@ class BuildSystemProcess {
       sexprs.push('if(removed && !added) system.${name}Removed(entity)');
     }
     if(hasFunField(systemFields, '${name}Added')) {
-      sexprs.push('if(added & !removed) system.${name}Added(entity)');
+      sexprs.push('if(added && !removed) system.${name}Added(entity, o)');
     }
 
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos())),
@@ -241,7 +241,7 @@ class BuildSystemProcess {
       sexprs.push('if(removed && !added) system.updateRemoved(entity)');
     }
     if(hasFunField(systemFields, 'updateAdded')) {
-      sexprs.push('if(added && !removed) system.updateAdded(entity)');
+      sexprs.push('if(added && !removed) system.updateAdded(entity, o)');
     }
 
     var exprs = sexprs.map(function(sexpr) return Context.parse(sexpr, Context.currentPos()));

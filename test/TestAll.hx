@@ -314,7 +314,7 @@ class BeforeSystem implements ISystem {
 class UpdateAddedSystem implements ISystem {
   public var results : Array<Int> = [];
 
-  public function updateAdded(entity : Entity) {
+  public function updateAdded(entity : Entity, o : { a : A }) {
     Assert.is(entity, Entity);
     results.push(1);
   }
@@ -340,7 +340,7 @@ class UpdateRemovedSystem implements ISystem {
 class UpdateAddedRemovedSystem implements ISystem {
   public var results : Array<Int> = [];
 
-  public function updateAdded(entity : Entity) {
+  public function updateAdded(entity : Entity, o : { a : A }) {
     Assert.is(entity, Entity);
     results.push(1);
   }

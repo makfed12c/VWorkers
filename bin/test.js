@@ -908,7 +908,7 @@ UpdateAddedSystem.__name__ = ["UpdateAddedSystem"];
 UpdateAddedSystem.__interfaces__ = [edge.ISystem];
 UpdateAddedSystem.prototype = {
 	results: null
-	,updateAdded: function(entity) {
+	,updateAdded: function(entity,o) {
 		utest.Assert["is"](entity,edge.Entity,null,{ fileName : "TestAll.hx", lineNumber : 318, className : "UpdateAddedSystem", methodName : "updateAdded"});
 		this.results.push(1);
 	}
@@ -954,7 +954,7 @@ UpdateAddedRemovedSystem.__name__ = ["UpdateAddedRemovedSystem"];
 UpdateAddedRemovedSystem.__interfaces__ = [edge.ISystem];
 UpdateAddedRemovedSystem.prototype = {
 	results: null
-	,updateAdded: function(entity) {
+	,updateAdded: function(entity,o) {
 		utest.Assert["is"](entity,edge.Entity,null,{ fileName : "TestAll.hx", lineNumber : 344, className : "UpdateAddedRemovedSystem", methodName : "updateAdded"});
 		this.results.push(1);
 	}
@@ -1103,7 +1103,7 @@ UpdateAddedRemovedSystem_SystemProcess.prototype = {
 		}
 		var added = count == 0 && this.updateItems.tryAdd(entity,o);
 		if(removed && !added) this.system.updateRemoved(entity);
-		if(added && !removed) this.system.updateAdded(entity);
+		if(added && !removed) this.system.updateAdded(entity,o);
 	}
 	,__class__: UpdateAddedRemovedSystem_SystemProcess
 };
@@ -1144,7 +1144,7 @@ UpdateAddedSystem_SystemProcess.prototype = {
 			}
 		}
 		var added = count == 0 && this.updateItems.tryAdd(entity,o);
-		if(added && !removed) this.system.updateAdded(entity);
+		if(added && !removed) this.system.updateAdded(entity,o);
 	}
 	,__class__: UpdateAddedSystem_SystemProcess
 };
