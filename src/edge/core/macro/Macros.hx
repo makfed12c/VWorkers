@@ -11,7 +11,7 @@ class Macros {
     return fields
       .map(function(field) return switch field.kind {
         case FVar(t, _) if(!field.isStatic()):
-          { name : field.name, type : t, opt : null, value : null }
+          { name : field.name, type : t, opt : null, value : null, meta : null }
         case _:
           null;
       })
