@@ -7,6 +7,17 @@ using thx.macro.MacroFields;
 import Type in RType;
 
 class Macros {
+  public static function getVarAsFunctionArgs(fields : Array<Field>) : Array<FunctionArg> {
+    return fields
+      .map(function(field) return switch field.kind {
+        case FVar(t, _) if(!field.isStatic()):
+          { name : field.name, type : t, opt : null, value : null }
+        case _:
+          null;
+      })
+      .filter(function(field) return field != null);
+  }
+
   public static function createFunctionField(name : String, args : Array<FunctionArg>, ret : ComplexType, expr : Expr) : Field {
     return {
       name: name,

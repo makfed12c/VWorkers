@@ -39,15 +39,4 @@ class BuildComponent {
       macro : String,
       Context.parse(s, Context.currentPos())));
   }
-
-  static function getVarAsFunctionArgs(fields : Array<Field>) : Array<FunctionArg> {
-    return fields
-      .map(function(field) return switch field.kind {
-        case FVar(t, _) if(!field.isStatic()):
-          { name : field.name, type : t, opt : null, value : null }
-        case _:
-          null;
-      })
-      .filter(function(field) return field != null);
-  }
 }
