@@ -1,10 +1,10 @@
-# edge
+# dfgan
 
 Entity system for Haxe
 
 ## introduction
 
-*edge* works on the following principles:
+*dfgan* works on the following principles:
 
   * an `Entity` is a collection of components with no additional logic.
   * a `Component` is an instance of any type of Class. You can use anything as a component except for anonymous objects and primitive types.
@@ -21,13 +21,13 @@ Entity system for Haxe
 For the official release:
 
 ```bash
-haxelib install edge
+haxelib install dfgan
 ```
 
-For the cutting-edge/dev-version:
+For the cutting-dfgan/dev-version:
 
 ```bash
-haxelib git edge https://github.com/fponticelli/edge.git
+haxelib git dfgan https://github.com/fponticelli/dfgan.git
 ```
 
 ## example
@@ -36,10 +36,10 @@ In the example below we create a bunch of entities some with both `Position` and
 
 `RenderingBackground` will clear the canvas on every frame before any other rendering operation. Note that it will only be invoked once per frame and it doesn't rely on the presence of any entity (`update()` takes no argument).
 
-See the [example in action](https://rawgit.com/fponticelli/edge/master/demo/basic/bin/index.html).
+See the [example in action](https://rawgit.com/fponticelli/dfgan/master/demo/basic/bin/index.html).
 
 ```haxe
-import edge.*;
+import dfgan.*;
 import minicanvas.MiniCanvas;
 
 class Game {
@@ -146,7 +146,7 @@ Optionally a System can expose the following members:
 
 If the System exposes any of these members, they will be automatically populated at the right time. So no initialization is required or desired. Also they will be automatically changed to `public` if they are not already.
 
-Sometimes you want to be able to iterate over collections of entities that satisfy certain requirements. For example, it can be extremely useful for collisions. In that case you can define one (or more) fields of type `edge.View(T)`. Where `T` is the type of an anonymous object where each field must be have the type of a component.
+Sometimes you want to be able to iterate over collections of entities that satisfy certain requirements. For example, it can be extremely useful for collisions. In that case you can define one (or more) fields of type `dfgan.View(T)`. Where `T` is the type of an anonymous object where each field must be have the type of a component.
 
 ```haxe
 var targets : View<{ position : Position, life : Life }>;
