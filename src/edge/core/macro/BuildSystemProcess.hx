@@ -98,7 +98,6 @@ class BuildSystemProcess {
     fields.push(createFunctionField(
         methodName,
         [{ name : "entity", type : macro : edge.Entity }],
-        macro : Void,
         macro $b{exprs}
       ));
 
@@ -182,7 +181,6 @@ class BuildSystemProcess {
         "update",
         [{ name : "engine", type : macro : edge.Engine },
          { name : "delta", type : macro : Float }],
-        macro : Void,
         macro $b{exprs}
       ));
   }
@@ -220,7 +218,6 @@ class BuildSystemProcess {
     fields.push(createFunctionField(
         "updateMatchRequirements",
         [{ name : "entity", type : macro : edge.Entity }],
-        macro : Void,
         macro $b{exprs}
       ));
 
@@ -232,17 +229,13 @@ class BuildSystemProcess {
   static function injectRemoveEntity(fields : Array<Field>)
     fields.push(createFunctionField(
         "removeEntity",
-        [{ name : "entity", type : macro : edge.Entity }],
-        macro : Void,
-        macro {}
+        [{ name : "entity", type : macro : edge.Entity }]
       ));
 
   static function injectAddEntity(fields : Array<Field>)
     fields.push(createFunctionField(
         "addEntity",
-        [{ name : "entity", type : macro : edge.Entity }],
-        macro : Void,
-        macro {}
+        [{ name : "entity", type : macro : edge.Entity }]
       ));
 
   static function injectSystemField(system : ComplexType, fields : Array<Field>)
@@ -252,7 +245,6 @@ class BuildSystemProcess {
     fields.push(createFunctionField(
         "new",
         [{ name : "system", type : system }],
-        macro : Void,
         macro this.system = system
       ));
 

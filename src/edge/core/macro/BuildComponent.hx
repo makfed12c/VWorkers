@@ -21,7 +21,7 @@ class BuildComponent {
         init = args
           .map(function(arg) return arg.name)
           .map(function(name) return macro this.$name = $i{name});
-    fields.push(createFunctionField("new", args, macro : Void, macro $b{init}));
+    fields.push(createFunctionField("new", args, macro $b{init}));
   }
 
   static function injectToString(fields : Array<Field>) {

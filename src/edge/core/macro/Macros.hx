@@ -26,14 +26,14 @@ class Macros {
     };
   }
 
-  public static function createFunctionField(name : String, args : Array<FunctionArg>, ret : ComplexType, expr : Expr) : Field {
+  public static function createFunctionField(name : String, ?args : Array<FunctionArg>, ?ret : ComplexType, ?expr : Expr) : Field {
     return {
       name: name,
       access: [APublic],
       kind: FFun({
-        ret : ret,
-        expr : expr,
-        args : args
+        ret  : null != ret ? ret : macro : Void,
+        expr : null != expr ? expr : macro {},
+        args : null != args ? args : []
       }),
       pos: Context.currentPos()
     };
