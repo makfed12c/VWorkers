@@ -20,6 +20,7 @@ class BuildSystem {
     injectToString(fields);
     injectConstructor(fields);
     makePublic(fields, "engine");
+    makePublic(fields, "timeDelta");
     var cls = Context.getLocalClass();
     injectSystemProcess(fields, cls);
     return fields;

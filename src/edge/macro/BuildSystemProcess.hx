@@ -38,19 +38,25 @@ class BuildSystemProcess {
   }
 
   static function injectSetEngine(systemFields : Array<Field>, fields : Array<Field>) {
+    var exprs = [];
+    if(BuildSystem.hasVarField(systemFields, "engine"))
+      exprs.push(macro system.engine = engine);
+    if(BuildSystem.hasVarField(systemFields, "timeDelta"))
+      exprs.push(macro system.timeDelta = delta);
+
     fields.push({
-      name : "setEngine",
+      name : "update",
       access: [APublic],
       kind: FFun({
         ret : macro : Void,
         params : null,
-        expr :
-          BuildSystem.hasVarField(systemFields, "engine") ?
-            macro system.engine = engine :
-            macro {},
+        expr : macro $b{exprs},
         args : [{
           name : "engine",
           type : macro : edge.Engine
+        }, {
+          name : "delta",
+          type : macro : Float
         }]
       }),
       pos: Context.currentPos()

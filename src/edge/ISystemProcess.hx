@@ -1,5 +1,5 @@
 package edge;
 
 interface ISystemProcess {
-  public function setEngine(engine : Engine) : Void;
+  public function update(engine : Engine, delta : Float) : Void;
 }

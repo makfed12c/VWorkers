@@ -9,7 +9,7 @@ var edge = {};
 edge.ISystemProcess = function() { };
 edge.ISystemProcess.__name__ = ["edge","ISystemProcess"];
 edge.ISystemProcess.prototype = {
-	setEngine: null
+	update: null
 	,__class__: edge.ISystemProcess
 };
 var Components1System_SystemProcess = function(system) {
@@ -19,7 +19,7 @@ Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
 Components1System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components1System_SystemProcess.prototype = {
 	system: null
-	,setEngine: function(engine) {
+	,update: function(engine,delta) {
 		this.system.engine = engine;
 	}
 	,__class__: Components1System_SystemProcess
@@ -31,7 +31,7 @@ Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
 Components2System_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 Components2System_SystemProcess.prototype = {
 	system: null
-	,setEngine: function(engine) {
+	,update: function(engine,delta) {
 	}
 	,__class__: Components2System_SystemProcess
 };
@@ -42,7 +42,7 @@ ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_Sys
 ComponentsEntitiesSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 ComponentsEntitiesSystem_SystemProcess.prototype = {
 	system: null
-	,setEngine: function(engine) {
+	,update: function(engine,delta) {
 	}
 	,__class__: ComponentsEntitiesSystem_SystemProcess
 };
@@ -232,7 +232,7 @@ NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"]
 NoComponentsSystem_SystemProcess.__interfaces__ = [edge.ISystemProcess];
 NoComponentsSystem_SystemProcess.prototype = {
 	system: null
-	,setEngine: function(engine) {
+	,update: function(engine,delta) {
 	}
 	,__class__: NoComponentsSystem_SystemProcess
 };
@@ -779,8 +779,7 @@ edge.Engine.prototype = {
 		var info = this.mapInfo.h[system.__id__];
 		if(info == null) return;
 		var process = info.process;
-		process.setEngine(this);
-		if(info.hasDelta) system.timeDelta = t;
+		process.update(this,t);
 		if(info.hasComponents) {
 			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);
 			var $it0 = info.components.keys();

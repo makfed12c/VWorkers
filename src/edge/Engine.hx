@@ -75,11 +75,11 @@ class Engine {
     if(info == null)
       return;
     var process = info.process;
-    process.setEngine(this);
+    process.update(this, t);
 //    if(info.hasEngine)
 //      Reflect.setField(system, "engine", this);
-    if(info.hasDelta)
-      Reflect.setField(system, "timeDelta", t);
+//    if(info.hasDelta)
+//      Reflect.setField(system, "timeDelta", t);
     if(info.hasComponents) {
       if(info.hasBefore)
         Reflect.callMethod(system, info.update, emptyArgs);
