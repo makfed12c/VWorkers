@@ -13,10 +13,14 @@ class Phase {
   var mapSystem : Map<ISystem, NodeSystem>;
   var mapType : Map<String, ISystem>;
   var engine : Engine;
+  var phases : Array<Phase>;
+  public var enabled : Bool;
   public function new(engine : Engine) {
     this.engine = engine;
     mapSystem = new Map();
     mapType = new Map();
+    phases = [];
+    enabled = true;
   }
 
   public function add(system : ISystem) {
@@ -30,6 +34,12 @@ class Phase {
       last.next = node;
       last = node;
     }
+  }
+
+  public function createPhase() {
+    var phase = new Phase(engine);
+    phases.push(phase);
+    return phase;
   }
 
   public function clear()
@@ -105,9 +115,11 @@ class Phase {
     return new NodeSystemIterator(first);
 
   public function update(t : Float) {
-    if(null == engine) return;
+    if(null == engine || !enabled) return;
     for(system in systems())
       engine.updateSystem(system, t);
+    for(phase in phases)
+      phase.update(t);
   }
 
   function createNode(system : ISystem) {
