@@ -7,7 +7,7 @@ class View<T : {}> {
   var removed : Entity -> Void;
   var holder : { entity : Entity, data : T };
 
-  public function new(?added : ViewData<T> -> Void, ?removed : Entity -> Void) {
+  public function new(added : ViewData<T> -> Void, removed : Entity -> Void) {
     map = new Map();
     count = 0;
     holder = { entity : null, data : null };
