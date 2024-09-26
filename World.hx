@@ -1,46 +1,101 @@
 package edge;
 
+import edge.Entity;
+
+using thx.core.Arrays;
+
+@:access(edge.Entity)
 class World {
-//  var entities : Map<Entity>;
-//  var updates : Array<
+  var entities : Map<Entity, Bool>;
+  var systemToCycle : Map<ISystem, Cycle>;
+  var mapCycles : Map<String, Array<ISystem>>;
+
   public function new() {
-//    entities = [];
+    systemToCycle = new Map();
+    mapCycles = new Map();
+    [Cycle.update, Cycle.render].pluck(mapCycles.set(_, []));
+    matches = new Map();
+    entities = new Map();
   }
 
   public function addEntity(entity : Entity) {
-
+    entity.world = this;
+    entities.set(entity, true);
+    matchSystems(entity);
   }
 
   public function removeEntity(entity : Entity) {
-
+    for(system in matches.keys()) {
+      matches.get(system).remove(entity);
+    }
+    entities.remove(entity);
   }
 
-  public function addSystem(system : ISystem<Dynamic>, cycle : Cycle) {
-
+  public function addSystem(system : ISystem, cycle : Cycle) {
+    removeSystem(system);
+    systemToCycle.set(system, cycle);
+    mapCycles.get(cycle).push(system);
+    matches.set(system, new Map());
+    for(entity in entities.keys())
+      matchSystem(entity, system);
   }
 
-  public function removeSystem(system : ISystem<Dynamic>) {
-
+  public function removeSystem(system : ISystem) {
+    if(!systemToCycle.exists(system))
+      return;
+    var cycle = systemToCycle.get(system);
+    systemToCycle.remove(system);
+    mapCycles.get(cycle).remove(system);
+    matches.remove(system);
   }
 
-  public function addMultiSystem(system : IMultiSystem<Dynamic>, cycle : Cycle) {
+  public function update()
+    updateCycle(Cycle.update);
 
+  public function render()
+    updateCycle(Cycle.render);
+
+  function updateCycle(cycle : Cycle) {
+    var systems = mapCycles.get(cycle),
+        f;
+    for(system in systems) {
+      var match = matches.get(system);
+      f = Reflect.field(system, "update");
+      if(null != f) {
+        for(components in match) {
+          Reflect.callMethod(system, f, components);
+        }
+        break;
+      }
+      f = Reflect.field(system, "updateAll");
+      if(null != f) {
+        var list = [];
+        for(components in match) {
+          list.push(components);
+        }
+        Reflect.callMethod(system, f, [list]);
+      }
+    }
   }
 
-  public function removeMultiSystem(system : IMultiSystem<Dynamic>) {
-
+  var matches : Map<ISystem, Map<Entity, Array<Dynamic>>>;
+  function matchSystems(entity : Entity) {
+    for(system in matches.keys()) {
+      matchSystem(entity, system);
+    }
   }
 
-  public function update() {
-
-  }
-
-  public function render() {
-
+  function matchSystem(entity : Entity, system : ISystem) {
+    var match = matches.get(system);
+    match.remove(entity);
+    var components = entity.matchRequirements(system.getRequirements());
+    if(components.length > 0)
+      match.set(entity, components);
   }
 }
 
-enum Cycle {
-  render;
-  update;
+@:enum
+abstract Cycle(String) from String to String {
+  public var render = "render";
+  public var update = "update";
 }
