@@ -6,8 +6,10 @@ using thx.core.Arrays;
 class Entity {
   var components : Map<String, Dynamic>;
   var world : World;
-  public function new() {
-    components = new Map();
+  public function new(?components : Array<Dynamic>) {
+    this.components = new Map();
+    if(null != components)
+      addComponents(components);
   }
 
   public function addComponent(component : Dynamic) {
