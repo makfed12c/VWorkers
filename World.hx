@@ -13,7 +13,7 @@ class World {
   public function new() {
     systemToCycle = new Map();
     mapCycles = new Map();
-    [Cycle.update, Cycle.render].pluck(mapCycles.set(_, []));
+    [Cycle.update, Cycle.render, Cycle.preRender].pluck(mapCycles.set(_, []));
     matches = new Map();
     entities = new Map();
   }
@@ -51,6 +51,9 @@ class World {
 
   public function update()
     updateCycle(Cycle.update);
+
+  public function preRender()
+    updateCycle(Cycle.preRender);
 
   public function render()
     updateCycle(Cycle.render);
@@ -96,6 +99,7 @@ class World {
 
 @:enum
 abstract Cycle(String) from String to String {
+  public var preRender = "preRender";
   public var render = "render";
   public var update = "update";
 }
