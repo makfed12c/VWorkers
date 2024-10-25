@@ -13,7 +13,8 @@ class World {
   public function new() {
     systemToCycle = new Map();
     mapCycles = new Map();
-    [Cycle.update, Cycle.render, Cycle.preRender].pluck(mapCycles.set(_, []));
+    [Cycle.update, Cycle.render, Cycle.preRender]
+      .pluck(mapCycles.set(_, []));
     matches = new Map();
     entities = new Map();
   }
@@ -25,9 +26,8 @@ class World {
   }
 
   public function removeEntity(entity : Entity) {
-    for(system in matches.keys()) {
+    for(system in matches.keys())
       matches.get(system).remove(entity);
-    }
     entities.remove(entity);
   }
 
@@ -68,7 +68,7 @@ class World {
         for(components in match) {
           Reflect.callMethod(system, f, components);
         }
-        break;
+        continue;
       }
       f = Reflect.field(system, "updateAll");
       if(null != f) {
