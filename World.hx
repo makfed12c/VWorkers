@@ -8,13 +8,18 @@ using thx.core.Arrays;
 class World {
   var entities : Map<Entity, Bool>;
   var systemToCycle : Map<ISystem, Cycle>;
-  var mapCycles : Map<String, Array<ISystem>>;
+  var mapCycles : Map<Cycle, Array<ISystem>>;
+  var emptySystems : Map<Cycle, Array<ISystem>>;
 
   public function new() {
     systemToCycle = new Map();
     mapCycles = new Map();
+    emptySystems = new Map();
     [Cycle.update, Cycle.render, Cycle.preRender]
-      .pluck(mapCycles.set(_, []));
+      .map(function(s) {
+        emptySystems.set(s, []);
+        mapCycles.set(s, []);
+      });
     matches = new Map();
     entities = new Map();
   }
@@ -34,19 +39,29 @@ class World {
   public function addSystem(system : ISystem, cycle : Cycle) {
     removeSystem(system);
     systemToCycle.set(system, cycle);
-    mapCycles.get(cycle).push(system);
-    matches.set(system, new Map());
-    for(entity in entities.keys())
-      matchSystem(entity, system);
+    var requirements = system.getRequirements();
+    if(requirements.length > 0) {
+      mapCycles.get(cycle).push(system);
+      matches.set(system, new Map());
+      for(entity in entities.keys())
+        matchSystem(entity, system);
+    } else {
+      emptySystems.get(cycle).push(system);
+    }
   }
 
   public function removeSystem(system : ISystem) {
     if(!systemToCycle.exists(system))
       return;
-    var cycle = systemToCycle.get(system);
+    var cycle = systemToCycle.get(system),
+        requirements = system.getRequirements();
     systemToCycle.remove(system);
-    mapCycles.get(cycle).remove(system);
-    matches.remove(system);
+    if(requirements.length > 0) {
+      mapCycles.get(cycle).remove(system);
+      matches.remove(system);
+    } else {
+      emptySystems.get(cycle).remove(system);
+    }
   }
 
   public function update()
@@ -59,9 +74,11 @@ class World {
     updateCycle(Cycle.render);
 
   function updateCycle(cycle : Cycle) {
-    var systems = mapCycles.get(cycle),
-        f;
-    for(system in systems) {
+    for(system in emptySystems.get(cycle)) {
+      Reflect.callMethod(system, Reflect.field(system, "update"), []);
+    }
+    var f;
+    for(system in mapCycles.get(cycle)) {
       var match = matches.get(system);
       f = Reflect.field(system, "update");
       if(null != f) {
