@@ -15,8 +15,11 @@ class World {
     systemToCycle = new Map();
     mapCycles = new Map();
     emptySystems = new Map();
-    [Cycle.update, Cycle.render, Cycle.preRender]
-      .map(function(s) {
+    [
+      Cycle.preFrame,  Cycle.postFrame,
+      Cycle.preUpdate, Cycle.update, Cycle.postUpdate,
+      Cycle.preRender, Cycle.render, Cycle.postRender
+    ].map(function(s) {
         emptySystems.set(s, []);
         mapCycles.set(s, []);
       });
@@ -64,14 +67,29 @@ class World {
     }
   }
 
-  public function update()
+  inline public function preFrame()
+    updateCycle(Cycle.preFrame);
+
+  inline public function postFrame()
+    updateCycle(Cycle.preFrame);
+
+  inline public function preUpdate()
+    updateCycle(Cycle.preUpdate);
+
+  inline public function update()
     updateCycle(Cycle.update);
 
-  public function preRender()
+  inline public function postUpdate()
+    updateCycle(Cycle.postUpdate);
+
+  inline public function preRender()
     updateCycle(Cycle.preRender);
 
-  public function render()
+  inline public function render()
     updateCycle(Cycle.render);
+
+  inline public function postRender()
+    updateCycle(Cycle.postRender);
 
   function updateCycle(cycle : Cycle) {
     for(system in emptySystems.get(cycle)) {
@@ -118,5 +136,10 @@ class World {
 abstract Cycle(String) from String to String {
   public var preRender = "preRender";
   public var render = "render";
+  public var postRender = "postRender";
+  public var preUpdate = "preUpdate";
   public var update = "update";
+  public var postUpdate = "postUpdate";
+  public var preFrame = "preFrame";
+  public var postFrame = "postFrame";
 }
