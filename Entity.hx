@@ -55,10 +55,12 @@ class Entity {
 
   function matchRequirements(requirements : Array<Class<Dynamic>>) {
     var comps = [];
-    for(component in components) {
-      for(req in requirements) {
-        if(Type.getClass(component) == req)
+    for(req in requirements) {
+      for(component in components) {
+        if(Type.getClass(component) == req) {
           comps.push(component);
+          break;
+        }
       }
     }
     return comps.length == requirements.length ? comps : [];
