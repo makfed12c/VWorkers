@@ -42,7 +42,7 @@ class World {
   public function addSystem(system : ISystem, cycle : Cycle) {
     removeSystem(system);
     systemToCycle.set(system, cycle);
-    var requirements = system.getRequirements();
+    var requirements = system.getUpdateRequirements();
     if(requirements.length > 0) {
       mapCycles.get(cycle).push(system);
       matches.set(system, new Map());
@@ -57,7 +57,7 @@ class World {
     if(!systemToCycle.exists(system))
       return;
     var cycle = systemToCycle.get(system),
-        requirements = system.getRequirements();
+        requirements = system.getUpdateRequirements();
     systemToCycle.remove(system);
     if(requirements.length > 0) {
       mapCycles.get(cycle).remove(system);
@@ -126,7 +126,7 @@ class World {
   function matchSystem(entity : Entity, system : ISystem) {
     var match = matches.get(system);
     match.remove(entity);
-    var components = entity.matchRequirements(system.getRequirements());
+    var components = entity.matchRequirements(system.getUpdateRequirements());
     if(components.length > 0)
       match.set(entity, components);
   }
