@@ -63,6 +63,6 @@ class Entity {
         }
       }
     }
-    return comps.length == requirements.length ? comps : [];
+    return comps.length == requirements.length ? comps : null;
   }
 }

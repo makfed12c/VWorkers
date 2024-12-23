@@ -10,6 +10,7 @@ class World {
   var systemToCycle : Map<ISystem, Cycle>;
   var mapCycles : Map<Cycle, Array<ISystem>>;
   var emptySystems : Map<Cycle, Array<ISystem>>;
+  var systemToComponents : Map<ISystem, Map<Entity, Array<Dynamic>>>;
 
   public function new() {
     systemToCycle = new Map();
@@ -23,7 +24,7 @@ class World {
         emptySystems.set(s, []);
         mapCycles.set(s, []);
       });
-    matches = new Map();
+    systemToComponents = new Map();
     entities = new Map();
   }
 
@@ -34,18 +35,18 @@ class World {
   }
 
   public function removeEntity(entity : Entity) {
-    for(system in matches.keys())
-      matches.get(system).remove(entity);
+    for(system in systemToComponents.keys())
+      systemToComponents.get(system).remove(entity);
     entities.remove(entity);
   }
 
   public function addSystem(system : ISystem, cycle : Cycle) {
     removeSystem(system);
     systemToCycle.set(system, cycle);
-    var requirements = system.getUpdateRequirements();
-    if(requirements.length > 0) {
+    var updateRequirements = system.getUpdateRequirements();
+    if(null != updateRequirements) {
       mapCycles.get(cycle).push(system);
-      matches.set(system, new Map());
+      systemToComponents.set(system, new Map());
       for(entity in entities.keys())
         matchSystem(entity, system);
     } else {
@@ -57,11 +58,11 @@ class World {
     if(!systemToCycle.exists(system))
       return;
     var cycle = systemToCycle.get(system),
-        requirements = system.getUpdateRequirements();
+        updateRequirements = system.getUpdateRequirements(),
     systemToCycle.remove(system);
-    if(requirements.length > 0) {
+    if(null != updateRequirements) {
       mapCycles.get(cycle).remove(system);
-      matches.remove(system);
+      systemToComponents.remove(system);
     } else {
       emptySystems.get(cycle).remove(system);
     }
@@ -97,36 +98,33 @@ class World {
     }
     var f;
     for(system in mapCycles.get(cycle)) {
-      var match = matches.get(system);
+      var systemComponents = systemToComponents.get(system),
       f = Reflect.field(system, "update");
       if(null != f) {
-        for(components in match) {
+        for(entity in systemComponents.keys()) {
+          var components = systemComponents.get(entity);
+          if(Reflect.hasField(system, "entity"))
+            Reflect.setField(system, "entity", entity);
           Reflect.callMethod(system, f, components);
         }
         continue;
       }
-      f = Reflect.field(system, "updateAll");
-      if(null != f) {
-        var list = [];
-        for(components in match) {
-          list.push(components);
-        }
-        Reflect.callMethod(system, f, [list]);
-      }
     }
   }
 
-  var matches : Map<ISystem, Map<Entity, Array<Dynamic>>>;
   function matchSystems(entity : Entity) {
-    for(system in matches.keys()) {
+    for(system in systemToComponents.keys()) {
       matchSystem(entity, system);
     }
   }
 
   function matchSystem(entity : Entity, system : ISystem) {
-    var match = matches.get(system);
+    var match = systemToComponents.get(system);
     match.remove(entity);
     var components = entity.matchRequirements(system.getUpdateRequirements());
+    if(null != components)
+      match.set(entity, components);
+  }
     if(components.length > 0)
       match.set(entity, components);
   }
