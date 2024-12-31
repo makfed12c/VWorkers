@@ -3,6 +3,7 @@ package edge;
 import edge.Entity;
 
 using thx.core.Arrays;
+using thx.core.Iterators;
 
 @:access(edge.Entity)
 class World {
@@ -11,6 +12,7 @@ class World {
   var mapCycles : Map<Cycle, Array<ISystem>>;
   var emptySystems : Map<Cycle, Array<ISystem>>;
   var systemToComponents : Map<ISystem, Map<Entity, Array<Dynamic>>>;
+  var systemToEntities : Map<ISystem, Map<Entity, Dynamic>>;
 
   public function new() {
     systemToCycle = new Map();
@@ -25,6 +27,7 @@ class World {
         mapCycles.set(s, []);
       });
     systemToComponents = new Map();
+    systemToEntities = new Map();
     entities = new Map();
   }
 
@@ -32,11 +35,14 @@ class World {
     entity.world = this;
     entities.set(entity, true);
     matchSystems(entity);
+    matchEntities(entity);
   }
 
   public function removeEntity(entity : Entity) {
     for(system in systemToComponents.keys())
       systemToComponents.get(system).remove(entity);
+    for(system in systemToEntities.keys())
+      systemToEntities.get(system).remove(entity);
     entities.remove(entity);
   }
 
@@ -52,6 +58,12 @@ class World {
     } else {
       emptySystems.get(cycle).push(system);
     }
+    var entitiesRequirements = system.getEntitiesRequirements();
+    if(null != entitiesRequirements) {
+      systemToEntities.set(system, new Map());
+      for(entity in entities.keys())
+        matchEntity(entity, system);
+    }
   }
 
   public function removeSystem(system : ISystem) {
@@ -59,12 +71,16 @@ class World {
       return;
     var cycle = systemToCycle.get(system),
         updateRequirements = system.getUpdateRequirements(),
+        entitiesRequirements = system.getEntitiesRequirements();
     systemToCycle.remove(system);
     if(null != updateRequirements) {
       mapCycles.get(cycle).remove(system);
       systemToComponents.remove(system);
     } else {
       emptySystems.get(cycle).remove(system);
+    }
+    if(null != entitiesRequirements) {
+      systemToEntities.remove(system);
     }
   }
 
@@ -99,12 +115,17 @@ class World {
     var f;
     for(system in mapCycles.get(cycle)) {
       var systemComponents = systemToComponents.get(system),
+          systemEntities = systemToEntities.get(system);
       f = Reflect.field(system, "update");
       if(null != f) {
         for(entity in systemComponents.keys()) {
           var components = systemComponents.get(entity);
           if(Reflect.hasField(system, "entity"))
             Reflect.setField(system, "entity", entity);
+          if(null != systemEntities) {
+            var arr = systemEntities.iterator().toArray();
+            Reflect.setField(system, "entities", arr);
+          }
           Reflect.callMethod(system, f, components);
         }
         continue;
@@ -118,6 +139,12 @@ class World {
     }
   }
 
+  function matchEntities(entity : Entity) {
+    for(system in systemToEntities.keys()) {
+      matchEntity(entity, system);
+    }
+  }
+
   function matchSystem(entity : Entity, system : ISystem) {
     var match = systemToComponents.get(system);
     match.remove(entity);
@@ -125,8 +152,20 @@ class World {
     if(null != components)
       match.set(entity, components);
   }
-    if(components.length > 0)
-      match.set(entity, components);
+
+  function matchEntity(entity : Entity, system : ISystem) {
+    var match = systemToEntities.get(system),
+        requirements = system.getEntitiesRequirements();
+    match.remove(entity);
+    var components = entity.matchRequirements(requirements.map(function(o) return o.cls));
+    if(null != components) {
+      var o = {};
+      for(i in 0...components.length) {
+        Reflect.setField(o, requirements[i].name, components[i]);
+      }
+      Reflect.setField(o, "entity", entity);
+      match.set(entity, o);
+    }
   }
 }
 
