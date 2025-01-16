@@ -18,22 +18,8 @@ class Entity {
       world.matchSystems(this);
   }
 
-  function _addComponent(component : Dynamic) {
-    var type = key(component);
-    if(components.exists(type))
-      removeComponent(components.get(type));
-    components.set(type, component);
-  }
-
   public function addComponents(components : Array<Dynamic>) {
     components.pluck(_addComponent(_));
-    if(null != world)
-      world.matchSystems(this);
-  }
-
-  function _removeComponent(component : Dynamic) {
-    var type = key(component);
-    components.remove(component);
     if(null != world)
       world.matchSystems(this);
   }
@@ -46,6 +32,27 @@ class Entity {
 
   public function removeComponents(components : Array<Dynamic>) {
     components.pluck(_removeComponent(_));
+    if(null != world)
+      world.matchSystems(this);
+  }
+
+  public function removeType(type : Class<Dynamic>) {
+
+  }
+
+  public function iterator()
+    return components.iterator();
+
+  function _addComponent(component : Dynamic) {
+    var type = key(component);
+    if(components.exists(type))
+      removeComponent(components.get(type));
+    components.set(type, component);
+  }
+
+  function _removeComponent(component : Dynamic) {
+    var type = key(component);
+    components.remove(type);
     if(null != world)
       world.matchSystems(this);
   }
