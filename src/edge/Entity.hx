@@ -37,7 +37,9 @@ class Entity {
   }
 
   public function removeType(type : Class<Dynamic>) {
-
+    _removeTypeName(Type.getClassName(type));
+    if(null != world)
+      world.matchSystems(this);
   }
 
   public function iterator()
@@ -52,10 +54,11 @@ class Entity {
 
   function _removeComponent(component : Dynamic) {
     var type = key(component);
-    components.remove(type);
-    if(null != world)
-      world.matchSystems(this);
+    _removeTypeName(type);
   }
+
+  function _removeTypeName(type : String)
+    components.remove(type);
 
   inline function key(component : Dynamic)
     return Type.getClassName(Type.getClass(component));
