@@ -1,0 +1,11 @@
+{
+  "name": "edge",
+  "url": "https://github.com/fponticelli/edge",
+  "license": "MIT",
+  "classPath": "src",
+  "tags": ["entity system", "gaming", "cross"],
+  "description": "Entity system for Haxe.",
+  "releasenote": "First release.",
+  "version": "0.3.0",
+  "contributors": ["fponticelli"]
+}
