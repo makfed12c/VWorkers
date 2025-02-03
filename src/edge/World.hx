@@ -148,7 +148,7 @@ class World {
   function matchSystem(entity : Entity, system : ISystem) {
     var match = systemToComponents.get(system);
     match.remove(entity);
-    var components = entity.matchRequirements(system.getUpdateRequirements());
+    var components = matchRequirements(entity, system.getUpdateRequirements());
     if(null != components)
       match.set(entity, components);
   }
@@ -157,7 +157,7 @@ class World {
     var match = systemToEntities.get(system),
         requirements = system.getEntitiesRequirements();
     match.remove(entity);
-    var components = entity.matchRequirements(requirements.map(function(o) return o.cls));
+    var components = matchRequirements(entity, requirements.map(function(o) return o.cls));
     if(null != components) {
       var o = {};
       for(i in 0...components.length) {
@@ -166,6 +166,19 @@ class World {
       Reflect.setField(o, "entity", entity);
       match.set(entity, o);
     }
+  }
+
+  function matchRequirements(entity : Entity, requirements : Array<Class<Dynamic>>) {
+    var comps = [];
+    for(req in requirements) {
+      for(component in entity.iterator()) {
+        if(Type.getClass(component) == req) {
+          comps.push(component);
+          break;
+        }
+      }
+    }
+    return comps.length == requirements.length ? comps : null;
   }
 }
 

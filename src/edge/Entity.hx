@@ -62,17 +62,4 @@ class Entity {
 
   inline function key(component : Dynamic)
     return Type.getClassName(Type.getClass(component));
-
-  function matchRequirements(requirements : Array<Class<Dynamic>>) {
-    var comps = [];
-    for(req in requirements) {
-      for(component in components) {
-        if(Type.getClass(component) == req) {
-          comps.push(component);
-          break;
-        }
-      }
-    }
-    return comps.length == requirements.length ? comps : null;
-  }
 }
