@@ -42,7 +42,7 @@ class Entity {
       world.matchSystems(this);
   }
 
-  public function iterator()
+  inline public function iterator()
     return components.iterator();
 
   function _addComponent(component : Dynamic) {

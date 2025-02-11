@@ -302,7 +302,7 @@ TestAll.prototype = {
 		this.assertNumberOfComponents(e,0,{ fileName : "TestAll.hx", lineNumber : 32, className : "TestAll", methodName : "testEntity"});
 	}
 	,assertNumberOfComponents: function(e,qt,pos) {
-		utest.Assert.equals(qt,thx.core.Iterators.toArray(e.iterator()).length,null,pos);
+		utest.Assert.equals(qt,thx.core.Iterators.toArray(e.components.iterator()).length,null,pos);
 	}
 	,__class__: TestAll
 };
@@ -649,7 +649,7 @@ edge.World.prototype = {
 		while(_g < requirements.length) {
 			var req = requirements[_g];
 			++_g;
-			var $it0 = entity.iterator();
+			var $it0 = entity.components.iterator();
 			while( $it0.hasNext() ) {
 				var component = $it0.next();
 				if(Type.getClass(component) == req) {
