@@ -6,17 +6,6 @@ using thx.core.Iterators;
 import edge.*;
 
 class TestAll {
-  public static function main() {
-    var runner = new Runner();
-
-    runner.addCase(new TestAll());
-
-    Report.create(runner);
-    runner.run();
-  }
-
-  public function new() {}
-
   public function testEntity() {
     var e = new Entity();
     e.addComponent(new A());
@@ -34,6 +23,17 @@ class TestAll {
 
   public function assertNumberOfComponents(e : Entity, qt : Int, ?pos : haxe.PosInfos)
     Assert.equals(qt, e.iterator().toArray().length, pos);
+
+  public static function main() {
+    var runner = new Runner();
+
+    runner.addCase(new TestAll());
+
+    Report.create(runner);
+    runner.run();
+  }
+
+  public function new() {}
 }
 
 class A {
