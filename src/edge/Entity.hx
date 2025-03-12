@@ -5,7 +5,7 @@ using thx.core.Arrays;
 @:access(edge.World)
 class Entity {
   var components : Map<String, Dynamic>;
-  var world : World;
+  public var world(default, null) : World;
   public function new(?components : Array<Dynamic>) {
     this.components = new Map();
     if(null != components)
