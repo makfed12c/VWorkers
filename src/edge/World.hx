@@ -7,7 +7,7 @@ using thx.core.Iterators;
 
 @:access(edge.Entity)
 class World {
-  var entities : Map<Entity, Bool>;
+  var mapEntities : Map<Entity, Bool>;
   var systemToCycle : Map<ISystem, Cycle>;
   var mapCycles : Map<Cycle, Array<ISystem>>;
   var emptySystems : Map<Cycle, Array<ISystem>>;
@@ -28,12 +28,12 @@ class World {
       });
     systemToComponents = new Map();
     systemToEntities = new Map();
-    entities = new Map();
+    mapEntities = new Map();
   }
 
   public function addEntity(entity : Entity) {
     entity.world = this;
-    entities.set(entity, true);
+    mapEntities.set(entity, true);
     matchSystems(entity);
     matchEntities(entity);
   }
@@ -43,7 +43,7 @@ class World {
       systemToComponents.get(system).remove(entity);
     for(system in systemToEntities.keys())
       systemToEntities.get(system).remove(entity);
-    entities.remove(entity);
+    mapEntities.remove(entity);
   }
 
   public function addSystem(system : ISystem, cycle : Cycle) {
@@ -53,7 +53,7 @@ class World {
     if(null != updateRequirements) {
       mapCycles.get(cycle).push(system);
       systemToComponents.set(system, new Map());
-      for(entity in entities.keys())
+      for(entity in mapEntities.keys())
         matchSystem(entity, system);
     } else {
       emptySystems.get(cycle).push(system);
@@ -61,7 +61,7 @@ class World {
     var entitiesRequirements = system.getEntitiesRequirements();
     if(null != entitiesRequirements) {
       systemToEntities.set(system, new Map());
-      for(entity in entities.keys())
+      for(entity in mapEntities.keys())
         matchEntity(entity, system);
     }
   }
@@ -108,6 +108,7 @@ class World {
   inline public function postRender()
     updateCycle(Cycle.postRender);
 
+  // private methods
   function updateCycle(cycle : Cycle) {
     for(system in emptySystems.get(cycle)) {
       Reflect.callMethod(system, Reflect.field(system, "update"), []);
