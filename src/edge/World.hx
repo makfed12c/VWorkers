@@ -46,6 +46,9 @@ class World {
     mapEntities.remove(entity);
   }
 
+  public function entities()
+    return mapEntities.keys();
+
   public function addSystem(system : ISystem, cycle : Cycle) {
     removeSystem(system);
     systemToCycle.set(system, cycle);
@@ -83,6 +86,9 @@ class World {
       systemToEntities.remove(system);
     }
   }
+
+  public function systems()
+    return systemToCycle.keys();
 
   inline public function preFrame()
     updateCycle(Cycle.preFrame);
