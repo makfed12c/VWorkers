@@ -287,24 +287,144 @@ TestAll.main = function() {
 	runner.run();
 };
 TestAll.prototype = {
-	testEntity: function() {
+	testWorldNoComponentSystem: function() {
+		var world = new edge.World();
+		var s = new NoComponentsSystem();
+		world.addSystem(s,"update");
+		utest.Assert.equals(0,s.count,null,{ fileName : "TestAll.hx", lineNumber : 13, className : "TestAll", methodName : "testWorldNoComponentSystem"});
+		world.updateCycle("update");
+		utest.Assert.equals(1,s.count,null,{ fileName : "TestAll.hx", lineNumber : 15, className : "TestAll", methodName : "testWorldNoComponentSystem"});
+		world.updateCycle("update");
+		utest.Assert.equals(2,s.count,null,{ fileName : "TestAll.hx", lineNumber : 17, className : "TestAll", methodName : "testWorldNoComponentSystem"});
+		world.removeSystem(s);
+		world.updateCycle("update");
+		utest.Assert.equals(2,s.count,null,{ fileName : "TestAll.hx", lineNumber : 20, className : "TestAll", methodName : "testWorldNoComponentSystem"});
+	}
+	,testWorldSystemCounting: function() {
+		var world = new edge.World();
+		var s1 = new NoComponentsSystem();
+		var s2 = new Components2System();
+		this.assertNumberOfEntities(world,0,{ fileName : "TestAll.hx", lineNumber : 27, className : "TestAll", methodName : "testWorldSystemCounting"});
+		this.assertNumberOfSystems(world,0,{ fileName : "TestAll.hx", lineNumber : 28, className : "TestAll", methodName : "testWorldSystemCounting"});
+		world.addSystem(s1,"update");
+		this.assertNumberOfSystems(world,1,{ fileName : "TestAll.hx", lineNumber : 30, className : "TestAll", methodName : "testWorldSystemCounting"});
+		world.addSystem(s2,"update");
+		this.assertNumberOfSystems(world,2,{ fileName : "TestAll.hx", lineNumber : 32, className : "TestAll", methodName : "testWorldSystemCounting"});
+		world.removeSystem(s1);
+		this.assertNumberOfSystems(world,1,{ fileName : "TestAll.hx", lineNumber : 34, className : "TestAll", methodName : "testWorldSystemCounting"});
+		world.removeSystem(s1);
+		this.assertNumberOfSystems(world,1,{ fileName : "TestAll.hx", lineNumber : 36, className : "TestAll", methodName : "testWorldSystemCounting"});
+		world.removeSystem(s2);
+		this.assertNumberOfSystems(world,0,{ fileName : "TestAll.hx", lineNumber : 38, className : "TestAll", methodName : "testWorldSystemCounting"});
+	}
+	,testWorldEntity: function() {
+		var world = new edge.World();
+		var e1 = new edge.Entity();
+		var e2 = new edge.Entity();
+		this.assertNumberOfEntities(world,0,{ fileName : "TestAll.hx", lineNumber : 45, className : "TestAll", methodName : "testWorldEntity"});
+		this.assertNumberOfSystems(world,0,{ fileName : "TestAll.hx", lineNumber : 46, className : "TestAll", methodName : "testWorldEntity"});
+		world.addEntity(e1);
+		this.assertNumberOfEntities(world,1,{ fileName : "TestAll.hx", lineNumber : 48, className : "TestAll", methodName : "testWorldEntity"});
+		this.assertNumberOfSystems(world,0,{ fileName : "TestAll.hx", lineNumber : 49, className : "TestAll", methodName : "testWorldEntity"});
+		world.addEntity(e2);
+		this.assertNumberOfEntities(world,2,{ fileName : "TestAll.hx", lineNumber : 51, className : "TestAll", methodName : "testWorldEntity"});
+		world.removeEntity(e1);
+		this.assertNumberOfEntities(world,1,{ fileName : "TestAll.hx", lineNumber : 53, className : "TestAll", methodName : "testWorldEntity"});
+		world.removeEntity(e1);
+		this.assertNumberOfEntities(world,1,{ fileName : "TestAll.hx", lineNumber : 55, className : "TestAll", methodName : "testWorldEntity"});
+		world.removeEntity(e2);
+		this.assertNumberOfEntities(world,0,{ fileName : "TestAll.hx", lineNumber : 57, className : "TestAll", methodName : "testWorldEntity"});
+	}
+	,testEntity: function() {
 		var e = new edge.Entity();
+		utest.Assert.isNull(e.world,null,{ fileName : "TestAll.hx", lineNumber : 62, className : "TestAll", methodName : "testEntity"});
 		e.addComponent(new A());
-		this.assertNumberOfComponents(e,1,{ fileName : "TestAll.hx", lineNumber : 23, className : "TestAll", methodName : "testEntity"});
+		this.assertNumberOfComponents(e,1,{ fileName : "TestAll.hx", lineNumber : 64, className : "TestAll", methodName : "testEntity"});
 		e.addComponent(new B());
-		this.assertNumberOfComponents(e,2,{ fileName : "TestAll.hx", lineNumber : 25, className : "TestAll", methodName : "testEntity"});
+		this.assertNumberOfComponents(e,2,{ fileName : "TestAll.hx", lineNumber : 66, className : "TestAll", methodName : "testEntity"});
 		var a = new A();
 		e.addComponent(a);
-		this.assertNumberOfComponents(e,2,{ fileName : "TestAll.hx", lineNumber : 28, className : "TestAll", methodName : "testEntity"});
+		this.assertNumberOfComponents(e,2,{ fileName : "TestAll.hx", lineNumber : 69, className : "TestAll", methodName : "testEntity"});
 		e.removeComponent(a);
-		this.assertNumberOfComponents(e,1,{ fileName : "TestAll.hx", lineNumber : 30, className : "TestAll", methodName : "testEntity"});
+		this.assertNumberOfComponents(e,1,{ fileName : "TestAll.hx", lineNumber : 71, className : "TestAll", methodName : "testEntity"});
 		e.removeType(B);
-		this.assertNumberOfComponents(e,0,{ fileName : "TestAll.hx", lineNumber : 32, className : "TestAll", methodName : "testEntity"});
+		this.assertNumberOfComponents(e,0,{ fileName : "TestAll.hx", lineNumber : 73, className : "TestAll", methodName : "testEntity"});
 	}
 	,assertNumberOfComponents: function(e,qt,pos) {
 		utest.Assert.equals(qt,thx.core.Iterators.toArray(e.components.iterator()).length,null,pos);
 	}
+	,assertNumberOfEntities: function(w,qt,pos) {
+		utest.Assert.equals(qt,thx.core.Iterators.toArray(w.entities()).length,null,pos);
+	}
+	,assertNumberOfSystems: function(w,qt,pos) {
+		utest.Assert.equals(qt,thx.core.Iterators.toArray(w.systems()).length,null,pos);
+	}
 	,__class__: TestAll
+};
+var edge = {};
+edge.ISystem = function() { };
+edge.ISystem.__name__ = ["edge","ISystem"];
+edge.ISystem.prototype = {
+	getUpdateRequirements: null
+	,getEntitiesRequirements: null
+	,__class__: edge.ISystem
+};
+var NoComponentsSystem = function() {
+	this.count = 0;
+};
+NoComponentsSystem.__name__ = ["NoComponentsSystem"];
+NoComponentsSystem.__interfaces__ = [edge.ISystem];
+NoComponentsSystem.prototype = {
+	count: null
+	,update: function() {
+		this.count++;
+	}
+	,getEntitiesRequirements: function() {
+		return [];
+	}
+	,getUpdateRequirements: function() {
+		return null;
+	}
+	,__class__: NoComponentsSystem
+};
+var Components2System = function() {
+	this.count = 0;
+};
+Components2System.__name__ = ["Components2System"];
+Components2System.__interfaces__ = [edge.ISystem];
+Components2System.prototype = {
+	count: null
+	,update: function(b,a) {
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 114, className : "Components2System", methodName : "update"});
+		utest.Assert["is"](a,A,null,{ fileName : "TestAll.hx", lineNumber : 115, className : "Components2System", methodName : "update"});
+		this.count++;
+	}
+	,getEntitiesRequirements: function() {
+		return null;
+	}
+	,getUpdateRequirements: function() {
+		return [B,A];
+	}
+	,__class__: Components2System
+};
+var Components1System = function() {
+	this.count = 0;
+};
+Components1System.__name__ = ["Components1System"];
+Components1System.__interfaces__ = [edge.ISystem];
+Components1System.prototype = {
+	count: null
+	,update: function(b) {
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 128, className : "Components1System", methodName : "update"});
+		this.count++;
+	}
+	,getEntitiesRequirements: function() {
+		return null;
+	}
+	,getUpdateRequirements: function() {
+		return [B];
+	}
+	,__class__: Components1System
 };
 var A = function() {
 };
@@ -399,7 +519,6 @@ Type.enumParameters = function(e) {
 Type.enumIndex = function(e) {
 	return e[1];
 };
-var edge = {};
 edge.Entity = function(components) {
 	this.components = new haxe.ds.StringMap();
 	if(null != components) this.addComponents(components);
@@ -457,13 +576,6 @@ edge.Entity.prototype = {
 	}
 	,__class__: edge.Entity
 };
-edge.ISystem = function() { };
-edge.ISystem.__name__ = ["edge","ISystem"];
-edge.ISystem.prototype = {
-	getUpdateRequirements: null
-	,getEntitiesRequirements: null
-	,__class__: edge.ISystem
-};
 edge.World = function() {
 	var _g = this;
 	this.systemToCycle = new haxe.ds.ObjectMap();
@@ -475,11 +587,11 @@ edge.World = function() {
 	});
 	this.systemToComponents = new haxe.ds.ObjectMap();
 	this.systemToEntities = new haxe.ds.ObjectMap();
-	this.entities = new haxe.ds.ObjectMap();
+	this.mapEntities = new haxe.ds.ObjectMap();
 };
 edge.World.__name__ = ["edge","World"];
 edge.World.prototype = {
-	entities: null
+	mapEntities: null
 	,systemToCycle: null
 	,mapCycles: null
 	,emptySystems: null
@@ -487,7 +599,7 @@ edge.World.prototype = {
 	,systemToEntities: null
 	,addEntity: function(entity) {
 		entity.world = this;
-		this.entities.set(entity,true);
+		this.mapEntities.set(entity,true);
 		this.matchSystems(entity);
 		this.matchEntities(entity);
 	}
@@ -504,7 +616,10 @@ edge.World.prototype = {
 			var this11 = this.systemToEntities.h[system1.__id__];
 			this11.remove(entity);
 		}
-		this.entities.remove(entity);
+		this.mapEntities.remove(entity);
+	}
+	,entities: function() {
+		return this.mapEntities.keys();
 	}
 	,addSystem: function(system,cycle) {
 		this.removeSystem(system);
@@ -514,7 +629,7 @@ edge.World.prototype = {
 			this.mapCycles.get(cycle).push(system);
 			var value = new haxe.ds.ObjectMap();
 			this.systemToComponents.set(system,value);
-			var $it0 = this.entities.keys();
+			var $it0 = this.mapEntities.keys();
 			while( $it0.hasNext() ) {
 				var entity = $it0.next();
 				this.matchSystem(entity,system);
@@ -524,7 +639,7 @@ edge.World.prototype = {
 		if(null != entitiesRequirements) {
 			var value1 = new haxe.ds.ObjectMap();
 			this.systemToEntities.set(system,value1);
-			var $it1 = this.entities.keys();
+			var $it1 = this.mapEntities.keys();
 			while( $it1.hasNext() ) {
 				var entity1 = $it1.next();
 				this.matchEntity(entity1,system);
@@ -546,6 +661,9 @@ edge.World.prototype = {
 			HxOverrides.remove(_this1,system);
 		}
 		if(null != entitiesRequirements) this.systemToEntities.remove(system);
+	}
+	,systems: function() {
+		return this.systemToCycle.keys();
 	}
 	,preFrame: function() {
 		this.updateCycle("preFrame");
