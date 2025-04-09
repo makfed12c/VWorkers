@@ -42,6 +42,12 @@ class Entity {
       world.matchSystems(this);
   }
 
+  public function removeTypes(types : Array<Class<Dynamic>>) {
+    types.pluck(_removeTypeName(Type.getClassName(_)));
+    if(null != world)
+      world.matchSystems(this);
+  }
+
   inline public function iterator()
     return components.iterator();
 
