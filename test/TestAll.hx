@@ -6,6 +6,66 @@ using thx.core.Iterators;
 import edge.*;
 
 class TestAll {
+  public function testWorldComponents2System() {
+    var world = new World(),
+        s = new Components2System(),
+        e = new Entity([new A(), new B()]);
+    world.addSystem(s, Cycle.update);
+    Assert.equals(0, s.count);
+    world.update();
+    Assert.equals(0, s.count);
+    world.addEntity(e);
+    world.update();
+    Assert.equals(1, s.count);
+    world.removeEntity(e);
+    world.update();
+    Assert.equals(1, s.count);
+    world.addEntity(e);
+    world.update();
+    Assert.equals(2, s.count);
+    e.removeType(A);
+    world.update();
+    Assert.equals(2, s.count);
+  }
+
+  public function testWorldComponents1System() {
+    var world = new World(),
+        s = new Components1System(),
+        e = new Entity([new B()]);
+    world.addSystem(s, Cycle.update);
+    Assert.equals(0, s.count);
+    world.update();
+    Assert.equals(0, s.count);
+    world.addEntity(e);
+    world.update();
+    Assert.equals(1, s.count);
+    world.removeEntity(e);
+    world.update();
+    Assert.equals(1, s.count);
+    world.addEntity(e);
+    world.update();
+    Assert.equals(2, s.count);
+    e.removeType(B);
+    world.update();
+    Assert.equals(2, s.count);
+  }
+
+  public function testWorldComponents1MissingSystem() {
+    var world = new World(),
+        s = new Components1System(),
+        e = new Entity([new A()]);
+    world.addSystem(s, Cycle.update);
+    Assert.equals(0, s.count);
+    world.update();
+    Assert.equals(0, s.count);
+    world.addEntity(e);
+    world.update();
+    Assert.equals(0, s.count);
+    world.removeEntity(e);
+    world.update();
+    Assert.equals(0, s.count);
+  }
+
   public function testWorldNoComponentSystem() {
     var world = new World(),
         s = new NoComponentsSystem();
