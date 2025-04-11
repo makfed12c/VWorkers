@@ -395,14 +395,14 @@ TestAll.prototype = {
 	,testEntity: function() {
 		var e = new edge.Entity();
 		utest.Assert.isNull(e.world,null,{ fileName : "TestAll.hx", lineNumber : 122, className : "TestAll", methodName : "testEntity"});
-		e.addComponent(new A());
+		e.add(new A());
 		this.assertNumberOfComponents(e,1,{ fileName : "TestAll.hx", lineNumber : 124, className : "TestAll", methodName : "testEntity"});
-		e.addComponent(new B());
+		e.add(new B());
 		this.assertNumberOfComponents(e,2,{ fileName : "TestAll.hx", lineNumber : 126, className : "TestAll", methodName : "testEntity"});
 		var a = new A();
-		e.addComponent(a);
+		e.add(a);
 		this.assertNumberOfComponents(e,2,{ fileName : "TestAll.hx", lineNumber : 129, className : "TestAll", methodName : "testEntity"});
-		e.removeComponent(a);
+		e.remove(a);
 		this.assertNumberOfComponents(e,1,{ fileName : "TestAll.hx", lineNumber : 131, className : "TestAll", methodName : "testEntity"});
 		e.removeType(B);
 		this.assertNumberOfComponents(e,0,{ fileName : "TestAll.hx", lineNumber : 133, className : "TestAll", methodName : "testEntity"});
@@ -578,32 +578,36 @@ Type.enumIndex = function(e) {
 };
 edge.Entity = function(components) {
 	this.components = new haxe.ds.StringMap();
-	if(null != components) this.addComponents(components);
+	if(null != components) this.addMany(components);
 };
 edge.Entity.__name__ = ["edge","Entity"];
 edge.Entity.prototype = {
 	components: null
 	,world: null
-	,addComponent: function(component) {
-		this._addComponent(component);
+	,add: function(component) {
+		this._add(component);
 		if(null != this.world) this.world.matchSystems(this);
 	}
-	,addComponents: function(components) {
+	,addMany: function(components) {
 		var _g = this;
 		components.map(function(_) {
-			_g._addComponent(_);
+			_g._add(_);
 			return;
 		});
 		if(null != this.world) this.world.matchSystems(this);
 	}
-	,removeComponent: function(component) {
-		this._removeComponent(component);
+	,exists: function(component) {
+		var key = Type.getClassName(Type.getClass(component));
+		return this.components.exists(key);
+	}
+	,remove: function(component) {
+		this._remove(component);
 		if(null != this.world) this.world.matchSystems(this);
 	}
-	,removeComponents: function(components) {
+	,removeMany: function(components) {
 		var _g = this;
 		components.map(function(_) {
-			_g._removeComponent(_);
+			_g._remove(_);
 			return;
 		});
 		if(null != this.world) this.world.matchSystems(this);
@@ -623,13 +627,13 @@ edge.Entity.prototype = {
 	,iterator: function() {
 		return this.components.iterator();
 	}
-	,_addComponent: function(component) {
+	,_add: function(component) {
 		var type = Type.getClassName(Type.getClass(component));
-		if(this.components.exists(type)) this.removeComponent(this.components.get(type));
+		if(this.components.exists(type)) this.remove(this.components.get(type));
 		var value = component;
 		this.components.set(type,value);
 	}
-	,_removeComponent: function(component) {
+	,_remove: function(component) {
 		var type = Type.getClassName(Type.getClass(component));
 		this._removeTypeName(type);
 	}

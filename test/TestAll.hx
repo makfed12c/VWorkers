@@ -120,14 +120,14 @@ class TestAll {
   public function testEntity() {
     var e = new Entity();
     Assert.isNull(e.world);
-    e.addComponent(new A());
+    e.add(new A());
     assertNumberOfComponents(e, 1);
-    e.addComponent(new B());
+    e.add(new B());
     assertNumberOfComponents(e, 2);
     var a = new A();
-    e.addComponent(a);
+    e.add(a);
     assertNumberOfComponents(e, 2);
-    e.removeComponent(a);
+    e.remove(a);
     assertNumberOfComponents(e, 1);
     e.removeType(B);
     assertNumberOfComponents(e, 0);

@@ -9,29 +9,32 @@ class Entity {
   public function new(?components : Array<Dynamic>) {
     this.components = new Map();
     if(null != components)
-      addComponents(components);
+      addMany(components);
   }
 
-  public function addComponent(component : Dynamic) {
-    _addComponent(component);
+  public function add(component : Dynamic) {
+    _add(component);
     if(null != world)
       world.matchSystems(this);
   }
 
-  public function addComponents(components : Array<Dynamic>) {
-    components.pluck(_addComponent(_));
+  public function addMany(components : Array<Dynamic>) {
+    components.pluck(_add(_));
     if(null != world)
       world.matchSystems(this);
   }
 
-  public function removeComponent(component : Dynamic) {
-    _removeComponent(component);
+  public function exists(component : Dynamic)
+    return components.exists(key(component));
+
+  public function remove(component : Dynamic) {
+    _remove(component);
     if(null != world)
       world.matchSystems(this);
   }
 
-  public function removeComponents(components : Array<Dynamic>) {
-    components.pluck(_removeComponent(_));
+  public function removeMany(components : Array<Dynamic>) {
+    components.pluck(_remove(_));
     if(null != world)
       world.matchSystems(this);
   }
@@ -51,14 +54,14 @@ class Entity {
   inline public function iterator()
     return components.iterator();
 
-  function _addComponent(component : Dynamic) {
+  function _add(component : Dynamic) {
     var type = key(component);
     if(components.exists(type))
-      removeComponent(components.get(type));
+      remove(components.get(type));
     components.set(type, component);
   }
 
-  function _removeComponent(component : Dynamic) {
+  function _remove(component : Dynamic) {
     var type = key(component);
     _removeTypeName(type);
   }
