@@ -25,7 +25,10 @@ class Entity {
   }
 
   public function exists(component : Dynamic)
-    return components.exists(key(component));
+    return existsType(key(component));
+
+  public function existsType(type : String)
+    return components.exists(type);
 
   public function remove(component : Dynamic) {
     _remove(component);
