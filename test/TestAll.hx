@@ -134,7 +134,7 @@ class TestAll {
   }
 
   public function assertNumberOfComponents(e : Entity, qt : Int, ?pos : haxe.PosInfos)
-    Assert.equals(qt, e.iterator().toArray().length, pos);
+    Assert.equals(qt, e.components().toArray().length, pos);
 
   public function assertNumberOfEntities(w : World, qt : Int, ?pos : haxe.PosInfos)
     Assert.equals(qt, w.entities().toArray().length, pos);

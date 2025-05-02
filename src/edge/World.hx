@@ -178,7 +178,7 @@ class World {
   function matchRequirements(entity : Entity, requirements : Array<Class<Dynamic>>) {
     var comps = [];
     for(req in requirements) {
-      for(component in entity.iterator()) {
+      for(component in entity.components()) {
         if(Type.getClass(component) == req) {
           comps.push(component);
           break;

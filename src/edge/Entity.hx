@@ -4,10 +4,10 @@ using thx.core.Arrays;
 
 @:access(edge.World)
 class Entity {
-  var components : Map<String, {}>;
+  var map : Map<String, {}>;
   public var world(default, null) : World;
   public function new(?components : Array<{}>) {
-    this.components = new Map();
+    this.map = new Map();
     if(null != components)
       addMany(components);
   }
@@ -28,7 +28,7 @@ class Entity {
     return existsType(key(component));
 
   public function existsType(type : String)
-    return components.exists(type);
+    return map.exists(type);
 
   public function remove(component : {}) {
     _remove(component);
@@ -54,14 +54,14 @@ class Entity {
       world.matchSystems(this);
   }
 
-  inline public function iterator()
-    return components.iterator();
+  inline public function components()
+    return map.iterator();
 
   function _add(component : {}) {
     var type = key(component);
-    if(components.exists(type))
-      remove(components.get(type));
-    components.set(type, component);
+    if(map.exists(type))
+      remove(map.get(type));
+    map.set(type, component);
   }
 
   function _remove(component : {}) {
@@ -70,7 +70,7 @@ class Entity {
   }
 
   function _removeTypeName(type : String)
-    components.remove(type);
+    map.remove(type);
 
   inline function key(component : {})
     return Type.getClassName(Type.getClass(component));

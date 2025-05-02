@@ -408,7 +408,7 @@ TestAll.prototype = {
 		this.assertNumberOfComponents(e,0,{ fileName : "TestAll.hx", lineNumber : 133, className : "TestAll", methodName : "testEntity"});
 	}
 	,assertNumberOfComponents: function(e,qt,pos) {
-		utest.Assert.equals(qt,thx.core.Iterators.toArray(e.components.iterator()).length,null,pos);
+		utest.Assert.equals(qt,thx.core.Iterators.toArray(e.map.iterator()).length,null,pos);
 	}
 	,assertNumberOfEntities: function(w,qt,pos) {
 		utest.Assert.equals(qt,thx.core.Iterators.toArray(w.entities()).length,null,pos);
@@ -577,12 +577,12 @@ Type.enumIndex = function(e) {
 	return e[1];
 };
 edge.Entity = function(components) {
-	this.components = new haxe.ds.StringMap();
+	this.map = new haxe.ds.StringMap();
 	if(null != components) this.addMany(components);
 };
 edge.Entity.__name__ = ["edge","Entity"];
 edge.Entity.prototype = {
-	components: null
+	map: null
 	,world: null
 	,add: function(component) {
 		this._add(component);
@@ -597,8 +597,10 @@ edge.Entity.prototype = {
 		if(null != this.world) this.world.matchSystems(this);
 	}
 	,exists: function(component) {
-		var key = Type.getClassName(Type.getClass(component));
-		return this.components.exists(key);
+		return this.existsType(Type.getClassName(Type.getClass(component)));
+	}
+	,existsType: function(type) {
+		return this.map.exists(type);
 	}
 	,remove: function(component) {
 		this._remove(component);
@@ -624,21 +626,20 @@ edge.Entity.prototype = {
 		});
 		if(null != this.world) this.world.matchSystems(this);
 	}
-	,iterator: function() {
-		return this.components.iterator();
+	,components: function() {
+		return this.map.iterator();
 	}
 	,_add: function(component) {
 		var type = Type.getClassName(Type.getClass(component));
-		if(this.components.exists(type)) this.remove(this.components.get(type));
-		var value = component;
-		this.components.set(type,value);
+		if(this.map.exists(type)) this.remove(this.map.get(type));
+		this.map.set(type,component);
 	}
 	,_remove: function(component) {
 		var type = Type.getClassName(Type.getClass(component));
 		this._removeTypeName(type);
 	}
 	,_removeTypeName: function(type) {
-		this.components.remove(type);
+		this.map.remove(type);
 	}
 	,key: function(component) {
 		return Type.getClassName(Type.getClass(component));
@@ -836,7 +837,7 @@ edge.World.prototype = {
 		while(_g < requirements.length) {
 			var req = requirements[_g];
 			++_g;
-			var $it0 = entity.components.iterator();
+			var $it0 = entity.map.iterator();
 			while( $it0.hasNext() ) {
 				var component = $it0.next();
 				if(Type.getClass(component) == req) {
