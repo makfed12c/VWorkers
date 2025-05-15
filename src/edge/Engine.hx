@@ -6,7 +6,7 @@ using thx.core.Arrays;
 using thx.core.Iterators;
 
 @:access(edge.Entity)
-class World {
+class Engine {
   var mapEntities : Map<Entity, Bool>;
   var systemToCycle : Map<ISystem, Cycle>;
   var mapCycles : Map<Cycle, Array<ISystem>>;
@@ -32,7 +32,7 @@ class World {
   }
 
   public function addEntity(entity : Entity) {
-    entity.world = this;
+    entity.engine = this;
     mapEntities.set(entity, true);
     matchSystems(entity);
     matchEntities(entity);

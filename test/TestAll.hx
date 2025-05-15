@@ -6,120 +6,120 @@ using thx.core.Iterators;
 import edge.*;
 
 class TestAll {
-  public function testWorldComponents2System() {
-    var world = new World(),
+  public function testEngineComponents2System() {
+    var engine = new Engine(),
         s = new Components2System(),
         e = new Entity([new A(), new B()]);
-    world.addSystem(s, Cycle.update);
+    engine.addSystem(s, Cycle.update);
     Assert.equals(0, s.count);
-    world.update();
+    engine.update();
     Assert.equals(0, s.count);
-    world.addEntity(e);
-    world.update();
+    engine.addEntity(e);
+    engine.update();
     Assert.equals(1, s.count);
-    world.removeEntity(e);
-    world.update();
+    engine.removeEntity(e);
+    engine.update();
     Assert.equals(1, s.count);
-    world.addEntity(e);
-    world.update();
+    engine.addEntity(e);
+    engine.update();
     Assert.equals(2, s.count);
     e.removeType(A);
-    world.update();
+    engine.update();
     Assert.equals(2, s.count);
   }
 
-  public function testWorldComponents1System() {
-    var world = new World(),
+  public function testEngineComponents1System() {
+    var engine = new Engine(),
         s = new Components1System(),
         e = new Entity([new B()]);
-    world.addSystem(s, Cycle.update);
+    engine.addSystem(s, Cycle.update);
     Assert.equals(0, s.count);
-    world.update();
+    engine.update();
     Assert.equals(0, s.count);
-    world.addEntity(e);
-    world.update();
+    engine.addEntity(e);
+    engine.update();
     Assert.equals(1, s.count);
-    world.removeEntity(e);
-    world.update();
+    engine.removeEntity(e);
+    engine.update();
     Assert.equals(1, s.count);
-    world.addEntity(e);
-    world.update();
+    engine.addEntity(e);
+    engine.update();
     Assert.equals(2, s.count);
     e.removeType(B);
-    world.update();
+    engine.update();
     Assert.equals(2, s.count);
   }
 
-  public function testWorldComponents1MissingSystem() {
-    var world = new World(),
+  public function testEngineComponents1MissingSystem() {
+    var engine = new Engine(),
         s = new Components1System(),
         e = new Entity([new A()]);
-    world.addSystem(s, Cycle.update);
+    engine.addSystem(s, Cycle.update);
     Assert.equals(0, s.count);
-    world.update();
+    engine.update();
     Assert.equals(0, s.count);
-    world.addEntity(e);
-    world.update();
+    engine.addEntity(e);
+    engine.update();
     Assert.equals(0, s.count);
-    world.removeEntity(e);
-    world.update();
+    engine.removeEntity(e);
+    engine.update();
     Assert.equals(0, s.count);
   }
 
-  public function testWorldNoComponentSystem() {
-    var world = new World(),
+  public function testEngineNoComponentSystem() {
+    var engine = new Engine(),
         s = new NoComponentsSystem();
-    world.addSystem(s, Cycle.update);
+    engine.addSystem(s, Cycle.update);
     Assert.equals(0, s.count);
-    world.update();
+    engine.update();
     Assert.equals(1, s.count);
-    world.update();
+    engine.update();
     Assert.equals(2, s.count);
-    world.removeSystem(s);
-    world.update();
+    engine.removeSystem(s);
+    engine.update();
     Assert.equals(2, s.count);
   }
 
-  public function testWorldSystemCounting() {
-    var world = new World(),
+  public function testEngineSystemCounting() {
+    var engine = new Engine(),
         s1 = new NoComponentsSystem(),
         s2 = new Components2System();
-    assertNumberOfEntities(world, 0);
-    assertNumberOfSystems(world, 0);
-    world.addSystem(s1, Cycle.update);
-    assertNumberOfSystems(world, 1);
-    world.addSystem(s2, Cycle.update);
-    assertNumberOfSystems(world, 2);
-    world.removeSystem(s1);
-    assertNumberOfSystems(world, 1);
-    world.removeSystem(s1);
-    assertNumberOfSystems(world, 1);
-    world.removeSystem(s2);
-    assertNumberOfSystems(world, 0);
+    assertNumberOfEntities(engine, 0);
+    assertNumberOfSystems(engine, 0);
+    engine.addSystem(s1, Cycle.update);
+    assertNumberOfSystems(engine, 1);
+    engine.addSystem(s2, Cycle.update);
+    assertNumberOfSystems(engine, 2);
+    engine.removeSystem(s1);
+    assertNumberOfSystems(engine, 1);
+    engine.removeSystem(s1);
+    assertNumberOfSystems(engine, 1);
+    engine.removeSystem(s2);
+    assertNumberOfSystems(engine, 0);
   }
 
-  public function testWorldEntity() {
-    var world = new World(),
+  public function testEngineEntity() {
+    var engine = new Engine(),
         e1 = new Entity(),
         e2 = new Entity();
-    assertNumberOfEntities(world, 0);
-    assertNumberOfSystems(world, 0);
-    world.addEntity(e1);
-    assertNumberOfEntities(world, 1);
-    assertNumberOfSystems(world, 0);
-    world.addEntity(e2);
-    assertNumberOfEntities(world, 2);
-    world.removeEntity(e1);
-    assertNumberOfEntities(world, 1);
-    world.removeEntity(e1);
-    assertNumberOfEntities(world, 1);
-    world.removeEntity(e2);
-    assertNumberOfEntities(world, 0);
+    assertNumberOfEntities(engine, 0);
+    assertNumberOfSystems(engine, 0);
+    engine.addEntity(e1);
+    assertNumberOfEntities(engine, 1);
+    assertNumberOfSystems(engine, 0);
+    engine.addEntity(e2);
+    assertNumberOfEntities(engine, 2);
+    engine.removeEntity(e1);
+    assertNumberOfEntities(engine, 1);
+    engine.removeEntity(e1);
+    assertNumberOfEntities(engine, 1);
+    engine.removeEntity(e2);
+    assertNumberOfEntities(engine, 0);
   }
 
   public function testEntity() {
     var e = new Entity();
-    Assert.isNull(e.world);
+    Assert.isNull(e.engine);
     e.add(new A());
     assertNumberOfComponents(e, 1);
     e.add(new B());
@@ -136,11 +136,11 @@ class TestAll {
   public function assertNumberOfComponents(e : Entity, qt : Int, ?pos : haxe.PosInfos)
     Assert.equals(qt, e.components().toArray().length, pos);
 
-  public function assertNumberOfEntities(w : World, qt : Int, ?pos : haxe.PosInfos)
-    Assert.equals(qt, w.entities().toArray().length, pos);
+  public function assertNumberOfEntities(e : Engine, qt : Int, ?pos : haxe.PosInfos)
+    Assert.equals(qt, e.entities().toArray().length, pos);
 
-  public function assertNumberOfSystems(w : World, qt : Int, ?pos : haxe.PosInfos)
-    Assert.equals(qt, w.systems().toArray().length, pos);
+  public function assertNumberOfSystems(e : Engine, qt : Int, ?pos : haxe.PosInfos)
+    Assert.equals(qt, e.systems().toArray().length, pos);
 
   public static function main() {
     var runner = new Runner();

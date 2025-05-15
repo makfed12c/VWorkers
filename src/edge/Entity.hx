@@ -2,10 +2,10 @@ package edge;
 
 using thx.core.Arrays;
 
-@:access(edge.World)
+@:access(edge.Engine)
 class Entity {
   var map : Map<String, {}>;
-  public var world(default, null) : World;
+  public var engine(default, null) : Engine;
   public function new(?components : Array<{}>) {
     this.map = new Map();
     if(null != components)
@@ -14,14 +14,14 @@ class Entity {
 
   public function add(component : {}) {
     _add(component);
-    if(null != world)
-      world.matchSystems(this);
+    if(null != engine)
+      engine.matchSystems(this);
   }
 
   public function addMany(components : Array<{}>) {
     components.pluck(_add(_));
-    if(null != world)
-      world.matchSystems(this);
+    if(null != engine)
+      engine.matchSystems(this);
   }
 
   public function exists(component : {})
@@ -32,26 +32,26 @@ class Entity {
 
   public function remove(component : {}) {
     _remove(component);
-    if(null != world)
-      world.matchSystems(this);
+    if(null != engine)
+      engine.matchSystems(this);
   }
 
   public function removeMany(components : Array<{}>) {
     components.pluck(_remove(_));
-    if(null != world)
-      world.matchSystems(this);
+    if(null != engine)
+      engine.matchSystems(this);
   }
 
   public function removeType(type : Class<{}>) {
     _removeTypeName(Type.getClassName(type));
-    if(null != world)
-      world.matchSystems(this);
+    if(null != engine)
+      engine.matchSystems(this);
   }
 
   public function removeTypes(types : Array<Class<{}>>) {
     types.pluck(_removeTypeName(Type.getClassName(_)));
-    if(null != world)
-      world.matchSystems(this);
+    if(null != engine)
+      engine.matchSystems(this);
   }
 
   inline public function components()
