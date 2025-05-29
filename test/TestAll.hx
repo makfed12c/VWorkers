@@ -14,10 +14,13 @@ class TestAll {
     Assert.equals(0, system.count);
     engine.update();
     Assert.equals(0, system.count);
+    Assert.isNull(entity.engine);
     engine.addEntity(entity);
+    Assert.equals(engine, entity.engine);
     engine.update();
     Assert.equals(1, system.count);
     engine.removeEntity(entity);
+    Assert.isNull(entity.engine);
     engine.update();
     Assert.equals(1, system.count);
     engine.addEntity(entity);

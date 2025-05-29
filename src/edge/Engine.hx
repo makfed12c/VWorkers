@@ -44,6 +44,7 @@ class Engine {
     for(system in systemToEntities.keys())
       systemToEntities.get(system).remove(entity);
     mapEntities.remove(entity);
+    entity.engine = null;
   }
 
   public function entities()
