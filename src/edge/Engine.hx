@@ -53,8 +53,8 @@ class Engine {
   public function addSystem(system : ISystem, cycle : Cycle) {
     removeSystem(system);
     systemToCycle.set(system, cycle);
-    var updateRequirements = system.getUpdateRequirements();
-    if(null != updateRequirements) {
+    var updateRequirements = system.componentRequirements;
+    if(null != updateRequirements && updateRequirements.length > 0) {
       mapCycles.get(cycle).push(system);
       systemToComponents.set(system, new Map());
       for(entity in mapEntities.keys())
@@ -74,7 +74,7 @@ class Engine {
     if(!systemToCycle.exists(system))
       return;
     var cycle = systemToCycle.get(system),
-        updateRequirements = system.getUpdateRequirements(),
+        updateRequirements = system.componentRequirements,
         entitiesRequirements = system.getEntitiesRequirements();
     systemToCycle.remove(system);
     if(null != updateRequirements) {
@@ -156,16 +156,21 @@ class Engine {
   function matchSystem(entity : Entity, system : ISystem) {
     var match = systemToComponents.get(system);
     match.remove(entity);
-    var components = matchRequirements(entity, system.getUpdateRequirements());
-    if(null != components)
-      match.set(entity, components);
+    if(system.componentRequirements == null || system.componentRequirements.length == 0) {
+      match.set(entity, []);
+    } else {
+      var components = matchRequirements(entity, system.componentRequirements);
+      if(null != components)
+        match.set(entity, components);
+    }
   }
 
   function matchEntity(entity : Entity, system : ISystem) {
     var match = systemToEntities.get(system),
-        requirements = system.getEntitiesRequirements();
+        requirements = system.getEntitiesRequirements(),
+        componentRequirements = requirements.map(function(o) return o.cls);
     match.remove(entity);
-    var components = matchRequirements(entity, requirements.map(function(o) return o.cls));
+    var components = matchRequirements(entity, componentRequirements);
     if(null != components) {
       var o = {};
       for(i in 0...components.length) {

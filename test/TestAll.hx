@@ -165,8 +165,8 @@ class NoComponentsSystem implements ISystem {
     count++;
   }
 
-  public function getEntitiesRequirements() return [];
-  public function getUpdateRequirements() return null;
+  public function getEntitiesRequirements() return null;
+  public var componentRequirements(default, null) = null;
 }
 
 class Components2System implements ISystem {
@@ -180,7 +180,7 @@ class Components2System implements ISystem {
   }
 
   public function getEntitiesRequirements() return null;
-  public function getUpdateRequirements() : Array<Class<Dynamic>> return [B, A];
+  public var componentRequirements(default, null) : Array<Class<Dynamic>> = [B, A];
 }
 
 class Components1System implements ISystem {
@@ -193,7 +193,7 @@ class Components1System implements ISystem {
   }
 
   public function getEntitiesRequirements() return null;
-  public function getUpdateRequirements() : Array<Class<Dynamic>> return [B];
+  public var componentRequirements(default, null) : Array<Class<Dynamic>> = [B];
 }
 
 class A {

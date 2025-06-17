@@ -425,11 +425,12 @@ var edge = {};
 edge.ISystem = function() { };
 edge.ISystem.__name__ = ["edge","ISystem"];
 edge.ISystem.prototype = {
-	getUpdateRequirements: null
+	componentRequirements: null
 	,getEntitiesRequirements: null
 	,__class__: edge.ISystem
 };
 var NoComponentsSystem = function() {
+	this.componentRequirements = null;
 	this.count = 0;
 };
 NoComponentsSystem.__name__ = ["NoComponentsSystem"];
@@ -440,14 +441,13 @@ NoComponentsSystem.prototype = {
 		this.count++;
 	}
 	,getEntitiesRequirements: function() {
-		return [];
-	}
-	,getUpdateRequirements: function() {
 		return null;
 	}
+	,componentRequirements: null
 	,__class__: NoComponentsSystem
 };
 var Components2System = function() {
+	this.componentRequirements = [B,A];
 	this.count = 0;
 };
 Components2System.__name__ = ["Components2System"];
@@ -462,12 +462,11 @@ Components2System.prototype = {
 	,getEntitiesRequirements: function() {
 		return null;
 	}
-	,getUpdateRequirements: function() {
-		return [B,A];
-	}
+	,componentRequirements: null
 	,__class__: Components2System
 };
 var Components1System = function() {
+	this.componentRequirements = [B];
 	this.count = 0;
 };
 Components1System.__name__ = ["Components1System"];
@@ -481,9 +480,7 @@ Components1System.prototype = {
 	,getEntitiesRequirements: function() {
 		return null;
 	}
-	,getUpdateRequirements: function() {
-		return [B];
-	}
+	,componentRequirements: null
 	,__class__: Components1System
 };
 var A = function() {
@@ -628,8 +625,8 @@ edge.Engine.prototype = {
 	,addSystem: function(system,cycle) {
 		this.removeSystem(system);
 		this.systemToCycle.set(system,cycle);
-		var updateRequirements = system.getUpdateRequirements();
-		if(null != updateRequirements) {
+		var updateRequirements = system.componentRequirements;
+		if(null != updateRequirements && updateRequirements.length > 0) {
 			this.mapCycles.get(cycle).push(system);
 			var value = new haxe.ds.ObjectMap();
 			this.systemToComponents.set(system,value);
@@ -653,7 +650,7 @@ edge.Engine.prototype = {
 	,removeSystem: function(system) {
 		if(!(this.systemToCycle.h.__keys__[system.__id__] != null)) return;
 		var cycle = this.systemToCycle.h[system.__id__];
-		var updateRequirements = system.getUpdateRequirements();
+		var updateRequirements = system.componentRequirements;
 		var entitiesRequirements = system.getEntitiesRequirements();
 		this.systemToCycle.remove(system);
 		if(null != updateRequirements) {
@@ -743,16 +740,19 @@ edge.Engine.prototype = {
 	,matchSystem: function(entity,system) {
 		var match = this.systemToComponents.h[system.__id__];
 		match.remove(entity);
-		var components = this.matchRequirements(entity,system.getUpdateRequirements());
-		if(null != components) match.set(entity,components);
+		if(system.componentRequirements == null || system.componentRequirements.length == 0) match.set(entity,[]); else {
+			var components = this.matchRequirements(entity,system.componentRequirements);
+			if(null != components) match.set(entity,components);
+		}
 	}
 	,matchEntity: function(entity,system) {
 		var match = this.systemToEntities.h[system.__id__];
 		var requirements = system.getEntitiesRequirements();
-		match.remove(entity);
-		var components = this.matchRequirements(entity,requirements.map(function(o) {
+		var componentRequirements = requirements.map(function(o) {
 			return o.cls;
-		}));
+		});
+		match.remove(entity);
+		var components = this.matchRequirements(entity,componentRequirements);
 		if(null != components) {
 			var o1 = { };
 			var _g1 = 0;

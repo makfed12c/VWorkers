@@ -15,6 +15,6 @@ TODO
   `delta : Float` // for elapsed time since last update
 */
 interface ISystem {
-  function getUpdateRequirements() : Array<Class<Dynamic>>;
+  var componentRequirements(default, null) : Array<Class<Dynamic>>;
   function getEntitiesRequirements() : Array<{ name : String , cls : Class<Dynamic> }>;
 }
