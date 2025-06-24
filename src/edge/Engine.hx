@@ -62,8 +62,7 @@ class Engine {
     } else {
       emptySystems.get(cycle).push(system);
     }
-    var entitiesRequirements = system.getEntitiesRequirements();
-    if(null != entitiesRequirements) {
+    if(null != system.entitiesRequirements) {
       systemToEntities.set(system, new Map());
       for(entity in mapEntities.keys())
         matchEntity(entity, system);
@@ -74,8 +73,7 @@ class Engine {
     if(!systemToCycle.exists(system))
       return;
     var cycle = systemToCycle.get(system),
-        updateRequirements = system.componentRequirements,
-        entitiesRequirements = system.getEntitiesRequirements();
+        updateRequirements = system.componentRequirements;
     systemToCycle.remove(system);
     if(null != updateRequirements) {
       mapCycles.get(cycle).remove(system);
@@ -83,7 +81,7 @@ class Engine {
     } else {
       emptySystems.get(cycle).remove(system);
     }
-    if(null != entitiesRequirements) {
+    if(null != system.entitiesRequirements) {
       systemToEntities.remove(system);
     }
   }
@@ -167,14 +165,13 @@ class Engine {
 
   function matchEntity(entity : Entity, system : ISystem) {
     var match = systemToEntities.get(system),
-        requirements = system.getEntitiesRequirements(),
-        componentRequirements = requirements.map(function(o) return o.cls);
+        componentRequirements = system.entitiesRequirements.map(function(o) return o.cls);
     match.remove(entity);
     var components = matchRequirements(entity, componentRequirements);
     if(null != components) {
       var o = {};
       for(i in 0...components.length) {
-        Reflect.setField(o, requirements[i].name, components[i]);
+        Reflect.setField(o, system.entitiesRequirements[i].name, components[i]);
       }
       Reflect.setField(o, "entity", entity);
       match.set(entity, o);

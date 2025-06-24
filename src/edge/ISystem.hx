@@ -16,5 +16,5 @@ TODO
 */
 interface ISystem {
   var componentRequirements(default, null) : Array<Class<Dynamic>>;
-  function getEntitiesRequirements() : Array<{ name : String , cls : Class<Dynamic> }>;
+  var entitiesRequirements(default, null) : Array<{ name : String , cls : Class<Dynamic> }>;
 }
