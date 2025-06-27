@@ -166,7 +166,7 @@ class NoComponentsSystem implements ISystem {
   }
 
   public var componentRequirements(default, null) = null;
-  public var entitiesRequirements(default, null) = null;
+  public var entityRequirements(default, null) = null;
 }
 
 class Components2System implements ISystem {
@@ -180,7 +180,7 @@ class Components2System implements ISystem {
   }
 
   public var componentRequirements(default, null) : Array<Class<Dynamic>> = [B, A];
-  public var entitiesRequirements(default, null) = null;
+  public var entityRequirements(default, null) = null;
 }
 
 class Components1System implements ISystem {
@@ -193,7 +193,7 @@ class Components1System implements ISystem {
   }
 
   public var componentRequirements(default, null) : Array<Class<Dynamic>> = [B];
-  public var entitiesRequirements(default, null) = null;
+  public var entityRequirements(default, null) = null;
 }
 
 class A {

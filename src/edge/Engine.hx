@@ -62,7 +62,7 @@ class Engine {
     } else {
       emptySystems.get(cycle).push(system);
     }
-    if(null != system.entitiesRequirements) {
+    if(null != system.entityRequirements) {
       systemToEntities.set(system, new Map());
       for(entity in mapEntities.keys())
         matchEntity(entity, system);
@@ -81,7 +81,7 @@ class Engine {
     } else {
       emptySystems.get(cycle).remove(system);
     }
-    if(null != system.entitiesRequirements) {
+    if(null != system.entityRequirements) {
       systemToEntities.remove(system);
     }
   }
@@ -165,13 +165,13 @@ class Engine {
 
   function matchEntity(entity : Entity, system : ISystem) {
     var match = systemToEntities.get(system),
-        componentRequirements = system.entitiesRequirements.map(function(o) return o.cls);
+        componentRequirements = system.entityRequirements.map(function(o) return o.cls);
     match.remove(entity);
     var components = matchRequirements(entity, componentRequirements);
     if(null != components) {
       var o = {};
       for(i in 0...components.length) {
-        Reflect.setField(o, system.entitiesRequirements[i].name, components[i]);
+        Reflect.setField(o, system.entityRequirements[i].name, components[i]);
       }
       Reflect.setField(o, "entity", entity);
       match.set(entity, o);

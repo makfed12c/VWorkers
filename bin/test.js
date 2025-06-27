@@ -426,11 +426,11 @@ edge.ISystem = function() { };
 edge.ISystem.__name__ = ["edge","ISystem"];
 edge.ISystem.prototype = {
 	componentRequirements: null
-	,entitiesRequirements: null
+	,entityRequirements: null
 	,__class__: edge.ISystem
 };
 var NoComponentsSystem = function() {
-	this.entitiesRequirements = null;
+	this.entityRequirements = null;
 	this.componentRequirements = null;
 	this.count = 0;
 };
@@ -442,11 +442,11 @@ NoComponentsSystem.prototype = {
 		this.count++;
 	}
 	,componentRequirements: null
-	,entitiesRequirements: null
+	,entityRequirements: null
 	,__class__: NoComponentsSystem
 };
 var Components2System = function() {
-	this.entitiesRequirements = null;
+	this.entityRequirements = null;
 	this.componentRequirements = [B,A];
 	this.count = 0;
 };
@@ -460,11 +460,11 @@ Components2System.prototype = {
 		this.count++;
 	}
 	,componentRequirements: null
-	,entitiesRequirements: null
+	,entityRequirements: null
 	,__class__: Components2System
 };
 var Components1System = function() {
-	this.entitiesRequirements = null;
+	this.entityRequirements = null;
 	this.componentRequirements = [B];
 	this.count = 0;
 };
@@ -477,7 +477,7 @@ Components1System.prototype = {
 		this.count++;
 	}
 	,componentRequirements: null
-	,entitiesRequirements: null
+	,entityRequirements: null
 	,__class__: Components1System
 };
 var A = function() {
@@ -633,7 +633,7 @@ edge.Engine.prototype = {
 				this.matchSystem(entity,system);
 			}
 		} else this.emptySystems.get(cycle).push(system);
-		if(null != system.entitiesRequirements) {
+		if(null != system.entityRequirements) {
 			var value1 = new haxe.ds.ObjectMap();
 			this.systemToEntities.set(system,value1);
 			var $it1 = this.mapEntities.keys();
@@ -656,7 +656,7 @@ edge.Engine.prototype = {
 			var _this1 = this.emptySystems.get(cycle);
 			HxOverrides.remove(_this1,system);
 		}
-		if(null != system.entitiesRequirements) this.systemToEntities.remove(system);
+		if(null != system.entityRequirements) this.systemToEntities.remove(system);
 	}
 	,systems: function() {
 		return this.systemToCycle.keys();
@@ -742,7 +742,7 @@ edge.Engine.prototype = {
 	}
 	,matchEntity: function(entity,system) {
 		var match = this.systemToEntities.h[system.__id__];
-		var componentRequirements = system.entitiesRequirements.map(function(o) {
+		var componentRequirements = system.entityRequirements.map(function(o) {
 			return o.cls;
 		});
 		match.remove(entity);
@@ -753,7 +753,7 @@ edge.Engine.prototype = {
 			var _g = components.length;
 			while(_g1 < _g) {
 				var i = _g1++;
-				o1[system.entitiesRequirements[i].name] = components[i];
+				o1[system.entityRequirements[i].name] = components[i];
 			}
 			o1.entity = entity;
 			match.set(entity,o1);
