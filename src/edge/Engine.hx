@@ -93,7 +93,7 @@ class Engine {
     updateCycle(Cycle.preFrame);
 
   inline public function postFrame()
-    updateCycle(Cycle.preFrame);
+    updateCycle(Cycle.postFrame);
 
   inline public function preUpdate()
     updateCycle(Cycle.preUpdate);
