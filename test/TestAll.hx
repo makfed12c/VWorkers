@@ -6,6 +6,28 @@ using thx.core.Iterators;
 import edge.*;
 
 class TestAll {
+  public function testPhaseNodes() {
+    var phase = new Phase(),
+        it = phase.iterator();
+    Assert.isFalse(it.hasNext());
+    phase.add(new Components2System());
+    it = phase.iterator();
+    Assert.isTrue(it.hasNext());
+    Assert.notNull(it.next());
+    Assert.isFalse(it.hasNext());
+    phase.add(new Components1System());
+    it = phase.iterator();
+    Assert.isTrue(it.hasNext());
+    Assert.is(it.next(), Components2System);
+    Assert.is(it.next(), Components1System);
+    Assert.isFalse(it.hasNext());
+    phase.removeType(Components2System);
+    it = phase.iterator();
+    Assert.isTrue(it.hasNext());
+    Assert.is(it.next(), Components1System);
+    Assert.isFalse(it.hasNext());
+  }
+
   public function testEngineComponents2System() {
     var engine = new Engine(),
         system = new Components2System(),
