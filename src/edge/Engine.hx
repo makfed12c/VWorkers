@@ -14,6 +14,8 @@ class Engine {
   var systemToComponents : Map<ISystem, Map<Entity, Array<Dynamic>>>;
   var systemToEntities : Map<ISystem, Map<Entity, Dynamic>>;
 
+  var listPhases : Array<Phase>;
+
   public function new() {
     systemToCycle = new Map();
     mapCycles = new Map();
@@ -29,6 +31,7 @@ class Engine {
     systemToComponents = new Map();
     systemToEntities = new Map();
     mapEntities = new Map();
+    listPhases = [];
   }
 
   public function addEntity(entity : Entity) {
@@ -49,6 +52,15 @@ class Engine {
 
   public function entities()
     return mapEntities.keys();
+
+  public function addPhase() {
+    var phase = new Phase();
+    listPhases.push(phase);
+    return phase;
+  }
+
+  public function phases()
+    return listPhases.iterator();
 
   public function addSystem(system : ISystem, cycle : Cycle) {
     removeSystem(system);
