@@ -7,7 +7,7 @@ import edge.*;
 
 class TestAll {
   public function testPhaseNodes() {
-    var phase = new Phase(),
+    var phase = new Phase(null),
         it = phase.iterator();
     Assert.isFalse(it.hasNext());
     phase.add(new Components2System());
@@ -30,96 +30,101 @@ class TestAll {
 
   public function testEngineComponents2System() {
     var engine = new Engine(),
+        phase  = engine.addPhase(),
         system = new Components2System(),
         entity = new Entity([new A(), new B()]);
-    engine.addSystem(system, Cycle.update);
+    phase.add(system);
     Assert.equals(0, system.count);
-    engine.update();
+    phase.update();
     Assert.equals(0, system.count);
     Assert.isNull(entity.engine);
     engine.addEntity(entity);
     Assert.equals(engine, entity.engine);
-    engine.update();
+    phase.update();
     Assert.equals(1, system.count);
     engine.removeEntity(entity);
     Assert.isNull(entity.engine);
-    engine.update();
+    phase.update();
     Assert.equals(1, system.count);
     engine.addEntity(entity);
-    engine.update();
+    phase.update();
     Assert.equals(2, system.count);
     entity.removeType(A);
-    engine.update();
+    phase.update();
     Assert.equals(2, system.count);
   }
 
   public function testEngineComponents1System() {
     var engine = new Engine(),
+        phase  = engine.addPhase(),
         system = new Components1System(),
         entity = new Entity([new B()]);
-    engine.addSystem(system, Cycle.update);
+    phase.add(system);
     Assert.equals(0, system.count);
-    engine.update();
+    phase.update();
     Assert.equals(0, system.count);
     engine.addEntity(entity);
-    engine.update();
+    phase.update();
     Assert.equals(1, system.count);
     engine.removeEntity(entity);
-    engine.update();
+    phase.update();
     Assert.equals(1, system.count);
     engine.addEntity(entity);
-    engine.update();
+    phase.update();
     Assert.equals(2, system.count);
     entity.removeType(B);
-    engine.update();
+    phase.update();
     Assert.equals(2, system.count);
   }
 
   public function testEngineComponents1MissingSystem() {
     var engine = new Engine(),
+        phase  = engine.addPhase(),
         system = new Components1System(),
         entity = new Entity([new A()]);
-    engine.addSystem(system, Cycle.update);
+    phase.add(system);
     Assert.equals(0, system.count);
-    engine.update();
+    phase.update();
     Assert.equals(0, system.count);
     engine.addEntity(entity);
-    engine.update();
+    phase.update();
     Assert.equals(0, system.count);
     engine.removeEntity(entity);
-    engine.update();
+    phase.update();
     Assert.equals(0, system.count);
   }
 
   public function testEngineNoComponentSystem() {
     var engine = new Engine(),
+        phase  = engine.addPhase(),
         system = new NoComponentsSystem();
-    engine.addSystem(system, Cycle.update);
+    phase.add(system);
     Assert.equals(0, system.count);
-    engine.update();
+    phase.update();
     Assert.equals(1, system.count);
-    engine.update();
+    phase.update();
     Assert.equals(2, system.count);
-    engine.removeSystem(system);
-    engine.update();
+    phase.remove(system);
+    phase.update();
     Assert.equals(2, system.count);
   }
 
   public function testEngineSystemCounting() {
     var engine = new Engine(),
+        phase  = engine.addPhase(),
         s1 = new NoComponentsSystem(),
         s2 = new Components2System();
     assertNumberOfEntities(engine, 0);
     assertNumberOfSystems(engine, 0);
-    engine.addSystem(s1, Cycle.update);
+    phase.add(s1);
     assertNumberOfSystems(engine, 1);
-    engine.addSystem(s2, Cycle.update);
+    phase.add(s2);
     assertNumberOfSystems(engine, 2);
-    engine.removeSystem(s1);
+    phase.remove(s1);
     assertNumberOfSystems(engine, 1);
-    engine.removeSystem(s1);
+    phase.remove(s1);
     assertNumberOfSystems(engine, 1);
-    engine.removeSystem(s2);
+    phase.remove(s2);
     assertNumberOfSystems(engine, 0);
   }
 

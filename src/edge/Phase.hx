@@ -1,12 +1,15 @@
 package edge;
 
+@:access(edge.Engine.addSystem)
 @:access(edge.NodeSystem)
 class Phase {
   var first : NodeSystem;
   var last : NodeSystem;
   var mapSystem : Map<ISystem, NodeSystem>;
   var mapType : Map<String, ISystem>;
-  public function new() {
+  var engine : Engine;
+  public function new(engine : Engine) {
+    this.engine = engine;
     mapSystem = new Map();
     mapType = new Map();
   }
@@ -90,10 +93,16 @@ class Phase {
   public function iterator()
     return new NodeSystemIterator(first);
 
+  public function update() {
+    // do something
+  }
+
   function createNode(system : ISystem) {
     var node = new NodeSystem(system);
     mapSystem.set(system, node);
     mapType.set(key(system), system);
+    if(null != engine)
+      engine.addSystem(this, system);
     return node;
   }
 
