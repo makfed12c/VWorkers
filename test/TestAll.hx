@@ -30,7 +30,7 @@ class TestAll {
 
   public function testEngineComponents2System() {
     var engine = new Engine(),
-        phase  = engine.addPhase(),
+        phase  = engine.createPhase(),
         system = new Components2System(),
         entity = new Entity([new A(), new B()]);
     phase.add(system);
@@ -56,7 +56,7 @@ class TestAll {
 
   public function testEngineComponents1System() {
     var engine = new Engine(),
-        phase  = engine.addPhase(),
+        phase  = engine.createPhase(),
         system = new Components1System(),
         entity = new Entity([new B()]);
     phase.add(system);
@@ -79,7 +79,7 @@ class TestAll {
 
   public function testEngineComponents1MissingSystem() {
     var engine = new Engine(),
-        phase  = engine.addPhase(),
+        phase  = engine.createPhase(),
         system = new Components1System(),
         entity = new Entity([new A()]);
     phase.add(system);
@@ -96,7 +96,7 @@ class TestAll {
 
   public function testEngineNoComponentSystem() {
     var engine = new Engine(),
-        phase  = engine.addPhase(),
+        phase  = engine.createPhase(),
         system = new NoComponentsSystem();
     phase.add(system);
     Assert.equals(0, system.count);
@@ -111,7 +111,7 @@ class TestAll {
 
   public function testEngineSystemCounting() {
     var engine = new Engine(),
-        phase  = engine.addPhase(),
+        phase  = engine.createPhase(),
         s1 = new NoComponentsSystem(),
         s2 = new Components2System();
     assertNumberOfEntities(engine, 0);

@@ -53,7 +53,7 @@ class Engine {
   public function entities()
     return mapEntities.keys();
 
-  public function addPhase() {
+  public function createPhase() {
     var phase = new Phase(this);
     listPhases.push(phase);
     return phase;
@@ -63,7 +63,7 @@ class Engine {
     return listPhases.iterator();
 
   function addSystem(phase : Phase, system : ISystem) {
-    
+
   }
 
   public function pushSystem(system : ISystem, cycle : Cycle) {
