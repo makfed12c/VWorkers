@@ -19,6 +19,7 @@ class Engine {
   public function new() {
     systemToCycle = new Map();
     mapCycles = new Map();
+    mapSystemToPhase = new Map();
     emptySystems = new Map();
     [
       Cycle.preFrame,  Cycle.postFrame,
@@ -62,8 +63,13 @@ class Engine {
   public function phases()
     return listPhases.iterator();
 
+  var mapSystemToPhase : Map<ISystem, Phase>;
   function addSystem(phase : Phase, system : ISystem) {
+    mapSystemToPhase.set(system, phase);
+  }
 
+  function removeSystem(system : ISystem) {
+    mapSystemToPhase.remove(system);
   }
 
   public function pushSystem(system : ISystem, cycle : Cycle) {
@@ -85,7 +91,7 @@ class Engine {
     }
   }
 
-  public function removeSystem(system : ISystem) {
+  public function popSystem(system : ISystem) {
     if(!systemToCycle.exists(system))
       return;
     var cycle = systemToCycle.get(system),

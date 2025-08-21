@@ -1,6 +1,7 @@
 package edge;
 
 @:access(edge.Engine.addSystem)
+@:access(edge.Engine.removeSystem)
 @:access(edge.NodeSystem)
 class Phase {
   var first : NodeSystem;
@@ -68,6 +69,8 @@ class Phase {
     mapType.remove(key(system));
     if(null == node)
       return;
+    if(null != engine)
+      engine.removeSystem(system);
     mapSystem.remove(system);
     if(node == first && node == last) {
       first = last = null;
