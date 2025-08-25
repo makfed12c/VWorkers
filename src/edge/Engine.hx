@@ -213,3 +213,10 @@ class Engine {
     return comps.length == requirements.length ? comps : null;
   }
 }
+
+typedef SystemInfo = {
+  hasComponents : Bool,
+  hasEntity : Bool,
+  hasEntities : Bool,
+  update : Dynamic
+}
