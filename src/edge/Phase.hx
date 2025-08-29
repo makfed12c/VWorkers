@@ -2,6 +2,7 @@ package edge;
 
 @:access(edge.Engine.addSystem)
 @:access(edge.Engine.removeSystem)
+@:access(edge.Engine.updateSystem)
 @:access(edge.NodeSystem)
 class Phase {
   var first : NodeSystem;
@@ -93,11 +94,13 @@ class Phase {
     return remove(system);
   }
 
-  public function iterator()
+  public function systems()
     return new NodeSystemIterator(first);
 
   public function update() {
-    // do something
+    if(null == engine) return;
+    for(system in systems())
+      engine.updateSystem(system);
   }
 
   function createNode(system : ISystem) {
