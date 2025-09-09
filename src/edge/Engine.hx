@@ -7,6 +7,8 @@ using thx.core.Iterators;
 
 @:access(edge.Entity)
 class Engine {
+  var mapSystemToPhase : Map<ISystem, Phase>;
+  var mapInfo : Map<ISystem, SystemInfo>;
   var mapEntities : Map<Entity, Bool>;
   var systemToCycle : Map<ISystem, Cycle>;
   var mapCycles : Map<Cycle, Array<ISystem>>;
@@ -18,6 +20,7 @@ class Engine {
 
   public function new() {
     systemToCycle = new Map();
+    mapInfo = new Map();
     mapCycles = new Map();
     mapSystemToPhase = new Map();
     emptySystems = new Map();
@@ -63,100 +66,59 @@ class Engine {
   public function phases()
     return listPhases.iterator();
 
-  var mapSystemToPhase : Map<ISystem, Phase>;
+  // TODO, extract from map instead that from Phases
+  public function systems() : Array<ISystem>
+    return listPhases.pluck(_.systems().toArray()).flatten();
+
+  // private methods
   function addSystem(phase : Phase, system : ISystem) {
     mapSystemToPhase.set(system, phase);
-  }
-
-  function removeSystem(system : ISystem) {
-    mapSystemToPhase.remove(system);
-  }
-
-  public function pushSystem(system : ISystem, cycle : Cycle) {
-    removeSystem(system);
-    systemToCycle.set(system, cycle);
-    var updateRequirements = system.componentRequirements;
-    if(null != updateRequirements && updateRequirements.length > 0) {
-      mapCycles.get(cycle).push(system);
+    var updateRequirements = system.componentRequirements,
+        info = {
+          hasComponents : null != updateRequirements && updateRequirements.length > 0,
+          hasEntity : Reflect.hasField(system, "entity"),
+          hasEntities : null != system.entityRequirements,
+          update : Reflect.field(system, "update")
+        };
+    mapInfo.set(system, info);
+    if(info.hasComponents) {
       systemToComponents.set(system, new Map());
       for(entity in mapEntities.keys())
         matchSystem(entity, system);
-    } else {
-      emptySystems.get(cycle).push(system);
     }
-    if(null != system.entityRequirements) {
+    if(info.hasEntities) {
       systemToEntities.set(system, new Map());
       for(entity in mapEntities.keys())
         matchEntity(entity, system);
     }
   }
 
-  public function popSystem(system : ISystem) {
-    if(!systemToCycle.exists(system))
+  function removeSystem(system : ISystem) {
+    if(!mapSystemToPhase.exists(system))
       return;
-    var cycle = systemToCycle.get(system),
-        updateRequirements = system.componentRequirements;
-    systemToCycle.remove(system);
-    if(null != updateRequirements) {
-      mapCycles.get(cycle).remove(system);
+    mapSystemToPhase.remove(system);
+    var info = mapInfo.get(system);
+    if(info.hasComponents) {
       systemToComponents.remove(system);
-    } else {
-      emptySystems.get(cycle).remove(system);
     }
-    if(null != system.entityRequirements) {
+    if(info.hasEntities) {
       systemToEntities.remove(system);
     }
   }
 
-  public function systems()
-    return systemToCycle.keys();
-
-  inline public function preFrame()
-    updateCycle(Cycle.preFrame);
-
-  inline public function postFrame()
-    updateCycle(Cycle.postFrame);
-
-  inline public function preUpdate()
-    updateCycle(Cycle.preUpdate);
-
-  inline public function update()
-    updateCycle(Cycle.update);
-
-  inline public function postUpdate()
-    updateCycle(Cycle.postUpdate);
-
-  inline public function preRender()
-    updateCycle(Cycle.preRender);
-
-  inline public function render()
-    updateCycle(Cycle.render);
-
-  inline public function postRender()
-    updateCycle(Cycle.postRender);
-
-  // private methods
-  function updateCycle(cycle : Cycle) {
-    for(system in emptySystems.get(cycle)) {
-      Reflect.callMethod(system, Reflect.field(system, "update"), []);
-    }
-    var f;
-    for(system in mapCycles.get(cycle)) {
-      var systemComponents = systemToComponents.get(system),
-          systemEntities = systemToEntities.get(system);
-      f = Reflect.field(system, "update");
-      if(null != f) {
-        for(entity in systemComponents.keys()) {
-          var components = systemComponents.get(entity);
-          if(Reflect.hasField(system, "entity"))
-            Reflect.setField(system, "entity", entity);
-          if(null != systemEntities) {
-            var arr = systemEntities.iterator().toArray();
-            Reflect.setField(system, "entities", arr);
-          }
-          Reflect.callMethod(system, f, components);
-        }
-        continue;
+  function updateSystem(system : ISystem) {
+    var info = mapInfo.get(system);
+    if(!info.hasComponents) {
+      Reflect.callMethod(system, info.update, []);
+    } else {
+      var systemComponents = systemToComponents.get(system);
+      for(entity in systemComponents.keys()) {
+        var components = systemComponents.get(entity);
+        if(info.hasEntity)
+          Reflect.setField(system, "entity", entity);
+        if(info.hasEntities)
+          Reflect.setField(system, "entities", systemToEntities.get(system).iterator().toArray());
+        Reflect.callMethod(system, info.update, components);
       }
     }
   }

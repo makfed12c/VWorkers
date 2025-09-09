@@ -8,21 +8,21 @@ import edge.*;
 class TestAll {
   public function testPhaseNodes() {
     var phase = new Phase(null),
-        it = phase.iterator();
+        it = phase.systems();
     Assert.isFalse(it.hasNext());
     phase.add(new Components2System());
-    it = phase.iterator();
+    it = phase.systems();
     Assert.isTrue(it.hasNext());
     Assert.notNull(it.next());
     Assert.isFalse(it.hasNext());
     phase.add(new Components1System());
-    it = phase.iterator();
+    it = phase.systems();
     Assert.isTrue(it.hasNext());
     Assert.is(it.next(), Components2System);
     Assert.is(it.next(), Components1System);
     Assert.isFalse(it.hasNext());
     phase.removeType(Components2System);
-    it = phase.iterator();
+    it = phase.systems();
     Assert.isTrue(it.hasNext());
     Assert.is(it.next(), Components1System);
     Assert.isFalse(it.hasNext());
@@ -170,7 +170,7 @@ class TestAll {
     Assert.equals(qt, engine.entities().toArray().length, pos);
 
   public function assertNumberOfSystems(engine : Engine, qt : Int, ?pos : haxe.PosInfos)
-    Assert.equals(qt, engine.systems().toArray().length, pos);
+    Assert.equals(qt, engine.systems().length, pos);
 
   public static function main() {
     var runner = new Runner();

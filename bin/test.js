@@ -193,6 +193,9 @@ Reflect.field = function(o,field) {
 		return null;
 	}
 };
+Reflect.setField = function(o,field,value) {
+	o[field] = value;
+};
 Reflect.callMethod = function(o,func,args) {
 	return func.apply(o,args);
 };
@@ -287,128 +290,154 @@ TestAll.main = function() {
 	runner.run();
 };
 TestAll.prototype = {
-	testEngineComponents2System: function() {
+	testPhaseNodes: function() {
+		var phase = new edge.Phase(null);
+		var it = phase.systems();
+		utest.Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 12, className : "TestAll", methodName : "testPhaseNodes"});
+		phase.add(new Components2System());
+		it = phase.systems();
+		utest.Assert.isTrue(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 15, className : "TestAll", methodName : "testPhaseNodes"});
+		utest.Assert.notNull(it.next(),null,{ fileName : "TestAll.hx", lineNumber : 16, className : "TestAll", methodName : "testPhaseNodes"});
+		utest.Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 17, className : "TestAll", methodName : "testPhaseNodes"});
+		phase.add(new Components1System());
+		it = phase.systems();
+		utest.Assert.isTrue(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 20, className : "TestAll", methodName : "testPhaseNodes"});
+		utest.Assert["is"](it.next(),Components2System,null,{ fileName : "TestAll.hx", lineNumber : 21, className : "TestAll", methodName : "testPhaseNodes"});
+		utest.Assert["is"](it.next(),Components1System,null,{ fileName : "TestAll.hx", lineNumber : 22, className : "TestAll", methodName : "testPhaseNodes"});
+		utest.Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 23, className : "TestAll", methodName : "testPhaseNodes"});
+		phase.removeType(Components2System);
+		it = phase.systems();
+		utest.Assert.isTrue(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 26, className : "TestAll", methodName : "testPhaseNodes"});
+		utest.Assert["is"](it.next(),Components1System,null,{ fileName : "TestAll.hx", lineNumber : 27, className : "TestAll", methodName : "testPhaseNodes"});
+		utest.Assert.isFalse(it.hasNext(),null,{ fileName : "TestAll.hx", lineNumber : 28, className : "TestAll", methodName : "testPhaseNodes"});
+	}
+	,testEngineComponents2System: function() {
 		var engine = new edge.Engine();
+		var phase = engine.createPhase();
 		var system = new Components2System();
 		var entity = new edge.Entity([new A(),new B()]);
-		engine.addSystem(system,"update");
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 14, className : "TestAll", methodName : "testEngineComponents2System"});
-		engine.updateCycle("update");
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 16, className : "TestAll", methodName : "testEngineComponents2System"});
-		utest.Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 17, className : "TestAll", methodName : "testEngineComponents2System"});
+		phase.add(system);
+		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 37, className : "TestAll", methodName : "testEngineComponents2System"});
+		phase.update();
+		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 39, className : "TestAll", methodName : "testEngineComponents2System"});
+		utest.Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 40, className : "TestAll", methodName : "testEngineComponents2System"});
 		engine.addEntity(entity);
-		utest.Assert.equals(engine,entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 19, className : "TestAll", methodName : "testEngineComponents2System"});
-		engine.updateCycle("update");
-		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 21, className : "TestAll", methodName : "testEngineComponents2System"});
+		utest.Assert.equals(engine,entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 42, className : "TestAll", methodName : "testEngineComponents2System"});
+		phase.update();
+		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 44, className : "TestAll", methodName : "testEngineComponents2System"});
 		engine.removeEntity(entity);
-		utest.Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 23, className : "TestAll", methodName : "testEngineComponents2System"});
-		engine.updateCycle("update");
-		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 25, className : "TestAll", methodName : "testEngineComponents2System"});
+		utest.Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 46, className : "TestAll", methodName : "testEngineComponents2System"});
+		phase.update();
+		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 48, className : "TestAll", methodName : "testEngineComponents2System"});
 		engine.addEntity(entity);
-		engine.updateCycle("update");
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 28, className : "TestAll", methodName : "testEngineComponents2System"});
+		phase.update();
+		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 51, className : "TestAll", methodName : "testEngineComponents2System"});
 		entity.removeType(A);
-		engine.updateCycle("update");
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 31, className : "TestAll", methodName : "testEngineComponents2System"});
+		phase.update();
+		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 54, className : "TestAll", methodName : "testEngineComponents2System"});
 	}
 	,testEngineComponents1System: function() {
 		var engine = new edge.Engine();
+		var phase = engine.createPhase();
 		var system = new Components1System();
 		var entity = new edge.Entity([new B()]);
-		engine.addSystem(system,"update");
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 39, className : "TestAll", methodName : "testEngineComponents1System"});
-		engine.updateCycle("update");
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 41, className : "TestAll", methodName : "testEngineComponents1System"});
+		phase.add(system);
+		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 63, className : "TestAll", methodName : "testEngineComponents1System"});
+		phase.update();
+		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 65, className : "TestAll", methodName : "testEngineComponents1System"});
 		engine.addEntity(entity);
-		engine.updateCycle("update");
-		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 44, className : "TestAll", methodName : "testEngineComponents1System"});
+		phase.update();
+		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 68, className : "TestAll", methodName : "testEngineComponents1System"});
 		engine.removeEntity(entity);
-		engine.updateCycle("update");
-		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 47, className : "TestAll", methodName : "testEngineComponents1System"});
+		phase.update();
+		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 71, className : "TestAll", methodName : "testEngineComponents1System"});
 		engine.addEntity(entity);
-		engine.updateCycle("update");
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 50, className : "TestAll", methodName : "testEngineComponents1System"});
+		phase.update();
+		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 74, className : "TestAll", methodName : "testEngineComponents1System"});
 		entity.removeType(B);
-		engine.updateCycle("update");
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 53, className : "TestAll", methodName : "testEngineComponents1System"});
+		phase.update();
+		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 77, className : "TestAll", methodName : "testEngineComponents1System"});
 	}
 	,testEngineComponents1MissingSystem: function() {
 		var engine = new edge.Engine();
+		var phase = engine.createPhase();
 		var system = new Components1System();
 		var entity = new edge.Entity([new A()]);
-		engine.addSystem(system,"update");
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 61, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
-		engine.updateCycle("update");
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 63, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
+		phase.add(system);
+		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 86, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
+		phase.update();
+		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 88, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 		engine.addEntity(entity);
-		engine.updateCycle("update");
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 66, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
+		phase.update();
+		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 91, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 		engine.removeEntity(entity);
-		engine.updateCycle("update");
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 69, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
+		phase.update();
+		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 94, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 	}
 	,testEngineNoComponentSystem: function() {
 		var engine = new edge.Engine();
+		var phase = engine.createPhase();
 		var system = new NoComponentsSystem();
-		engine.addSystem(system,"update");
-		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 76, className : "TestAll", methodName : "testEngineNoComponentSystem"});
-		engine.updateCycle("update");
-		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 78, className : "TestAll", methodName : "testEngineNoComponentSystem"});
-		engine.updateCycle("update");
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 80, className : "TestAll", methodName : "testEngineNoComponentSystem"});
-		engine.removeSystem(system);
-		engine.updateCycle("update");
-		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 83, className : "TestAll", methodName : "testEngineNoComponentSystem"});
+		phase.add(system);
+		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 102, className : "TestAll", methodName : "testEngineNoComponentSystem"});
+		phase.update();
+		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 104, className : "TestAll", methodName : "testEngineNoComponentSystem"});
+		phase.update();
+		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 106, className : "TestAll", methodName : "testEngineNoComponentSystem"});
+		phase.remove(system);
+		phase.update();
+		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 109, className : "TestAll", methodName : "testEngineNoComponentSystem"});
 	}
 	,testEngineSystemCounting: function() {
 		var engine = new edge.Engine();
+		var phase = engine.createPhase();
 		var s1 = new NoComponentsSystem();
 		var s2 = new Components2System();
-		this.assertNumberOfEntities(engine,0,{ fileName : "TestAll.hx", lineNumber : 90, className : "TestAll", methodName : "testEngineSystemCounting"});
-		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 91, className : "TestAll", methodName : "testEngineSystemCounting"});
-		engine.addSystem(s1,"update");
-		this.assertNumberOfSystems(engine,1,{ fileName : "TestAll.hx", lineNumber : 93, className : "TestAll", methodName : "testEngineSystemCounting"});
-		engine.addSystem(s2,"update");
-		this.assertNumberOfSystems(engine,2,{ fileName : "TestAll.hx", lineNumber : 95, className : "TestAll", methodName : "testEngineSystemCounting"});
-		engine.removeSystem(s1);
-		this.assertNumberOfSystems(engine,1,{ fileName : "TestAll.hx", lineNumber : 97, className : "TestAll", methodName : "testEngineSystemCounting"});
-		engine.removeSystem(s1);
-		this.assertNumberOfSystems(engine,1,{ fileName : "TestAll.hx", lineNumber : 99, className : "TestAll", methodName : "testEngineSystemCounting"});
-		engine.removeSystem(s2);
-		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 101, className : "TestAll", methodName : "testEngineSystemCounting"});
+		this.assertNumberOfEntities(engine,0,{ fileName : "TestAll.hx", lineNumber : 117, className : "TestAll", methodName : "testEngineSystemCounting"});
+		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 118, className : "TestAll", methodName : "testEngineSystemCounting"});
+		phase.add(s1);
+		this.assertNumberOfSystems(engine,1,{ fileName : "TestAll.hx", lineNumber : 120, className : "TestAll", methodName : "testEngineSystemCounting"});
+		phase.add(s2);
+		this.assertNumberOfSystems(engine,2,{ fileName : "TestAll.hx", lineNumber : 122, className : "TestAll", methodName : "testEngineSystemCounting"});
+		phase.remove(s1);
+		this.assertNumberOfSystems(engine,1,{ fileName : "TestAll.hx", lineNumber : 124, className : "TestAll", methodName : "testEngineSystemCounting"});
+		phase.remove(s1);
+		this.assertNumberOfSystems(engine,1,{ fileName : "TestAll.hx", lineNumber : 126, className : "TestAll", methodName : "testEngineSystemCounting"});
+		phase.remove(s2);
+		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 128, className : "TestAll", methodName : "testEngineSystemCounting"});
 	}
 	,testEngineEntity: function() {
 		var engine = new edge.Engine();
 		var e1 = new edge.Entity();
 		var e2 = new edge.Entity();
-		this.assertNumberOfEntities(engine,0,{ fileName : "TestAll.hx", lineNumber : 108, className : "TestAll", methodName : "testEngineEntity"});
-		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 109, className : "TestAll", methodName : "testEngineEntity"});
+		this.assertNumberOfEntities(engine,0,{ fileName : "TestAll.hx", lineNumber : 135, className : "TestAll", methodName : "testEngineEntity"});
+		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 136, className : "TestAll", methodName : "testEngineEntity"});
 		engine.addEntity(e1);
-		this.assertNumberOfEntities(engine,1,{ fileName : "TestAll.hx", lineNumber : 111, className : "TestAll", methodName : "testEngineEntity"});
-		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 112, className : "TestAll", methodName : "testEngineEntity"});
+		this.assertNumberOfEntities(engine,1,{ fileName : "TestAll.hx", lineNumber : 138, className : "TestAll", methodName : "testEngineEntity"});
+		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 139, className : "TestAll", methodName : "testEngineEntity"});
 		engine.addEntity(e2);
-		this.assertNumberOfEntities(engine,2,{ fileName : "TestAll.hx", lineNumber : 114, className : "TestAll", methodName : "testEngineEntity"});
+		this.assertNumberOfEntities(engine,2,{ fileName : "TestAll.hx", lineNumber : 141, className : "TestAll", methodName : "testEngineEntity"});
 		engine.removeEntity(e1);
-		this.assertNumberOfEntities(engine,1,{ fileName : "TestAll.hx", lineNumber : 116, className : "TestAll", methodName : "testEngineEntity"});
+		this.assertNumberOfEntities(engine,1,{ fileName : "TestAll.hx", lineNumber : 143, className : "TestAll", methodName : "testEngineEntity"});
 		engine.removeEntity(e1);
-		this.assertNumberOfEntities(engine,1,{ fileName : "TestAll.hx", lineNumber : 118, className : "TestAll", methodName : "testEngineEntity"});
+		this.assertNumberOfEntities(engine,1,{ fileName : "TestAll.hx", lineNumber : 145, className : "TestAll", methodName : "testEngineEntity"});
 		engine.removeEntity(e2);
-		this.assertNumberOfEntities(engine,0,{ fileName : "TestAll.hx", lineNumber : 120, className : "TestAll", methodName : "testEngineEntity"});
+		this.assertNumberOfEntities(engine,0,{ fileName : "TestAll.hx", lineNumber : 147, className : "TestAll", methodName : "testEngineEntity"});
 	}
 	,testEntity: function() {
 		var entity = new edge.Entity();
-		utest.Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 125, className : "TestAll", methodName : "testEntity"});
+		utest.Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 152, className : "TestAll", methodName : "testEntity"});
 		entity.add(new A());
-		this.assertNumberOfComponents(entity,1,{ fileName : "TestAll.hx", lineNumber : 127, className : "TestAll", methodName : "testEntity"});
+		this.assertNumberOfComponents(entity,1,{ fileName : "TestAll.hx", lineNumber : 154, className : "TestAll", methodName : "testEntity"});
 		entity.add(new B());
-		this.assertNumberOfComponents(entity,2,{ fileName : "TestAll.hx", lineNumber : 129, className : "TestAll", methodName : "testEntity"});
+		this.assertNumberOfComponents(entity,2,{ fileName : "TestAll.hx", lineNumber : 156, className : "TestAll", methodName : "testEntity"});
 		var a = new A();
 		entity.add(a);
-		this.assertNumberOfComponents(entity,2,{ fileName : "TestAll.hx", lineNumber : 132, className : "TestAll", methodName : "testEntity"});
+		this.assertNumberOfComponents(entity,2,{ fileName : "TestAll.hx", lineNumber : 159, className : "TestAll", methodName : "testEntity"});
 		entity.remove(a);
-		this.assertNumberOfComponents(entity,1,{ fileName : "TestAll.hx", lineNumber : 134, className : "TestAll", methodName : "testEntity"});
+		this.assertNumberOfComponents(entity,1,{ fileName : "TestAll.hx", lineNumber : 161, className : "TestAll", methodName : "testEntity"});
 		entity.removeType(B);
-		this.assertNumberOfComponents(entity,0,{ fileName : "TestAll.hx", lineNumber : 136, className : "TestAll", methodName : "testEntity"});
+		this.assertNumberOfComponents(entity,0,{ fileName : "TestAll.hx", lineNumber : 163, className : "TestAll", methodName : "testEntity"});
 	}
 	,assertNumberOfComponents: function(entity,qt,pos) {
 		utest.Assert.equals(qt,thx.core.Iterators.toArray(entity.map.iterator()).length,null,pos);
@@ -417,7 +446,7 @@ TestAll.prototype = {
 		utest.Assert.equals(qt,thx.core.Iterators.toArray(engine.entities()).length,null,pos);
 	}
 	,assertNumberOfSystems: function(engine,qt,pos) {
-		utest.Assert.equals(qt,thx.core.Iterators.toArray(engine.systems()).length,null,pos);
+		utest.Assert.equals(qt,engine.systems().length,null,pos);
 	}
 	,__class__: TestAll
 };
@@ -455,8 +484,8 @@ Components2System.__interfaces__ = [edge.ISystem];
 Components2System.prototype = {
 	count: null
 	,update: function(b,a) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 177, className : "Components2System", methodName : "update"});
-		utest.Assert["is"](a,A,null,{ fileName : "TestAll.hx", lineNumber : 178, className : "Components2System", methodName : "update"});
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 204, className : "Components2System", methodName : "update"});
+		utest.Assert["is"](a,A,null,{ fileName : "TestAll.hx", lineNumber : 205, className : "Components2System", methodName : "update"});
 		this.count++;
 	}
 	,componentRequirements: null
@@ -473,7 +502,7 @@ Components1System.__interfaces__ = [edge.ISystem];
 Components1System.prototype = {
 	count: null
 	,update: function(b) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 191, className : "Components1System", methodName : "update"});
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 218, className : "Components1System", methodName : "update"});
 		this.count++;
 	}
 	,componentRequirements: null
@@ -576,7 +605,9 @@ Type.enumIndex = function(e) {
 edge.Engine = function() {
 	var _g = this;
 	this.systemToCycle = new haxe.ds.ObjectMap();
+	this.mapInfo = new haxe.ds.ObjectMap();
 	this.mapCycles = new haxe.ds.StringMap();
+	this.mapSystemToPhase = new haxe.ds.ObjectMap();
 	this.emptySystems = new haxe.ds.StringMap();
 	["preFrame","postFrame","preUpdate","update","postUpdate","preRender","render","postRender"].map(function(s) {
 		_g.emptySystems.set(s,[]);
@@ -585,15 +616,19 @@ edge.Engine = function() {
 	this.systemToComponents = new haxe.ds.ObjectMap();
 	this.systemToEntities = new haxe.ds.ObjectMap();
 	this.mapEntities = new haxe.ds.ObjectMap();
+	this.listPhases = [];
 };
 edge.Engine.__name__ = ["edge","Engine"];
 edge.Engine.prototype = {
-	mapEntities: null
+	mapSystemToPhase: null
+	,mapInfo: null
+	,mapEntities: null
 	,systemToCycle: null
 	,mapCycles: null
 	,emptySystems: null
 	,systemToComponents: null
 	,systemToEntities: null
+	,listPhases: null
 	,addEntity: function(entity) {
 		entity.engine = this;
 		this.mapEntities.set(entity,true);
@@ -619,12 +654,25 @@ edge.Engine.prototype = {
 	,entities: function() {
 		return this.mapEntities.keys();
 	}
-	,addSystem: function(system,cycle) {
-		this.removeSystem(system);
-		this.systemToCycle.set(system,cycle);
+	,createPhase: function() {
+		var phase = new edge.Phase(this);
+		this.listPhases.push(phase);
+		return phase;
+	}
+	,phases: function() {
+		return HxOverrides.iter(this.listPhases);
+	}
+	,systems: function() {
+		return thx.core.Arrays.flatten(this.listPhases.map(function(_) {
+			return thx.core.Iterators.toArray(_.systems());
+		}));
+	}
+	,addSystem: function(phase,system) {
+		this.mapSystemToPhase.set(system,phase);
 		var updateRequirements = system.componentRequirements;
-		if(null != updateRequirements && updateRequirements.length > 0) {
-			this.mapCycles.get(cycle).push(system);
+		var info = { hasComponents : null != updateRequirements && updateRequirements.length > 0, hasEntity : Object.prototype.hasOwnProperty.call(system,"entity"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update")};
+		this.mapInfo.set(system,info);
+		if(info.hasComponents) {
 			var value = new haxe.ds.ObjectMap();
 			this.systemToComponents.set(system,value);
 			var $it0 = this.mapEntities.keys();
@@ -632,8 +680,8 @@ edge.Engine.prototype = {
 				var entity = $it0.next();
 				this.matchSystem(entity,system);
 			}
-		} else this.emptySystems.get(cycle).push(system);
-		if(null != system.entityRequirements) {
+		}
+		if(info.hasEntities) {
 			var value1 = new haxe.ds.ObjectMap();
 			this.systemToEntities.set(system,value1);
 			var $it1 = this.mapEntities.keys();
@@ -644,77 +692,28 @@ edge.Engine.prototype = {
 		}
 	}
 	,removeSystem: function(system) {
-		if(!(this.systemToCycle.h.__keys__[system.__id__] != null)) return;
-		var cycle = this.systemToCycle.h[system.__id__];
-		var updateRequirements = system.componentRequirements;
-		this.systemToCycle.remove(system);
-		if(null != updateRequirements) {
-			var _this = this.mapCycles.get(cycle);
-			HxOverrides.remove(_this,system);
-			this.systemToComponents.remove(system);
-		} else {
-			var _this1 = this.emptySystems.get(cycle);
-			HxOverrides.remove(_this1,system);
-		}
-		if(null != system.entityRequirements) this.systemToEntities.remove(system);
+		if(!(this.mapSystemToPhase.h.__keys__[system.__id__] != null)) return;
+		this.mapSystemToPhase.remove(system);
+		var info = this.mapInfo.h[system.__id__];
+		if(info.hasComponents) this.systemToComponents.remove(system);
+		if(info.hasEntities) this.systemToEntities.remove(system);
 	}
-	,systems: function() {
-		return this.systemToCycle.keys();
-	}
-	,preFrame: function() {
-		this.updateCycle("preFrame");
-	}
-	,postFrame: function() {
-		this.updateCycle("preFrame");
-	}
-	,preUpdate: function() {
-		this.updateCycle("preUpdate");
-	}
-	,update: function() {
-		this.updateCycle("update");
-	}
-	,postUpdate: function() {
-		this.updateCycle("postUpdate");
-	}
-	,preRender: function() {
-		this.updateCycle("preRender");
-	}
-	,render: function() {
-		this.updateCycle("render");
-	}
-	,postRender: function() {
-		this.updateCycle("postRender");
-	}
-	,updateCycle: function(cycle) {
-		var _g = 0;
-		var _g1 = this.emptySystems.get(cycle);
-		while(_g < _g1.length) {
-			var system = _g1[_g];
-			++_g;
-			Reflect.callMethod(system,Reflect.field(system,"update"),[]);
-		}
-		var f;
-		var _g2 = 0;
-		var _g11 = this.mapCycles.get(cycle);
-		while(_g2 < _g11.length) {
-			var system1 = _g11[_g2];
-			++_g2;
-			var systemComponents = this.systemToComponents.h[system1.__id__];
-			var systemEntities = this.systemToEntities.h[system1.__id__];
-			f = Reflect.field(system1,"update");
-			if(null != f) {
-				var $it0 = systemComponents.keys();
-				while( $it0.hasNext() ) {
-					var entity = $it0.next();
-					var components = systemComponents.h[entity.__id__];
-					if(Object.prototype.hasOwnProperty.call(system1,"entity")) system1.entity = entity;
-					if(null != systemEntities) {
-						var arr = thx.core.Iterators.toArray(systemEntities.iterator());
-						system1.entities = arr;
-					}
-					f.apply(system1,components);
-				}
-				continue;
+	,updateSystem: function(system) {
+		var info = this.mapInfo.h[system.__id__];
+		if(!info.hasComponents) Reflect.callMethod(system,info.update,[]); else {
+			var systemComponents = this.systemToComponents.h[system.__id__];
+			var $it0 = systemComponents.keys();
+			while( $it0.hasNext() ) {
+				var entity = $it0.next();
+				var components = systemComponents.h[entity.__id__];
+				if(info.hasEntity) system.entity = entity;
+				if(info.hasEntities) Reflect.setField(system,"entities",thx.core.Iterators.toArray((function($this) {
+					var $r;
+					var this1 = $this.systemToEntities.h[system.__id__];
+					$r = this1.iterator();
+					return $r;
+				}(this))));
+				Reflect.callMethod(system,info.update,components);
 			}
 		}
 	}
@@ -848,6 +847,138 @@ edge.Entity.prototype = {
 	}
 	,__class__: edge.Entity
 };
+edge.Phase = function(engine) {
+	this.engine = engine;
+	this.mapSystem = new haxe.ds.ObjectMap();
+	this.mapType = new haxe.ds.StringMap();
+};
+edge.Phase.__name__ = ["edge","Phase"];
+edge.Phase.prototype = {
+	first: null
+	,last: null
+	,mapSystem: null
+	,mapType: null
+	,engine: null
+	,add: function(system) {
+		this.remove(system);
+		var node = this.createNode(system);
+		if(null == this.first) {
+			this.first = node;
+			this.last = node;
+		} else {
+			node.prev = this.last;
+			this.last.next = node;
+			this.last = node;
+		}
+	}
+	,insertBefore: function(ref,system) {
+		var noderef = this.mapSystem.h[ref.__id__];
+		if(null == noderef) throw "Phase.insertBefore: unable to find " + Std.string(ref) + " system";
+		var node = this.createNode(system);
+		if(noderef == this.first) {
+			node.next = noderef;
+			noderef.prev = node;
+			this.first = node;
+		} else {
+			var prev = noderef.prev;
+			prev.next = node;
+			node.prev = prev;
+			node.next = noderef;
+			noderef.prev = node;
+		}
+	}
+	,insertAfter: function(ref,system) {
+		var noderef = this.mapSystem.h[ref.__id__];
+		if(null == noderef) throw "Phase.insertAfter: unable to find " + Std.string(ref) + " system";
+		var node = this.createNode(system);
+		if(noderef == this.last) {
+			node.prev = noderef;
+			noderef.next = node;
+			this.last = node;
+		} else {
+			var next = noderef.next;
+			next.prev = node;
+			node.next = next;
+			node.prev = noderef;
+			noderef.next = node;
+		}
+	}
+	,remove: function(system) {
+		var node = this.mapSystem.h[system.__id__];
+		var key = this.key(system);
+		this.mapType.remove(key);
+		if(null == node) return;
+		if(null != this.engine) this.engine.removeSystem(system);
+		this.mapSystem.remove(system);
+		if(node == this.first && node == this.last) this.first = this.last = null; else if(node == this.first) {
+			this.first = node.next;
+			node.next.prev = null;
+		} else if(node == this.last) {
+			this.first = node.prev;
+			node.prev.next = null;
+		} else {
+			node.prev.next = node.next;
+			node.next.prev = node.prev;
+		}
+	}
+	,removeType: function(cls) {
+		var system;
+		var key = Type.getClassName(cls);
+		system = this.mapType.get(key);
+		if(null == system) throw "type system " + Type.getClassName(cls) + " is not included in this Phase";
+		this.remove(system);
+		return;
+	}
+	,systems: function() {
+		return new edge.NodeSystemIterator(this.first);
+	}
+	,update: function() {
+		if(null == this.engine) return;
+		var $it0 = this.systems();
+		while( $it0.hasNext() ) {
+			var system = $it0.next();
+			this.engine.updateSystem(system);
+		}
+	}
+	,createNode: function(system) {
+		var node = new edge.NodeSystem(system);
+		this.mapSystem.set(system,node);
+		var key = this.key(system);
+		this.mapType.set(key,system);
+		if(null != this.engine) this.engine.addSystem(this,system);
+		return node;
+	}
+	,key: function(system) {
+		return Type.getClassName(Type.getClass(system));
+	}
+	,__class__: edge.Phase
+};
+edge.NodeSystem = function(system) {
+	this.system = system;
+};
+edge.NodeSystem.__name__ = ["edge","NodeSystem"];
+edge.NodeSystem.prototype = {
+	system: null
+	,next: null
+	,prev: null
+	,__class__: edge.NodeSystem
+};
+edge.NodeSystemIterator = function(node) {
+	this.node = node;
+};
+edge.NodeSystemIterator.__name__ = ["edge","NodeSystemIterator"];
+edge.NodeSystemIterator.prototype = {
+	node: null
+	,hasNext: function() {
+		return null != this.node;
+	}
+	,next: function() {
+		var system = this.node.system;
+		this.node = this.node.next;
+		return system;
+	}
+	,__class__: edge.NodeSystemIterator
+};
 var haxe = {};
 haxe.StackItem = { __ename__ : ["haxe","StackItem"], __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
 haxe.StackItem.CFunction = ["CFunction",0];
@@ -955,6 +1086,7 @@ haxe.IMap.prototype = {
 	get: null
 	,remove: null
 	,keys: null
+	,iterator: null
 	,__class__: haxe.IMap
 };
 haxe.Log = function() { };
