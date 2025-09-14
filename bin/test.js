@@ -607,7 +607,6 @@ edge.Engine = function() {
 	this.systemToCycle = new haxe.ds.ObjectMap();
 	this.mapInfo = new haxe.ds.ObjectMap();
 	this.mapCycles = new haxe.ds.StringMap();
-	this.mapSystemToPhase = new haxe.ds.ObjectMap();
 	this.emptySystems = new haxe.ds.StringMap();
 	["preFrame","postFrame","preUpdate","update","postUpdate","preRender","render","postRender"].map(function(s) {
 		_g.emptySystems.set(s,[]);
@@ -620,8 +619,7 @@ edge.Engine = function() {
 };
 edge.Engine.__name__ = ["edge","Engine"];
 edge.Engine.prototype = {
-	mapSystemToPhase: null
-	,mapInfo: null
+	mapInfo: null
 	,mapEntities: null
 	,systemToCycle: null
 	,mapCycles: null
@@ -668,9 +666,8 @@ edge.Engine.prototype = {
 		}));
 	}
 	,addSystem: function(phase,system) {
-		this.mapSystemToPhase.set(system,phase);
 		var updateRequirements = system.componentRequirements;
-		var info = { hasComponents : null != updateRequirements && updateRequirements.length > 0, hasEntity : Object.prototype.hasOwnProperty.call(system,"entity"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update")};
+		var info = { hasComponents : null != updateRequirements && updateRequirements.length > 0, hasEntity : Object.prototype.hasOwnProperty.call(system,"entity"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase};
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
 			var value = new haxe.ds.ObjectMap();
@@ -692,9 +689,9 @@ edge.Engine.prototype = {
 		}
 	}
 	,removeSystem: function(system) {
-		if(!(this.mapSystemToPhase.h.__keys__[system.__id__] != null)) return;
-		this.mapSystemToPhase.remove(system);
+		if(!(this.mapInfo.h.__keys__[system.__id__] != null)) return;
 		var info = this.mapInfo.h[system.__id__];
+		this.mapInfo.remove(system);
 		if(info.hasComponents) this.systemToComponents.remove(system);
 		if(info.hasEntities) this.systemToEntities.remove(system);
 	}

@@ -7,7 +7,6 @@ using thx.core.Iterators;
 
 @:access(edge.Entity)
 class Engine {
-  var mapSystemToPhase : Map<ISystem, Phase>;
   var mapInfo : Map<ISystem, SystemInfo>;
   var mapEntities : Map<Entity, Bool>;
   var systemToCycle : Map<ISystem, Cycle>;
@@ -22,7 +21,6 @@ class Engine {
     systemToCycle = new Map();
     mapInfo = new Map();
     mapCycles = new Map();
-    mapSystemToPhase = new Map();
     emptySystems = new Map();
     [
       Cycle.preFrame,  Cycle.postFrame,
@@ -72,13 +70,13 @@ class Engine {
 
   // private methods
   function addSystem(phase : Phase, system : ISystem) {
-    mapSystemToPhase.set(system, phase);
     var updateRequirements = system.componentRequirements,
         info = {
           hasComponents : null != updateRequirements && updateRequirements.length > 0,
           hasEntity : Reflect.hasField(system, "entity"),
           hasEntities : null != system.entityRequirements,
-          update : Reflect.field(system, "update")
+          update : Reflect.field(system, "update"),
+          phase : phase
         };
     mapInfo.set(system, info);
     if(info.hasComponents) {
@@ -94,10 +92,10 @@ class Engine {
   }
 
   function removeSystem(system : ISystem) {
-    if(!mapSystemToPhase.exists(system))
+    if(!mapInfo.exists(system))
       return;
-    mapSystemToPhase.remove(system);
     var info = mapInfo.get(system);
+    mapInfo.remove(system);
     if(info.hasComponents) {
       systemToComponents.remove(system);
     }
@@ -180,5 +178,6 @@ typedef SystemInfo = {
   hasComponents : Bool,
   hasEntity : Bool,
   hasEntities : Bool,
-  update : Dynamic
+  update : Dynamic,
+  phase : Phase
 }
