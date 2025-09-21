@@ -604,7 +604,6 @@ Type.enumIndex = function(e) {
 };
 edge.Engine = function() {
 	var _g = this;
-	this.systemToCycle = new haxe.ds.ObjectMap();
 	this.mapInfo = new haxe.ds.ObjectMap();
 	this.mapCycles = new haxe.ds.StringMap();
 	this.emptySystems = new haxe.ds.StringMap();
@@ -621,7 +620,6 @@ edge.Engine.__name__ = ["edge","Engine"];
 edge.Engine.prototype = {
 	mapInfo: null
 	,mapEntities: null
-	,systemToCycle: null
 	,mapCycles: null
 	,emptySystems: null
 	,systemToComponents: null
