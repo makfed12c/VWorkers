@@ -9,7 +9,6 @@ using thx.core.Iterators;
 class Engine {
   var mapInfo : Map<ISystem, SystemInfo>;
   var mapEntities : Map<Entity, Bool>;
-  var mapCycles : Map<Cycle, Array<ISystem>>;
   var emptySystems : Map<Cycle, Array<ISystem>>;
   var systemToComponents : Map<ISystem, Map<Entity, Array<Dynamic>>>;
   var systemToEntities : Map<ISystem, Map<Entity, Dynamic>>;
@@ -18,7 +17,6 @@ class Engine {
 
   public function new() {
     mapInfo = new Map();
-    mapCycles = new Map();
     emptySystems = new Map();
     [
       Cycle.preFrame,  Cycle.postFrame,
@@ -26,7 +24,6 @@ class Engine {
       Cycle.preRender, Cycle.render, Cycle.postRender
     ].map(function(s) {
         emptySystems.set(s, []);
-        mapCycles.set(s, []);
       });
     systemToComponents = new Map();
     systemToEntities = new Map();
