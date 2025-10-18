@@ -603,22 +603,16 @@ Type.enumIndex = function(e) {
 	return e[1];
 };
 edge.Engine = function() {
-	var _g = this;
 	this.mapInfo = new haxe.ds.ObjectMap();
-	this.emptySystems = new haxe.ds.StringMap();
-	["preFrame","postFrame","preUpdate","update","postUpdate","preRender","render","postRender"].map(function(s) {
-		_g.emptySystems.set(s,[]);
-	});
+	this.mapEntities = new haxe.ds.ObjectMap();
 	this.systemToComponents = new haxe.ds.ObjectMap();
 	this.systemToEntities = new haxe.ds.ObjectMap();
-	this.mapEntities = new haxe.ds.ObjectMap();
 	this.listPhases = [];
 };
 edge.Engine.__name__ = ["edge","Engine"];
 edge.Engine.prototype = {
 	mapInfo: null
 	,mapEntities: null
-	,emptySystems: null
 	,systemToComponents: null
 	,systemToEntities: null
 	,listPhases: null

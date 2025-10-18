@@ -11,14 +11,13 @@ class Engine {
   var mapEntities : Map<Entity, Bool>;
   var systemToComponents : Map<ISystem, Map<Entity, Array<Dynamic>>>;
   var systemToEntities : Map<ISystem, Map<Entity, Dynamic>>;
-
   var listPhases : Array<Phase>;
 
   public function new() {
     mapInfo = new Map();
+    mapEntities = new Map();
     systemToComponents = new Map();
     systemToEntities = new Map();
-    mapEntities = new Map();
     listPhases = [];
   }
 
