@@ -605,7 +605,6 @@ Type.enumIndex = function(e) {
 edge.Engine = function() {
 	this.mapInfo = new haxe.ds.ObjectMap();
 	this.mapEntities = new haxe.ds.ObjectMap();
-	this.systemToComponents = new haxe.ds.ObjectMap();
 	this.systemToEntities = new haxe.ds.ObjectMap();
 	this.listPhases = [];
 };
@@ -613,7 +612,6 @@ edge.Engine.__name__ = ["edge","Engine"];
 edge.Engine.prototype = {
 	mapInfo: null
 	,mapEntities: null
-	,systemToComponents: null
 	,systemToEntities: null
 	,listPhases: null
 	,addEntity: function(entity) {
@@ -623,10 +621,10 @@ edge.Engine.prototype = {
 		this.matchEntities(entity);
 	}
 	,removeEntity: function(entity) {
-		var $it0 = this.systemToComponents.keys();
+		var $it0 = this.mapInfo.keys();
 		while( $it0.hasNext() ) {
 			var system = $it0.next();
-			var this1 = this.systemToComponents.h[system.__id__];
+			var this1 = this.mapInfo.h[system.__id__].components;
 			this1.remove(entity);
 		}
 		var $it1 = this.systemToEntities.keys();
@@ -655,12 +653,9 @@ edge.Engine.prototype = {
 		}));
 	}
 	,addSystem: function(phase,system) {
-		var updateRequirements = system.componentRequirements;
-		var info = { hasComponents : null != updateRequirements && updateRequirements.length > 0, hasEntity : Object.prototype.hasOwnProperty.call(system,"entity"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase};
+		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasEntity : Object.prototype.hasOwnProperty.call(system,"entity"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, components : new haxe.ds.ObjectMap()};
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
-			var value = new haxe.ds.ObjectMap();
-			this.systemToComponents.set(system,value);
 			var $it0 = this.mapEntities.keys();
 			while( $it0.hasNext() ) {
 				var entity = $it0.next();
@@ -668,8 +663,8 @@ edge.Engine.prototype = {
 			}
 		}
 		if(info.hasEntities) {
-			var value1 = new haxe.ds.ObjectMap();
-			this.systemToEntities.set(system,value1);
+			var value = new haxe.ds.ObjectMap();
+			this.systemToEntities.set(system,value);
 			var $it1 = this.mapEntities.keys();
 			while( $it1.hasNext() ) {
 				var entity1 = $it1.next();
@@ -681,17 +676,15 @@ edge.Engine.prototype = {
 		if(!(this.mapInfo.h.__keys__[system.__id__] != null)) return;
 		var info = this.mapInfo.h[system.__id__];
 		this.mapInfo.remove(system);
-		if(info.hasComponents) this.systemToComponents.remove(system);
 		if(info.hasEntities) this.systemToEntities.remove(system);
 	}
 	,updateSystem: function(system) {
 		var info = this.mapInfo.h[system.__id__];
 		if(!info.hasComponents) Reflect.callMethod(system,info.update,[]); else {
-			var systemComponents = this.systemToComponents.h[system.__id__];
-			var $it0 = systemComponents.keys();
+			var $it0 = info.components.keys();
 			while( $it0.hasNext() ) {
 				var entity = $it0.next();
-				var components = systemComponents.h[entity.__id__];
+				var components = info.components.h[entity.__id__];
 				if(info.hasEntity) system.entity = entity;
 				if(info.hasEntities) Reflect.setField(system,"entities",thx.core.Iterators.toArray((function($this) {
 					var $r;
@@ -704,7 +697,7 @@ edge.Engine.prototype = {
 		}
 	}
 	,matchSystems: function(entity) {
-		var $it0 = this.systemToComponents.keys();
+		var $it0 = this.mapInfo.keys();
 		while( $it0.hasNext() ) {
 			var system = $it0.next();
 			this.matchSystem(entity,system);
@@ -718,11 +711,11 @@ edge.Engine.prototype = {
 		}
 	}
 	,matchSystem: function(entity,system) {
-		var match = this.systemToComponents.h[system.__id__];
-		match.remove(entity);
-		if(system.componentRequirements == null || system.componentRequirements.length == 0) match.set(entity,[]); else {
+		var info = this.mapInfo.h[system.__id__];
+		info.components.remove(entity);
+		if(info.hasComponents) {
 			var components = this.matchRequirements(entity,system.componentRequirements);
-			if(null != components) match.set(entity,components);
+			if(null != components) info.components.set(entity,components);
 		}
 	}
 	,matchEntity: function(entity,system) {

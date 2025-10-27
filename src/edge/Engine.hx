@@ -9,14 +9,12 @@ using thx.core.Iterators;
 class Engine {
   var mapInfo : Map<ISystem, SystemInfo>;
   var mapEntities : Map<Entity, Bool>;
-  var systemToComponents : Map<ISystem, Map<Entity, Array<Dynamic>>>;
   var systemToEntities : Map<ISystem, Map<Entity, Dynamic>>;
   var listPhases : Array<Phase>;
 
   public function new() {
     mapInfo = new Map();
     mapEntities = new Map();
-    systemToComponents = new Map();
     systemToEntities = new Map();
     listPhases = [];
   }
@@ -29,8 +27,8 @@ class Engine {
   }
 
   public function removeEntity(entity : Entity) {
-    for(system in systemToComponents.keys())
-      systemToComponents.get(system).remove(entity);
+    for(system in mapInfo.keys())
+      mapInfo.get(system).components.remove(entity);
     for(system in systemToEntities.keys())
       systemToEntities.get(system).remove(entity);
     mapEntities.remove(entity);
@@ -55,17 +53,16 @@ class Engine {
 
   // private methods
   function addSystem(phase : Phase, system : ISystem) {
-    var updateRequirements = system.componentRequirements,
-        info = {
-          hasComponents : null != updateRequirements && updateRequirements.length > 0,
+    var info = {
+          hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0,
           hasEntity : Reflect.hasField(system, "entity"),
           hasEntities : null != system.entityRequirements,
           update : Reflect.field(system, "update"),
-          phase : phase
+          phase : phase,
+          components : new Map()
         };
     mapInfo.set(system, info);
     if(info.hasComponents) {
-      systemToComponents.set(system, new Map());
       for(entity in mapEntities.keys())
         matchSystem(entity, system);
     }
@@ -81,9 +78,6 @@ class Engine {
       return;
     var info = mapInfo.get(system);
     mapInfo.remove(system);
-    if(info.hasComponents) {
-      systemToComponents.remove(system);
-    }
     if(info.hasEntities) {
       systemToEntities.remove(system);
     }
@@ -94,9 +88,8 @@ class Engine {
     if(!info.hasComponents) {
       Reflect.callMethod(system, info.update, []);
     } else {
-      var systemComponents = systemToComponents.get(system);
-      for(entity in systemComponents.keys()) {
-        var components = systemComponents.get(entity);
+      for(entity in info.components.keys()) {
+        var components = info.components.get(entity);
         if(info.hasEntity)
           Reflect.setField(system, "entity", entity);
         if(info.hasEntities)
@@ -107,7 +100,7 @@ class Engine {
   }
 
   function matchSystems(entity : Entity) {
-    for(system in systemToComponents.keys()) {
+    for(system in mapInfo.keys()) {
       matchSystem(entity, system);
     }
   }
@@ -119,14 +112,12 @@ class Engine {
   }
 
   function matchSystem(entity : Entity, system : ISystem) {
-    var match = systemToComponents.get(system);
-    match.remove(entity);
-    if(system.componentRequirements == null || system.componentRequirements.length == 0) {
-      match.set(entity, []);
-    } else {
+    var info = mapInfo.get(system);
+    info.components.remove(entity);
+    if(info.hasComponents) {
       var components = matchRequirements(entity, system.componentRequirements);
       if(null != components)
-        match.set(entity, components);
+        info.components.set(entity, components);
     }
   }
 
@@ -164,5 +155,6 @@ typedef SystemInfo = {
   hasEntity : Bool,
   hasEntities : Bool,
   update : Dynamic,
-  phase : Phase
+  phase : Phase,
+  components : Map<Entity, Array<Dynamic>>
 }
