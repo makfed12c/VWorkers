@@ -446,7 +446,7 @@ TestAll.prototype = {
 		utest.Assert.equals(qt,thx.core.Iterators.toArray(engine.entities()).length,null,pos);
 	}
 	,assertNumberOfSystems: function(engine,qt,pos) {
-		utest.Assert.equals(qt,engine.systems().length,null,pos);
+		utest.Assert.equals(qt,thx.core.Iterators.toArray(engine.systems()).length,null,pos);
 	}
 	,__class__: TestAll
 };
@@ -605,14 +605,12 @@ Type.enumIndex = function(e) {
 edge.Engine = function() {
 	this.mapInfo = new haxe.ds.ObjectMap();
 	this.mapEntities = new haxe.ds.ObjectMap();
-	this.systemToEntities = new haxe.ds.ObjectMap();
 	this.listPhases = [];
 };
 edge.Engine.__name__ = ["edge","Engine"];
 edge.Engine.prototype = {
 	mapInfo: null
 	,mapEntities: null
-	,systemToEntities: null
 	,listPhases: null
 	,addEntity: function(entity) {
 		entity.engine = this;
@@ -627,10 +625,10 @@ edge.Engine.prototype = {
 			var this1 = this.mapInfo.h[system.__id__].components;
 			this1.remove(entity);
 		}
-		var $it1 = this.systemToEntities.keys();
+		var $it1 = this.mapInfo.keys();
 		while( $it1.hasNext() ) {
 			var system1 = $it1.next();
-			var this11 = this.systemToEntities.h[system1.__id__];
+			var this11 = this.mapInfo.h[system1.__id__].entities;
 			this11.remove(entity);
 		}
 		this.mapEntities.remove(entity);
@@ -648,12 +646,11 @@ edge.Engine.prototype = {
 		return HxOverrides.iter(this.listPhases);
 	}
 	,systems: function() {
-		return thx.core.Arrays.flatten(this.listPhases.map(function(_) {
-			return thx.core.Iterators.toArray(_.systems());
-		}));
+		return this.mapInfo.keys();
 	}
 	,addSystem: function(phase,system) {
-		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasEntity : Object.prototype.hasOwnProperty.call(system,"entity"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, components : new haxe.ds.ObjectMap()};
+		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
+		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasEntity : Object.prototype.hasOwnProperty.call(system,"entity"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, components : new haxe.ds.ObjectMap(), entities : new haxe.ds.ObjectMap()};
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
 			var $it0 = this.mapEntities.keys();
@@ -663,8 +660,6 @@ edge.Engine.prototype = {
 			}
 		}
 		if(info.hasEntities) {
-			var value = new haxe.ds.ObjectMap();
-			this.systemToEntities.set(system,value);
 			var $it1 = this.mapEntities.keys();
 			while( $it1.hasNext() ) {
 				var entity1 = $it1.next();
@@ -673,10 +668,7 @@ edge.Engine.prototype = {
 		}
 	}
 	,removeSystem: function(system) {
-		if(!(this.mapInfo.h.__keys__[system.__id__] != null)) return;
-		var info = this.mapInfo.h[system.__id__];
 		this.mapInfo.remove(system);
-		if(info.hasEntities) this.systemToEntities.remove(system);
 	}
 	,updateSystem: function(system) {
 		var info = this.mapInfo.h[system.__id__];
@@ -686,12 +678,7 @@ edge.Engine.prototype = {
 				var entity = $it0.next();
 				var components = info.components.h[entity.__id__];
 				if(info.hasEntity) system.entity = entity;
-				if(info.hasEntities) Reflect.setField(system,"entities",thx.core.Iterators.toArray((function($this) {
-					var $r;
-					var this1 = $this.systemToEntities.h[system.__id__];
-					$r = this1.iterator();
-					return $r;
-				}(this))));
+				if(info.hasEntities) Reflect.setField(system,"entities",thx.core.Iterators.toArray(info.entities.iterator()));
 				Reflect.callMethod(system,info.update,components);
 			}
 		}
@@ -704,7 +691,7 @@ edge.Engine.prototype = {
 		}
 	}
 	,matchEntities: function(entity) {
-		var $it0 = this.systemToEntities.keys();
+		var $it0 = this.mapInfo.keys();
 		while( $it0.hasNext() ) {
 			var system = $it0.next();
 			this.matchEntity(entity,system);
@@ -719,14 +706,16 @@ edge.Engine.prototype = {
 		}
 	}
 	,matchEntity: function(entity,system) {
-		var match = this.systemToEntities.h[system.__id__];
+		var info = this.mapInfo.h[system.__id__];
+		if(!info.hasEntities) return;
+		info.entities.remove(entity);
 		var componentRequirements = system.entityRequirements.map(function(o) {
 			return o.cls;
 		});
-		match.remove(entity);
 		var components = this.matchRequirements(entity,componentRequirements);
+		var o1;
 		if(null != components) {
-			var o1 = { };
+			o1 = { };
 			var _g1 = 0;
 			var _g = components.length;
 			while(_g1 < _g) {
@@ -734,7 +723,7 @@ edge.Engine.prototype = {
 				o1[system.entityRequirements[i].name] = components[i];
 			}
 			o1.entity = entity;
-			match.set(entity,o1);
+			info.entities.set(entity,o1);
 		}
 	}
 	,matchRequirements: function(entity,requirements) {
@@ -1065,7 +1054,6 @@ haxe.IMap.prototype = {
 	get: null
 	,remove: null
 	,keys: null
-	,iterator: null
 	,__class__: haxe.IMap
 };
 haxe.Log = function() { };

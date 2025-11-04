@@ -170,7 +170,7 @@ class TestAll {
     Assert.equals(qt, engine.entities().toArray().length, pos);
 
   public function assertNumberOfSystems(engine : Engine, qt : Int, ?pos : haxe.PosInfos)
-    Assert.equals(qt, engine.systems().length, pos);
+    Assert.equals(qt, engine.systems().toArray().length, pos);
 
   public static function main() {
     var runner = new Runner();
