@@ -460,7 +460,7 @@ edge.ISystem.prototype = {
 };
 var NoComponentsSystem = function() {
 	this.entityRequirements = null;
-	this.componentRequirements = null;
+	this.componentRequirements = [];
 	this.count = 0;
 };
 NoComponentsSystem.__name__ = ["NoComponentsSystem"];
@@ -472,6 +472,9 @@ NoComponentsSystem.prototype = {
 	}
 	,componentRequirements: null
 	,entityRequirements: null
+	,toString: function() {
+		return "NoComponentsSystem";
+	}
 	,__class__: NoComponentsSystem
 };
 var Components2System = function() {
@@ -484,12 +487,15 @@ Components2System.__interfaces__ = [edge.ISystem];
 Components2System.prototype = {
 	count: null
 	,update: function(b,a) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 204, className : "Components2System", methodName : "update"});
-		utest.Assert["is"](a,A,null,{ fileName : "TestAll.hx", lineNumber : 205, className : "Components2System", methodName : "update"});
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 197, className : "Components2System", methodName : "update"});
+		utest.Assert["is"](a,A,null,{ fileName : "TestAll.hx", lineNumber : 198, className : "Components2System", methodName : "update"});
 		this.count++;
 	}
 	,componentRequirements: null
 	,entityRequirements: null
+	,toString: function() {
+		return "Components2System";
+	}
 	,__class__: Components2System
 };
 var Components1System = function() {
@@ -502,12 +508,36 @@ Components1System.__interfaces__ = [edge.ISystem];
 Components1System.prototype = {
 	count: null
 	,update: function(b) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 218, className : "Components1System", methodName : "update"});
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 206, className : "Components1System", methodName : "update"});
 		this.count++;
 	}
 	,componentRequirements: null
 	,entityRequirements: null
+	,toString: function() {
+		return "Components1System";
+	}
 	,__class__: Components1System
+};
+var ComponentsEntitiesSystem = function() {
+	this.entityRequirements = [{ name : "a", cls : A},{ name : "entity", cls : edge.Entity}];
+	this.componentRequirements = [B];
+	this.count = 0;
+};
+ComponentsEntitiesSystem.__name__ = ["ComponentsEntitiesSystem"];
+ComponentsEntitiesSystem.__interfaces__ = [edge.ISystem];
+ComponentsEntitiesSystem.prototype = {
+	count: null
+	,entities: null
+	,update: function(b) {
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 215, className : "ComponentsEntitiesSystem", methodName : "update"});
+		this.count++;
+	}
+	,componentRequirements: null
+	,entityRequirements: null
+	,toString: function() {
+		return "ComponentsEntitiesSystem";
+	}
+	,__class__: ComponentsEntitiesSystem
 };
 var A = function() {
 };

@@ -186,41 +186,35 @@ class TestAll {
 
 class NoComponentsSystem implements ISystem {
   public var count(default, null) = 0;
-  public function new() {}
-
   public function update() {
     count++;
   }
-
-  public var componentRequirements(default, null) = null;
-  public var entityRequirements(default, null) = null;
 }
 
 class Components2System implements ISystem {
   public var count(default, null) = 0;
-  public function new() {}
-
   public function update(b : B, a : A) {
     Assert.is(b, B);
     Assert.is(a, A);
     count++;
   }
-
-  public var componentRequirements(default, null) : Array<Class<Dynamic>> = [B, A];
-  public var entityRequirements(default, null) = null;
 }
 
 class Components1System implements ISystem {
   public var count(default, null) = 0;
-  public function new() {}
-
   public function update(b : B) {
     Assert.is(b, B);
     count++;
   }
+}
 
-  public var componentRequirements(default, null) : Array<Class<Dynamic>> = [B];
-  public var entityRequirements(default, null) = null;
+class ComponentsEntitiesSystem implements ISystem {
+  public var count(default, null) = 0;
+  public var entities : Array<{ a : A, entity : Entity }>;
+  public function update(b : B) {
+    Assert.is(b, B);
+    count++;
+  }
 }
 
 class A {
