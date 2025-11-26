@@ -2,6 +2,7 @@ package edge.macro;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
+using haxe.macro.TypeTools;
 using thx.macro.MacroFields;
 using thx.macro.MacroTypes;
 
@@ -55,7 +56,7 @@ class BuildSystem {
                 switch param {
                   case TPType(TAnonymous(a)):
                     "[" + a.map(function(f) {
-                      var t = switch f.kind { case FVar(TPath(o), _): o.name; case _: null; };
+                      var t = switch f.kind { case FVar(TPath(o), _): Context.getType(o.name).toString(); case _: null; };
                       return t == "edge.Entity" ? null : '{ name : "${f.name}", cls : $t }';
                     })
                     .filter(function(s) return s != null)
@@ -91,7 +92,7 @@ class BuildSystem {
           case FFun(f):
             f.args.map(function(arg) return switch arg.type {
               case TPath(p):
-                p.name;
+                Context.getType(p.name).toString();
               case _:
                 null;
             });

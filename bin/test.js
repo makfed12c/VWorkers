@@ -519,7 +519,7 @@ Components1System.prototype = {
 	,__class__: Components1System
 };
 var ComponentsEntitiesSystem = function() {
-	this.entityRequirements = [{ name : "a", cls : A},{ name : "entity", cls : edge.Entity}];
+	this.entityRequirements = [{ name : "a", cls : A}];
 	this.componentRequirements = [B];
 	this.count = 0;
 };
