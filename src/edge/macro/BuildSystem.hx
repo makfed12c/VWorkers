@@ -14,19 +14,6 @@ class BuildSystem {
     injectEntityRequirements(fields);
     injectToString(fields);
     injectConstructor(fields);
-    /*
-    var newField = {
-      name: fieldName,
-      doc: null,
-      meta: [],
-      access: [AStatic, APublic],
-      kind: FVar(macro : String,
-        macro "my default"),
-      pos: Context.currentPos()
-    };
-    fields.push(newField);
-    */
-
     return fields;
   }
 
