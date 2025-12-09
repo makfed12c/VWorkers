@@ -8,22 +8,25 @@ class World {
   public var render(default, null) : Phase;
   public var engine(default, null) : Engine;
   public var delta(default, null) : Float;
+  public var running(default, null) : Bool;
 
   var schedule : (Float -> Void) -> (Void -> Void);
   var cancel : Void -> Void;
   var remainder : Float;
   public function new(?delta : Float = 16, ?schedule : (Float -> Void) -> (Void -> Void)) {
-    engine = new Engine();
-    frame  = engine.createPhase();
+    engine  = new Engine();
+    frame   = engine.createPhase();
     physics = engine.createPhase();
-    render = engine.createPhase();
-    remainder  = 0;
+    render  = engine.createPhase();
+    remainder = 0;
+    running = false;
     this.delta = delta;
     this.schedule = null != schedule ? schedule : Timer.frame;
   }
 
   public function start() {
-    if(null != cancel) return;
+    if(running) return;
+    running = true;
     cancel = schedule(run);
   }
 
@@ -39,8 +42,8 @@ class World {
   }
 
   public function stop() {
-    if(null == cancel) return;
+    if(!running) return;
+    running = false;
     cancel();
-    cancel = null;
   }
 }
