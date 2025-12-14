@@ -169,10 +169,10 @@ class BuildSystem {
     }
   }
 
-  static function clsName()
+  public static function clsName()
     return Context.getLocalClass().toString();
 
-  static function findField(fields : Array<Field>, name : String) {
+  public static function findField(fields : Array<Field>, name : String) {
     for(field in fields) {
       if(field.name == name)
         return field;
