@@ -39,6 +39,11 @@ class BuildComponent {
   static function injectConstructor(fields : Array<Field>) {
     var field = BuildSystem.findField(fields, "new");
     if(null != field) return;
+    var info = getVarInfo(fields),
+        cls  = BuildSystem.clsName().split(".").pop(),
+        init = info
+          .map(function(arg) return arg.name)
+          .map(function(name) return macro this.$name = $i{name});
     fields.push({
       name: "new",
       doc: null,
@@ -47,8 +52,13 @@ class BuildComponent {
       kind: FFun({
         ret : macro : Void,
         params : null,
-        expr : macro {},
-        args : []
+        expr : macro $b{init},
+        args : info.map(function(arg) return {
+            value : null,
+            type : Context.getType(arg.type).toComplexType(),
+            opt : false,
+            name : arg.name
+          })
       }),
       pos: Context.currentPos()
     });
@@ -71,5 +81,16 @@ class BuildComponent {
       }),
       pos: Context.currentPos()
     });
+  }
+
+  static function getVarInfo(fields : Array<Field>) {
+    return fields
+      .map(function(field) return switch field.kind {
+        case FVar(TPath(p), _):
+          { name : field.name, type : Context.getType(p.name).toString() }
+        case _:
+          null;
+      })
+      .filter(function(field) return field != null);
   }
 }
