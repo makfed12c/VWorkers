@@ -67,7 +67,12 @@ class BuildComponent {
   static function injectToString(fields : Array<Field>) {
     var field = BuildSystem.findField(fields, "toString");
     if(null != field) return;
-    var cls = BuildSystem.clsName().split(".").pop();
+    var cls  = BuildSystem.clsName().split(".").pop(),
+        info = getVarInfo(fields),
+        args = info
+          .map(function(arg) return '${arg.name}=$' + arg.name)
+          .join(","),
+        s = 'return \'$cls($args)\'';
     fields.push({
       name: "toString",
       doc: null,
@@ -76,7 +81,7 @@ class BuildComponent {
       kind: FFun({
         ret : macro : String,
         params : null,
-        expr : macro return $v{cls},
+        expr : Context.parse(s, Context.currentPos()),
         args : []
       }),
       pos: Context.currentPos()
