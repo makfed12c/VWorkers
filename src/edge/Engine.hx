@@ -78,12 +78,12 @@ class Engine {
     if(!info.hasComponents) {
       Reflect.callMethod(system, info.update, []);
     } else {
+      if(info.hasEntities)
+        Reflect.setField(system, "entities", info.entities.iterator());
       for(entity in info.components.keys()) {
         var components = info.components.get(entity);
         if(info.hasEntity)
           Reflect.setField(system, "entity", entity);
-        if(info.hasEntities)
-          Reflect.setField(system, "entities", info.entities.iterator().toArray());
         Reflect.callMethod(system, info.update, components);
       }
     }
