@@ -38,7 +38,7 @@ class BuildSystem {
     var types = switch entities.kind {
           case FVar(t, _):
             switch t {
-              case TPath(p) if(p.name == "Array"):
+              case TPath(p) if(p.name == "Iterator"):
                 var param = p.params[0];
                 switch param {
                   case TPType(TAnonymous(a)):

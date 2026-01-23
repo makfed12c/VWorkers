@@ -210,7 +210,7 @@ class Components1System implements ISystem {
 
 class ComponentsEntitiesSystem implements ISystem {
   public var count(default, null) = 0;
-  public var entities : Array<{ a : A, entity : Entity }>;
+  public var entities : Iterator<{ a : A, entity : Entity }>;
   public function update(b : B) {
     Assert.is(b, B);
     count++;
