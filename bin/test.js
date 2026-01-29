@@ -633,6 +633,7 @@ Type.enumIndex = function(e) {
 	return e[1];
 };
 edge.Engine = function() {
+	this.emptyArgs = [];
 	this.mapInfo = new haxe.ds.ObjectMap();
 	this.mapEntities = new haxe.ds.ObjectMap();
 	this.listPhases = [];
@@ -680,7 +681,8 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasEntity : Object.prototype.hasOwnProperty.call(system,"entity"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, components : new haxe.ds.ObjectMap(), entities : new haxe.ds.ObjectMap()};
+		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasEntity : Object.prototype.hasOwnProperty.call(system,"entity"), hasBefore : Object.prototype.hasOwnProperty.call(system,"before"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, before : null, components : new haxe.ds.ObjectMap(), entities : new haxe.ds.ObjectMap()};
+		if(info.hasBefore) info.before = Reflect.field(system,"before");
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
 			var $it0 = this.mapEntities.keys();
@@ -700,10 +702,12 @@ edge.Engine.prototype = {
 	,removeSystem: function(system) {
 		this.mapInfo.remove(system);
 	}
+	,emptyArgs: null
 	,updateSystem: function(system) {
 		var info = this.mapInfo.h[system.__id__];
-		if(!info.hasComponents) Reflect.callMethod(system,info.update,[]); else {
+		if(!info.hasComponents) Reflect.callMethod(system,info.update,this.emptyArgs); else {
 			if(info.hasEntities) Reflect.setField(system,"entities",info.entities.iterator());
+			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);
 			var $it0 = info.components.keys();
 			while( $it0.hasNext() ) {
 				var entity = $it0.next();

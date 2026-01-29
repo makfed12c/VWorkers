@@ -55,12 +55,16 @@ class Engine {
     var info = {
           hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0,
           hasEntity : Reflect.hasField(system, "entity"),
+          hasBefore : Reflect.hasField(system, "before"),
           hasEntities : null != system.entityRequirements,
           update : Reflect.field(system, "update"),
           phase : phase,
+          before : null,
           components : new Map(),
           entities : new Map()
         };
+    if(info.hasBefore)
+      info.before = Reflect.field(system, "before");
     mapInfo.set(system, info);
     if(info.hasComponents)
       for(entity in mapEntities.keys())
@@ -73,13 +77,16 @@ class Engine {
   function removeSystem(system : ISystem)
     mapInfo.remove(system);
 
+  var emptyArgs = [];
   function updateSystem(system : ISystem) {
     var info = mapInfo.get(system);
     if(!info.hasComponents) {
-      Reflect.callMethod(system, info.update, []);
+      Reflect.callMethod(system, info.update, emptyArgs);
     } else {
       if(info.hasEntities)
         Reflect.setField(system, "entities", info.entities.iterator());
+      if(info.hasBefore)
+        Reflect.callMethod(system, info.update, emptyArgs);
       for(entity in info.components.keys()) {
         var components = info.components.get(entity);
         if(info.hasEntity)
@@ -142,6 +149,8 @@ typedef SystemInfo = {
   hasComponents : Bool,
   hasEntity : Bool,
   hasEntities : Bool,
+  hasBefore : Bool,
+  before : Dynamic,
   update : Dynamic,
   phase : Phase,
   components : Map<Entity, Array<Dynamic>>,
