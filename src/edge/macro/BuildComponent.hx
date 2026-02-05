@@ -3,6 +3,7 @@ package edge.macro;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 using haxe.macro.TypeTools;
+using haxe.macro.ComplexTypeTools;
 using thx.macro.MacroFields;
 using thx.macro.MacroTypes;
 
@@ -12,19 +13,6 @@ class BuildComponent {
     makePublic(fields);
     injectToString(fields);
     injectConstructor(fields);
-    /*
-    var newField = {
-      name: fieldName,
-      doc: null,
-      meta: [],
-      access: [AStatic, APublic],
-      kind: FVar(macro : String,
-        macro "my default"),
-      pos: Context.currentPos()
-    };
-    fields.push(newField);
-    */
-
     return fields;
   }
 
@@ -54,11 +42,11 @@ class BuildComponent {
         params : null,
         expr : macro $b{init},
         args : info.map(function(arg) return {
-            value : null,
-            type : Context.getType(arg.type).toComplexType(),
-            opt : false,
-            name : arg.name
-          })
+          value : null,
+          type : arg.type,
+          opt : false,
+          name : arg.name
+        })
       }),
       pos: Context.currentPos()
     });
@@ -91,8 +79,8 @@ class BuildComponent {
   static function getVarInfo(fields : Array<Field>) {
     return fields
       .map(function(field) return switch field.kind {
-        case FVar(TPath(p), _):
-          { name : field.name, type : Context.getType(p.name).toString() }
+        case FVar(t, _):
+          { name : field.name, type : t }
         case _:
           null;
       })

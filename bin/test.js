@@ -659,8 +659,8 @@ edge.Engine.prototype = {
 		var $it1 = this.mapInfo.keys();
 		while( $it1.hasNext() ) {
 			var system1 = $it1.next();
-			var this11 = this.mapInfo.h[system1.__id__].entities;
-			this11.remove(entity);
+			var this2 = this.mapInfo.h[system1.__id__].entities;
+			this2.remove(entity);
 		}
 		this.mapEntities.remove(entity);
 		entity.engine = null;
