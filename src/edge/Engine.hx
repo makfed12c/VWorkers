@@ -48,14 +48,17 @@ class Engine {
   public function systems() : Iterator<ISystem>
     return mapInfo.keys();
 
+  static function hasField(o : {}, field : String)
+    return Type.getInstanceFields(Type.getClass(o)).contains(field);
+
   // private methods
   function addSystem(phase : Phase, system : ISystem) {
     if(mapInfo.exists(system))
       throw 'System "$system" already exists in Engine';
     var info = {
           hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0,
-          hasEntity : Reflect.hasField(system, "entity"),
-          hasBefore : Reflect.hasField(system, "before"),
+          hasEntity : hasField(system, "entity"),
+          hasBefore : hasField(system, "before"),
           hasEntities : null != system.entityRequirements,
           update : Reflect.field(system, "update"),
           phase : phase,

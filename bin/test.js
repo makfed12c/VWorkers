@@ -507,8 +507,9 @@ Components1System.__name__ = ["Components1System"];
 Components1System.__interfaces__ = [edge.ISystem];
 Components1System.prototype = {
 	count: null
+	,entity: null
 	,update: function(b) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 206, className : "Components1System", methodName : "update"});
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 207, className : "Components1System", methodName : "update"});
 		this.count++;
 	}
 	,componentRequirements: null
@@ -529,7 +530,7 @@ ComponentsEntitiesSystem.prototype = {
 	count: null
 	,entities: null
 	,update: function(b) {
-		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 215, className : "ComponentsEntitiesSystem", methodName : "update"});
+		utest.Assert["is"](b,B,null,{ fileName : "TestAll.hx", lineNumber : 216, className : "ComponentsEntitiesSystem", methodName : "update"});
 		this.count++;
 	}
 	,componentRequirements: null
@@ -639,6 +640,9 @@ edge.Engine = function() {
 	this.listPhases = [];
 };
 edge.Engine.__name__ = ["edge","Engine"];
+edge.Engine.hasField = function(o,field) {
+	return thx.core.Arrays.contains(Type.getInstanceFields(Type.getClass(o)),field);
+};
 edge.Engine.prototype = {
 	mapInfo: null
 	,mapEntities: null
@@ -659,8 +663,8 @@ edge.Engine.prototype = {
 		var $it1 = this.mapInfo.keys();
 		while( $it1.hasNext() ) {
 			var system1 = $it1.next();
-			var this2 = this.mapInfo.h[system1.__id__].entities;
-			this2.remove(entity);
+			var this11 = this.mapInfo.h[system1.__id__].entities;
+			this11.remove(entity);
 		}
 		this.mapEntities.remove(entity);
 		entity.engine = null;
@@ -681,7 +685,7 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasEntity : Object.prototype.hasOwnProperty.call(system,"entity"), hasBefore : Object.prototype.hasOwnProperty.call(system,"before"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, before : null, components : new haxe.ds.ObjectMap(), entities : new haxe.ds.ObjectMap()};
+		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasEntity : edge.Engine.hasField(system,"entity"), hasBefore : edge.Engine.hasField(system,"before"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, before : null, components : new haxe.ds.ObjectMap(), entities : new haxe.ds.ObjectMap()};
 		if(info.hasBefore) info.before = Reflect.field(system,"before");
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
