@@ -685,7 +685,7 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasEntity : edge.Engine.hasField(system,"entity"), hasBefore : edge.Engine.hasField(system,"before"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, before : null, components : new haxe.ds.ObjectMap(), entities : new haxe.ds.ObjectMap()};
+		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasEngine : edge.Engine.hasField(system,"engine"), hasEntity : edge.Engine.hasField(system,"entity"), hasBefore : edge.Engine.hasField(system,"before"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, before : null, components : new haxe.ds.ObjectMap(), entities : new haxe.ds.ObjectMap()};
 		if(info.hasBefore) info.before = Reflect.field(system,"before");
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
@@ -709,6 +709,7 @@ edge.Engine.prototype = {
 	,emptyArgs: null
 	,updateSystem: function(system) {
 		var info = this.mapInfo.h[system.__id__];
+		if(info.hasEngine) system.engine = this;
 		if(!info.hasComponents) Reflect.callMethod(system,info.update,this.emptyArgs); else {
 			if(info.hasEntities) Reflect.setField(system,"entities",info.entities.iterator());
 			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);
