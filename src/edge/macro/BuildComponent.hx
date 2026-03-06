@@ -79,7 +79,7 @@ class BuildComponent {
   static function getVarInfo(fields : Array<Field>) {
     return fields
       .map(function(field) return switch field.kind {
-        case FVar(t, _):
+        case FVar(t, _) if(!field.isStatic()):
           { name : field.name, type : t }
         case _:
           null;
