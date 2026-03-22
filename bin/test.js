@@ -321,15 +321,15 @@ TestAll.prototype = {
 		phase.update();
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 39, className : "TestAll", methodName : "testEngineComponents2System"});
 		utest.Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 40, className : "TestAll", methodName : "testEngineComponents2System"});
-		engine.addEntity(entity);
+		engine.add(entity);
 		utest.Assert.equals(engine,entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 42, className : "TestAll", methodName : "testEngineComponents2System"});
 		phase.update();
 		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 44, className : "TestAll", methodName : "testEngineComponents2System"});
-		engine.removeEntity(entity);
+		engine.remove(entity);
 		utest.Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 46, className : "TestAll", methodName : "testEngineComponents2System"});
 		phase.update();
 		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 48, className : "TestAll", methodName : "testEngineComponents2System"});
-		engine.addEntity(entity);
+		engine.add(entity);
 		phase.update();
 		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 51, className : "TestAll", methodName : "testEngineComponents2System"});
 		entity.removeType(A);
@@ -345,13 +345,13 @@ TestAll.prototype = {
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 63, className : "TestAll", methodName : "testEngineComponents1System"});
 		phase.update();
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 65, className : "TestAll", methodName : "testEngineComponents1System"});
-		engine.addEntity(entity);
+		engine.add(entity);
 		phase.update();
 		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 68, className : "TestAll", methodName : "testEngineComponents1System"});
-		engine.removeEntity(entity);
+		engine.remove(entity);
 		phase.update();
 		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 71, className : "TestAll", methodName : "testEngineComponents1System"});
-		engine.addEntity(entity);
+		engine.add(entity);
 		phase.update();
 		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 74, className : "TestAll", methodName : "testEngineComponents1System"});
 		entity.removeType(B);
@@ -367,10 +367,10 @@ TestAll.prototype = {
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 86, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 		phase.update();
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 88, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
-		engine.addEntity(entity);
+		engine.add(entity);
 		phase.update();
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 91, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
-		engine.removeEntity(entity);
+		engine.remove(entity);
 		phase.update();
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 94, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 	}
@@ -412,16 +412,16 @@ TestAll.prototype = {
 		var e2 = new edge.Entity();
 		this.assertNumberOfEntities(engine,0,{ fileName : "TestAll.hx", lineNumber : 135, className : "TestAll", methodName : "testEngineEntity"});
 		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 136, className : "TestAll", methodName : "testEngineEntity"});
-		engine.addEntity(e1);
+		engine.add(e1);
 		this.assertNumberOfEntities(engine,1,{ fileName : "TestAll.hx", lineNumber : 138, className : "TestAll", methodName : "testEngineEntity"});
 		this.assertNumberOfSystems(engine,0,{ fileName : "TestAll.hx", lineNumber : 139, className : "TestAll", methodName : "testEngineEntity"});
-		engine.addEntity(e2);
+		engine.add(e2);
 		this.assertNumberOfEntities(engine,2,{ fileName : "TestAll.hx", lineNumber : 141, className : "TestAll", methodName : "testEngineEntity"});
-		engine.removeEntity(e1);
+		engine.remove(e1);
 		this.assertNumberOfEntities(engine,1,{ fileName : "TestAll.hx", lineNumber : 143, className : "TestAll", methodName : "testEngineEntity"});
-		engine.removeEntity(e1);
+		engine.remove(e1);
 		this.assertNumberOfEntities(engine,1,{ fileName : "TestAll.hx", lineNumber : 145, className : "TestAll", methodName : "testEngineEntity"});
-		engine.removeEntity(e2);
+		engine.remove(e2);
 		this.assertNumberOfEntities(engine,0,{ fileName : "TestAll.hx", lineNumber : 147, className : "TestAll", methodName : "testEngineEntity"});
 	}
 	,testEntity: function() {
@@ -647,13 +647,20 @@ edge.Engine.prototype = {
 	mapInfo: null
 	,mapEntities: null
 	,listPhases: null
-	,addEntity: function(entity) {
+	,add: function(entity) {
 		entity.engine = this;
 		this.mapEntities.set(entity,true);
 		this.matchSystems(entity);
 		this.matchEntities(entity);
 	}
-	,removeEntity: function(entity) {
+	,clear: function() {
+		var $it0 = this.mapEntities.keys();
+		while( $it0.hasNext() ) {
+			var entity = $it0.next();
+			this.remove(entity);
+		}
+	}
+	,remove: function(entity) {
 		var $it0 = this.mapInfo.keys();
 		while( $it0.hasNext() ) {
 			var system = $it0.next();

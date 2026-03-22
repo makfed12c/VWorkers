@@ -17,14 +17,18 @@ class Engine {
     listPhases = [];
   }
 
-  public function addEntity(entity : Entity) {
+  public function add(entity : Entity) {
     entity.engine = this;
     mapEntities.set(entity, true);
     matchSystems(entity);
     matchEntities(entity);
   }
 
-  public function removeEntity(entity : Entity) {
+  public function clear()
+    for(entity in mapEntities.keys())
+      remove(entity);
+
+  public function remove(entity : Entity) {
     for(system in mapInfo.keys())
       mapInfo.get(system).components.remove(entity);
     for(system in mapInfo.keys())

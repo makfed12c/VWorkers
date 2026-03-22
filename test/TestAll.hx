@@ -38,15 +38,15 @@ class TestAll {
     phase.update();
     Assert.equals(0, system.count);
     Assert.isNull(entity.engine);
-    engine.addEntity(entity);
+    engine.add(entity);
     Assert.equals(engine, entity.engine);
     phase.update();
     Assert.equals(1, system.count);
-    engine.removeEntity(entity);
+    engine.remove(entity);
     Assert.isNull(entity.engine);
     phase.update();
     Assert.equals(1, system.count);
-    engine.addEntity(entity);
+    engine.add(entity);
     phase.update();
     Assert.equals(2, system.count);
     entity.removeType(A);
@@ -63,13 +63,13 @@ class TestAll {
     Assert.equals(0, system.count);
     phase.update();
     Assert.equals(0, system.count);
-    engine.addEntity(entity);
+    engine.add(entity);
     phase.update();
     Assert.equals(1, system.count);
-    engine.removeEntity(entity);
+    engine.remove(entity);
     phase.update();
     Assert.equals(1, system.count);
-    engine.addEntity(entity);
+    engine.add(entity);
     phase.update();
     Assert.equals(2, system.count);
     entity.removeType(B);
@@ -86,10 +86,10 @@ class TestAll {
     Assert.equals(0, system.count);
     phase.update();
     Assert.equals(0, system.count);
-    engine.addEntity(entity);
+    engine.add(entity);
     phase.update();
     Assert.equals(0, system.count);
-    engine.removeEntity(entity);
+    engine.remove(entity);
     phase.update();
     Assert.equals(0, system.count);
   }
@@ -134,16 +134,16 @@ class TestAll {
         e2 = new Entity();
     assertNumberOfEntities(engine, 0);
     assertNumberOfSystems(engine, 0);
-    engine.addEntity(e1);
+    engine.add(e1);
     assertNumberOfEntities(engine, 1);
     assertNumberOfSystems(engine, 0);
-    engine.addEntity(e2);
+    engine.add(e2);
     assertNumberOfEntities(engine, 2);
-    engine.removeEntity(e1);
+    engine.remove(e1);
     assertNumberOfEntities(engine, 1);
-    engine.removeEntity(e1);
+    engine.remove(e1);
     assertNumberOfEntities(engine, 1);
-    engine.removeEntity(e2);
+    engine.remove(e2);
     assertNumberOfEntities(engine, 0);
   }
 
