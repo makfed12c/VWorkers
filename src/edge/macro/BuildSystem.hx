@@ -142,7 +142,7 @@ class BuildSystem {
     if(field == null)
       Context.error('${clsName()} doesn\'t contain a method `update`', Context.currentPos());
     if(!field.isPublic())
-      Context.error('${clsName()}.update() must be public', Context.currentPos());
+      field.access.push(APublic);
     if(field.isStatic())
       Context.error('${clsName()}.update() cannot be static', Context.currentPos());
     if(!field.isMethod())
