@@ -97,10 +97,10 @@ class Phase {
   public function systems()
     return new NodeSystemIterator(first);
 
-  public function update() {
+  public function update(t : Float) {
     if(null == engine) return;
     for(system in systems())
-      engine.updateSystem(system);
+      engine.updateSystem(system, t);
   }
 
   function createNode(system : ISystem) {

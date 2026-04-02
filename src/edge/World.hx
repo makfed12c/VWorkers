@@ -31,14 +31,14 @@ class World {
   }
 
   function run(t : Float) {
-    frame.update();
-    t += remainder;
-    while(t > delta) {
-      t -= delta;
-      physics.update();
+    frame.update(t);
+    var dt = t + remainder;
+    while(dt > delta) {
+      dt -= delta;
+      physics.update(delta);
     }
-    remainder = t;
-    render.update();
+    remainder = dt;
+    render.update(t);
   }
 
   public function stop() {

@@ -35,22 +35,22 @@ class TestAll {
         entity = new Entity([new A(), new B()]);
     phase.add(system);
     Assert.equals(0, system.count);
-    phase.update();
+    phase.update(0);
     Assert.equals(0, system.count);
     Assert.isNull(entity.engine);
     engine.add(entity);
     Assert.equals(engine, entity.engine);
-    phase.update();
+    phase.update(0);
     Assert.equals(1, system.count);
     engine.remove(entity);
     Assert.isNull(entity.engine);
-    phase.update();
+    phase.update(0);
     Assert.equals(1, system.count);
     engine.add(entity);
-    phase.update();
+    phase.update(0);
     Assert.equals(2, system.count);
     entity.removeType(A);
-    phase.update();
+    phase.update(0);
     Assert.equals(2, system.count);
   }
 
@@ -61,19 +61,19 @@ class TestAll {
         entity = new Entity([new B()]);
     phase.add(system);
     Assert.equals(0, system.count);
-    phase.update();
+    phase.update(0);
     Assert.equals(0, system.count);
     engine.add(entity);
-    phase.update();
+    phase.update(0);
     Assert.equals(1, system.count);
     engine.remove(entity);
-    phase.update();
+    phase.update(0);
     Assert.equals(1, system.count);
     engine.add(entity);
-    phase.update();
+    phase.update(0);
     Assert.equals(2, system.count);
     entity.removeType(B);
-    phase.update();
+    phase.update(0);
     Assert.equals(2, system.count);
   }
 
@@ -84,13 +84,13 @@ class TestAll {
         entity = new Entity([new A()]);
     phase.add(system);
     Assert.equals(0, system.count);
-    phase.update();
+    phase.update(0);
     Assert.equals(0, system.count);
     engine.add(entity);
-    phase.update();
+    phase.update(0);
     Assert.equals(0, system.count);
     engine.remove(entity);
-    phase.update();
+    phase.update(0);
     Assert.equals(0, system.count);
   }
 
@@ -100,12 +100,12 @@ class TestAll {
         system = new NoComponentsSystem();
     phase.add(system);
     Assert.equals(0, system.count);
-    phase.update();
+    phase.update(0);
     Assert.equals(1, system.count);
-    phase.update();
+    phase.update(0);
     Assert.equals(2, system.count);
     phase.remove(system);
-    phase.update();
+    phase.update(0);
     Assert.equals(2, system.count);
   }
 

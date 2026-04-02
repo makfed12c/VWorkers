@@ -61,6 +61,7 @@ class Engine {
       throw 'System "$system" already exists in Engine';
     var info = {
           hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0,
+          hasDelta  : hasField(system, "timeDelta"),
           hasEngine : hasField(system, "engine"),
           hasEntity : hasField(system, "entity"),
           hasBefore : hasField(system, "before"),
@@ -86,10 +87,12 @@ class Engine {
     mapInfo.remove(system);
 
   var emptyArgs = [];
-  function updateSystem(system : ISystem) {
+  function updateSystem(system : ISystem, t : Float) {
     var info = mapInfo.get(system);
     if(info.hasEngine)
       Reflect.setField(system, "engine", this);
+    if(info.hasDelta)
+      Reflect.setField(system, "timeDelta", t);
     if(!info.hasComponents) {
       Reflect.callMethod(system, info.update, emptyArgs);
     } else {
@@ -157,6 +160,7 @@ class Engine {
 
 typedef SystemInfo = {
   hasComponents : Bool,
+  hasDelta : Bool,
   hasEngine : Bool,
   hasEntity : Bool,
   hasEntities : Bool,
