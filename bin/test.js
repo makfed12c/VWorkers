@@ -318,22 +318,22 @@ TestAll.prototype = {
 		var entity = new edge.Entity([new A(),new B()]);
 		phase.add(system);
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 37, className : "TestAll", methodName : "testEngineComponents2System"});
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 39, className : "TestAll", methodName : "testEngineComponents2System"});
 		utest.Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 40, className : "TestAll", methodName : "testEngineComponents2System"});
 		engine.add(entity);
 		utest.Assert.equals(engine,entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 42, className : "TestAll", methodName : "testEngineComponents2System"});
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 44, className : "TestAll", methodName : "testEngineComponents2System"});
 		engine.remove(entity);
 		utest.Assert.isNull(entity.engine,null,{ fileName : "TestAll.hx", lineNumber : 46, className : "TestAll", methodName : "testEngineComponents2System"});
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 48, className : "TestAll", methodName : "testEngineComponents2System"});
 		engine.add(entity);
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 51, className : "TestAll", methodName : "testEngineComponents2System"});
 		entity.removeType(A);
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 54, className : "TestAll", methodName : "testEngineComponents2System"});
 	}
 	,testEngineComponents1System: function() {
@@ -343,19 +343,19 @@ TestAll.prototype = {
 		var entity = new edge.Entity([new B()]);
 		phase.add(system);
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 63, className : "TestAll", methodName : "testEngineComponents1System"});
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 65, className : "TestAll", methodName : "testEngineComponents1System"});
 		engine.add(entity);
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 68, className : "TestAll", methodName : "testEngineComponents1System"});
 		engine.remove(entity);
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 71, className : "TestAll", methodName : "testEngineComponents1System"});
 		engine.add(entity);
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 74, className : "TestAll", methodName : "testEngineComponents1System"});
 		entity.removeType(B);
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 77, className : "TestAll", methodName : "testEngineComponents1System"});
 	}
 	,testEngineComponents1MissingSystem: function() {
@@ -365,13 +365,13 @@ TestAll.prototype = {
 		var entity = new edge.Entity([new A()]);
 		phase.add(system);
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 86, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 88, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 		engine.add(entity);
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 91, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 		engine.remove(entity);
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 94, className : "TestAll", methodName : "testEngineComponents1MissingSystem"});
 	}
 	,testEngineNoComponentSystem: function() {
@@ -380,12 +380,12 @@ TestAll.prototype = {
 		var system = new NoComponentsSystem();
 		phase.add(system);
 		utest.Assert.equals(0,system.count,null,{ fileName : "TestAll.hx", lineNumber : 102, className : "TestAll", methodName : "testEngineNoComponentSystem"});
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(1,system.count,null,{ fileName : "TestAll.hx", lineNumber : 104, className : "TestAll", methodName : "testEngineNoComponentSystem"});
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 106, className : "TestAll", methodName : "testEngineNoComponentSystem"});
 		phase.remove(system);
-		phase.update();
+		phase.update(0);
 		utest.Assert.equals(2,system.count,null,{ fileName : "TestAll.hx", lineNumber : 109, className : "TestAll", methodName : "testEngineNoComponentSystem"});
 	}
 	,testEngineSystemCounting: function() {
@@ -692,7 +692,7 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasEngine : edge.Engine.hasField(system,"engine"), hasEntity : edge.Engine.hasField(system,"entity"), hasBefore : edge.Engine.hasField(system,"before"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, before : null, components : new haxe.ds.ObjectMap(), entities : new haxe.ds.ObjectMap()};
+		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasDelta : edge.Engine.hasField(system,"timeDelta"), hasEngine : edge.Engine.hasField(system,"engine"), hasEntity : edge.Engine.hasField(system,"entity"), hasBefore : edge.Engine.hasField(system,"before"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, before : null, components : new haxe.ds.ObjectMap(), entities : new haxe.ds.ObjectMap()};
 		if(info.hasBefore) info.before = Reflect.field(system,"before");
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
@@ -714,9 +714,10 @@ edge.Engine.prototype = {
 		this.mapInfo.remove(system);
 	}
 	,emptyArgs: null
-	,updateSystem: function(system) {
+	,updateSystem: function(system,t) {
 		var info = this.mapInfo.h[system.__id__];
 		if(info.hasEngine) system.engine = this;
+		if(info.hasDelta) system.timeDelta = t;
 		if(!info.hasComponents) Reflect.callMethod(system,info.update,this.emptyArgs); else {
 			if(info.hasEntities) Reflect.setField(system,"entities",info.entities.iterator());
 			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);
@@ -885,6 +886,13 @@ edge.Phase.prototype = {
 			this.last = node;
 		}
 	}
+	,clear: function() {
+		var $it0 = this.systems();
+		while( $it0.hasNext() ) {
+			var system = $it0.next();
+			this.remove(system);
+		}
+	}
 	,insertBefore: function(ref,system) {
 		var noderef = this.mapSystem.h[ref.__id__];
 		if(null == noderef) throw "Phase.insertBefore: unable to find " + Std.string(ref) + " system";
@@ -946,12 +954,12 @@ edge.Phase.prototype = {
 	,systems: function() {
 		return new edge.NodeSystemIterator(this.first);
 	}
-	,update: function() {
+	,update: function(t) {
 		if(null == this.engine) return;
 		var $it0 = this.systems();
 		while( $it0.hasNext() ) {
 			var system = $it0.next();
-			this.engine.updateSystem(system);
+			this.engine.updateSystem(system,t);
 		}
 	}
 	,createNode: function(system) {

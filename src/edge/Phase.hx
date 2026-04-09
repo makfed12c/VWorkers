@@ -29,6 +29,10 @@ class Phase {
     }
   }
 
+  public function clear()
+    for(system in systems())
+      remove(system);
+
   public function insertBefore(ref : ISystem, system : ISystem) {
     var noderef = mapSystem.get(ref);
     if(null == noderef)
