@@ -89,6 +89,8 @@ class Engine {
   var emptyArgs = [];
   function updateSystem(system : ISystem, t : Float) {
     var info = mapInfo.get(system);
+    if(info == null)
+      return;
     if(info.hasEngine)
       Reflect.setField(system, "engine", this);
     if(info.hasDelta)

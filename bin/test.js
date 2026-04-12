@@ -716,6 +716,7 @@ edge.Engine.prototype = {
 	,emptyArgs: null
 	,updateSystem: function(system,t) {
 		var info = this.mapInfo.h[system.__id__];
+		if(info == null) return;
 		if(info.hasEngine) system.engine = this;
 		if(info.hasDelta) system.timeDelta = t;
 		if(!info.hasComponents) Reflect.callMethod(system,info.update,this.emptyArgs); else {

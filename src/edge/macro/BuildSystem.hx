@@ -2,6 +2,7 @@ package edge.macro;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import haxe.macro.Type;
 using haxe.macro.TypeTools;
 using thx.macro.MacroFields;
 using thx.macro.MacroTypes;
@@ -167,6 +168,20 @@ class BuildSystem {
         }
       case _:
     }
+    if(!fieldHasMeta(field, ":keep"))
+      field.meta.push({
+        name : ":keep",
+        params : [],
+        pos : Context.currentPos()
+      });
+  }
+
+  static function fieldHasMeta(field : Field, name : String) {
+    if(field.meta == null) return false;
+    for(meta in field.meta)
+      if(meta.name == name)
+        return true;
+    return false;
   }
 
   public static function clsName()
