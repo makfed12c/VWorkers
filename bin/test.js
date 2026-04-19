@@ -719,8 +719,8 @@ edge.Engine.prototype = {
 		if(info == null) return;
 		if(info.hasEngine) system.engine = this;
 		if(info.hasDelta) system.timeDelta = t;
-		if(!info.hasComponents) Reflect.callMethod(system,info.update,this.emptyArgs); else {
-			if(info.hasEntities) Reflect.setField(system,"entities",info.entities.iterator());
+		if(info.hasEntities) Reflect.setField(system,"entities",info.entities.iterator());
+		if(info.hasComponents) {
 			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);
 			var $it0 = info.components.keys();
 			while( $it0.hasNext() ) {
@@ -729,7 +729,7 @@ edge.Engine.prototype = {
 				if(info.hasEntity) system.entity = entity;
 				Reflect.callMethod(system,info.update,components);
 			}
-		}
+		} else Reflect.callMethod(system,info.update,this.emptyArgs);
 	}
 	,matchSystems: function(entity) {
 		var $it0 = this.mapInfo.keys();

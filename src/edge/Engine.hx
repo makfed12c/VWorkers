@@ -95,11 +95,9 @@ class Engine {
       Reflect.setField(system, "engine", this);
     if(info.hasDelta)
       Reflect.setField(system, "timeDelta", t);
-    if(!info.hasComponents) {
-      Reflect.callMethod(system, info.update, emptyArgs);
-    } else {
-      if(info.hasEntities)
-        Reflect.setField(system, "entities", info.entities.iterator());
+    if(info.hasEntities)
+      Reflect.setField(system, "entities", info.entities.iterator());
+    if(info.hasComponents) {
       if(info.hasBefore)
         Reflect.callMethod(system, info.update, emptyArgs);
       for(entity in info.components.keys()) {
@@ -108,6 +106,8 @@ class Engine {
           Reflect.setField(system, "entity", entity);
         Reflect.callMethod(system, info.update, components);
       }
+    } else {
+      Reflect.callMethod(system, info.update, emptyArgs);
     }
   }
 
