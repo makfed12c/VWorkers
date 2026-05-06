@@ -1,0 +1,5 @@
+-cp src
+-js bin/main.js
+-lib edge
+-lib minicanvas
+-main Game
