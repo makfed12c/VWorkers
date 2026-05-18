@@ -104,3 +104,27 @@ class UpdateMovement implements ISystem {
   }
 }
 ```
+
+## more
+
+Sometimes your systems need a reference to the `Engine` to add/remove entities when needed. Just add the following and you will have a reference to the `Engine` to use inside your `update(...)` cycle.
+
+```haxe
+var engine : edge.Engine;
+```
+
+The same can be done for the current entity being processed.
+
+```haxe
+var entity : edge.Entity;
+```
+
+What if you want to process multiple entities in a single update? Aclassic example would be collisions of course. Just add the following:
+
+```haxe
+var entities : Iterator<{ pos : Position, entity : edge.Entity }>;
+```
+
+And you get an iterator of all the entities that match the `Position` requirement.
+
+Note: In the future this might be changed to a more flexible view system that will allow to have multiple entity collections in the same system.
