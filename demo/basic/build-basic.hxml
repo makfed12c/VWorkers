@@ -3,3 +3,4 @@
 -lib edge
 -lib minicanvas
 -main Game
+-dce full
