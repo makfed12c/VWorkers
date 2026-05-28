@@ -128,3 +128,13 @@ var entities : Iterator<{ pos : Position, entity : edge.Entity }>;
 And you get an iterator of all the entities that match the `Position` requirement.
 
 Note: In the future this might be changed to a more flexible view system that will allow to have multiple entity collections in the same system.
+
+### IComponent
+
+Even if not required, your components can implement `IComponent`. Doing so your components will gain the following super-powers for free:
+
+  * you don't need to setup a constructor, if it doesn't exist, one will be created for you and it will take the same arguments as the variable fields declared in the component.
+  * all variables are automatically made public.
+  * a method `toString` is also created to simplify the debugging of your code.
+
+Also implementing `ISystem` does something similar: it provides an automatic constructor, it makes `update` public and creates a couple of methods used internally from the engine to pair your entities/components with the systems.
