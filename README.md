@@ -22,6 +22,8 @@ In the example below we create a bunch of entities some with both `Position` and
 
 `RenderingBackground` will clear the canvas on every frame before any other rendering operation. Note that it will only be invoked once per frame and it doesn't rely on the presence of any entity (`update()` takes no argument).
 
+See the [example in action](https://rawgit.com/fponticelli/edge/master/demo/basic/bin/index.html).
+
 ```haxe
 import edge.*;
 import minicanvas.MiniCanvas;
