@@ -42,6 +42,6 @@ class View<T : {}> {
   }
 }
 typedef ViewData<T : {}> = {
-  entity : Entity;
-  data : T;
+  entity : Entity,
+  data : T
 }
