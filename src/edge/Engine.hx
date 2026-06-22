@@ -6,6 +6,7 @@ using thx.core.Arrays;
 using thx.core.Iterators;
 
 @:access(edge.Entity)
+@:access(edge.View)
 class Engine {
   var mapInfo : Map<ISystem, SystemInfo>;
   var mapEntities : Map<Entity, Bool>;
@@ -70,7 +71,7 @@ class Engine {
           phase : phase,
           before : null,
           components : new Map(),
-          entities : new Map()
+          entities : new View()
         };
     if(info.hasBefore)
       info.before = Reflect.field(system, "before");
@@ -142,7 +143,7 @@ class Engine {
         Reflect.setField(o, system.entityRequirements[i].name, components[i]);
       }
       Reflect.setField(o, "entity", entity);
-      info.entities.set(entity, o);
+      info.entities.add(entity, o);
     }
   }
 
@@ -171,5 +172,5 @@ typedef SystemInfo = {
   update : Dynamic,
   phase : Phase,
   components : Map<Entity, Array<Dynamic>>,
-  entities : Map<Entity, Dynamic>
+  entities : View<Dynamic>
 }

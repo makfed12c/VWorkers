@@ -3,6 +3,7 @@ package edge.macro;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.macro.Type;
+using haxe.macro.ComplexTypeTools;
 using haxe.macro.TypeTools;
 using thx.macro.MacroFields;
 using thx.macro.MacroTypes;
@@ -36,10 +37,12 @@ class BuildSystem {
       });
       return;
     }
+
     var types = switch entities.kind {
           case FVar(t, _):
-            switch t {
-              case TPath(p) if(p.name == "Iterator"):
+            var tt = t.toType();
+            switch [t, tt] {
+              case [TPath(p), TInst(t, _)] if(t.toString() == "edge.View"):
                 var param = p.params[0];
                 switch param {
                   case TPType(TAnonymous(a)):
