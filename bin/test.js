@@ -670,8 +670,7 @@ edge.Engine.prototype = {
 		var $it1 = this.mapInfo.keys();
 		while( $it1.hasNext() ) {
 			var system1 = $it1.next();
-			var this2 = this.mapInfo.h[system1.__id__].entities;
-			this2.remove(entity);
+			this.mapInfo.h[system1.__id__].entities.remove(entity);
 		}
 		this.mapEntities.remove(entity);
 		entity.engine = null;
@@ -692,7 +691,7 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasDelta : edge.Engine.hasField(system,"timeDelta"), hasEngine : edge.Engine.hasField(system,"engine"), hasEntity : edge.Engine.hasField(system,"entity"), hasBefore : edge.Engine.hasField(system,"before"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, before : null, components : new haxe.ds.ObjectMap(), entities : new haxe.ds.ObjectMap()};
+		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasDelta : edge.Engine.hasField(system,"timeDelta"), hasEngine : edge.Engine.hasField(system,"engine"), hasEntity : edge.Engine.hasField(system,"entity"), hasBefore : edge.Engine.hasField(system,"before"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, before : null, components : new haxe.ds.ObjectMap(), entities : new edge.View()};
 		if(info.hasBefore) info.before = Reflect.field(system,"before");
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
@@ -771,7 +770,7 @@ edge.Engine.prototype = {
 				o1[system.entityRequirements[i].name] = components[i];
 			}
 			o1.entity = entity;
-			info.entities.set(entity,o1);
+			info.entities.add(entity,o1);
 		}
 	}
 	,matchRequirements: function(entity,requirements) {
@@ -1002,6 +1001,43 @@ edge.NodeSystemIterator.prototype = {
 	}
 	,__class__: edge.NodeSystemIterator
 };
+edge.View = function() {
+	this.map = new haxe.ds.ObjectMap();
+	this.count = 0;
+};
+edge.View.__name__ = ["edge","View"];
+edge.View.prototype = {
+	count: null
+	,map: null
+	,iterator: function() {
+		var _g = this;
+		var keys = this.map.keys();
+		var holder = { entity : null, data : null};
+		return { hasNext : function() {
+			return keys.hasNext();
+		}, next : function() {
+			var key = keys.next();
+			holder.entity = key;
+			holder.data = _g.map.h[key.__id__];
+			return holder;
+		}};
+	}
+	,added: function(item) {
+	}
+	,removed: function(entity) {
+	}
+	,add: function(entity,data) {
+		if(this.map.h.__keys__[entity.__id__] != null) return;
+		this.map.set(entity,data);
+		this.count++;
+	}
+	,remove: function(entity) {
+		if(!(this.map.h.__keys__[entity.__id__] != null)) return;
+		this.map.remove(entity);
+		this.count--;
+	}
+	,__class__: edge.View
+};
 var haxe = {};
 haxe.StackItem = { __ename__ : ["haxe","StackItem"], __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
 haxe.StackItem.CFunction = ["CFunction",0];
@@ -1175,14 +1211,6 @@ haxe.ds.ObjectMap.prototype = {
 		if(this.h.hasOwnProperty(key)) a.push(this.h.__keys__[key]);
 		}
 		return HxOverrides.iter(a);
-	}
-	,iterator: function() {
-		return { ref : this.h, it : this.keys(), hasNext : function() {
-			return this.it.hasNext();
-		}, next : function() {
-			var i = this.it.next();
-			return this.ref[i.__id__];
-		}};
 	}
 	,__class__: haxe.ds.ObjectMap
 };
