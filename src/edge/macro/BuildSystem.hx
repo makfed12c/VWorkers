@@ -62,6 +62,10 @@ class BuildSystem {
             null;
         };
 
+    if(types == null) {
+      Context.error('entities is not of type View<T: {}>', entities.pos);
+    }
+
     fields.push({
       name: "entityRequirements",
       doc: null,
