@@ -193,9 +193,6 @@ Reflect.field = function(o,field) {
 		return null;
 	}
 };
-Reflect.setField = function(o,field,value) {
-	o[field] = value;
-};
 Reflect.callMethod = function(o,func,args) {
 	return func.apply(o,args);
 };
@@ -718,7 +715,7 @@ edge.Engine.prototype = {
 		if(info == null) return;
 		if(info.hasEngine) system.engine = this;
 		if(info.hasDelta) system.timeDelta = t;
-		if(info.hasEntities) Reflect.setField(system,"entities",info.entities.iterator());
+		if(info.hasEntities) system.entities = info.entities;
 		if(info.hasComponents) {
 			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);
 			var $it0 = info.components.keys();

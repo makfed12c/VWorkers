@@ -97,7 +97,7 @@ class Engine {
     if(info.hasDelta)
       Reflect.setField(system, "timeDelta", t);
     if(info.hasEntities)
-      Reflect.setField(system, "entities", info.entities.iterator());
+      Reflect.setField(system, "entities", info.entities);
     if(info.hasComponents) {
       if(info.hasBefore)
         Reflect.callMethod(system, info.update, emptyArgs);
