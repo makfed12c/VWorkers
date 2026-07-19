@@ -172,5 +172,10 @@ typedef SystemInfo = {
   update : Dynamic,
   phase : Phase,
   components : Map<Entity, Array<Dynamic>>,
-  entities : View<Dynamic>
+  entities : View<Dynamic>/*,
+  views : Map<String, {
+    requirements : Void -> Array<Class<Dynamic>>,
+    view : View<Dynamic>
+  }
+  */
 }
