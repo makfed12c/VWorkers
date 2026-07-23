@@ -201,4 +201,15 @@ class BuildSystem {
     }
     return null;
   }
+
+/*
+TODO
+ - move SystemInfo to a class
+ - create a new ${systemName}SystemInfo type for each System
+ - move ISystem fields to SystemInfo
+ - collect every FVar of type : View<T: {}>
+ - for each create a field _${name}Requirements
+ - add @:noCompletion to both component and system requirements
+ - change componentsRequirements to _component_Requirements
+*/
 }
