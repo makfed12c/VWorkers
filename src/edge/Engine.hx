@@ -2,9 +2,6 @@ package edge;
 
 import edge.Entity;
 
-using thx.core.Arrays;
-using thx.core.Iterators;
-
 @:access(edge.Entity)
 @:access(edge.View)
 class Engine {
@@ -53,28 +50,11 @@ class Engine {
   public function systems() : Iterator<ISystem>
     return mapInfo.keys();
 
-  static function hasField(o : {}, field : String)
-    return Type.getInstanceFields(Type.getClass(o)).contains(field);
-
   // private methods
   function addSystem(phase : Phase, system : ISystem) {
     if(mapInfo.exists(system))
       throw 'System "$system" already exists in Engine';
-    var info = {
-          hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0,
-          hasDelta  : hasField(system, "timeDelta"),
-          hasEngine : hasField(system, "engine"),
-          hasEntity : hasField(system, "entity"),
-          hasBefore : hasField(system, "before"),
-          hasEntities : null != system.entityRequirements,
-          update : Reflect.field(system, "update"),
-          phase : phase,
-          before : null,
-          components : new Map(),
-          entities : new View()
-        };
-    if(info.hasBefore)
-      info.before = Reflect.field(system, "before");
+    var info = new SystemInfo(system, phase);
     mapInfo.set(system, info);
     if(info.hasComponents)
       for(entity in mapEntities.keys())

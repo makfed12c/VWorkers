@@ -637,9 +637,6 @@ edge.Engine = function() {
 	this.listPhases = [];
 };
 edge.Engine.__name__ = ["edge","Engine"];
-edge.Engine.hasField = function(o,field) {
-	return thx.core.Arrays.contains(Type.getInstanceFields(Type.getClass(o)),field);
-};
 edge.Engine.prototype = {
 	mapInfo: null
 	,mapEntities: null
@@ -688,8 +685,7 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasDelta : edge.Engine.hasField(system,"timeDelta"), hasEngine : edge.Engine.hasField(system,"engine"), hasEntity : edge.Engine.hasField(system,"entity"), hasBefore : edge.Engine.hasField(system,"before"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, before : null, components : new haxe.ds.ObjectMap(), entities : new edge.View()};
-		if(info.hasBefore) info.before = Reflect.field(system,"before");
+		var info = new edge.SystemInfo(system,phase);
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
 			var $it0 = this.mapEntities.keys();
@@ -997,6 +993,40 @@ edge.NodeSystemIterator.prototype = {
 		return system;
 	}
 	,__class__: edge.NodeSystemIterator
+};
+edge.SystemInfo = function(system,phase) {
+	this.system = system;
+	this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
+	this.hasDelta = edge.SystemInfo.hasField(system,"timeDelta");
+	this.hasEngine = edge.SystemInfo.hasField(system,"engine");
+	this.hasEntity = edge.SystemInfo.hasField(system,"entity");
+	this.hasBefore = edge.SystemInfo.hasField(system,"before");
+	this.hasEntities = null != system.entityRequirements;
+	this.update = Reflect.field(system,"update");
+	this.phase = phase;
+	this.before = null;
+	this.components = new haxe.ds.ObjectMap();
+	this.entities = new edge.View();
+	if(this.hasBefore) this.before = Reflect.field(system,"before");
+};
+edge.SystemInfo.__name__ = ["edge","SystemInfo"];
+edge.SystemInfo.hasField = function(o,field) {
+	return thx.core.Arrays.contains(Type.getInstanceFields(Type.getClass(o)),field);
+};
+edge.SystemInfo.prototype = {
+	hasComponents: null
+	,hasDelta: null
+	,hasEngine: null
+	,hasEntity: null
+	,hasEntities: null
+	,hasBefore: null
+	,phase: null
+	,before: null
+	,update: null
+	,components: null
+	,entities: null
+	,system: null
+	,__class__: edge.SystemInfo
 };
 edge.View = function() {
 	this.map = new haxe.ds.ObjectMap();
