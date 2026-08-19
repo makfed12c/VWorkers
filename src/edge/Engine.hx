@@ -15,11 +15,12 @@ class Engine {
     listPhases = [];
   }
 
-  public function add(entity : Entity) {
-    entity.engine = this;
+  public function create(?components : Array<{}>) {
+    var entity = new Entity(this, components);
     mapEntities.set(entity, true);
     matchSystems(entity);
     matchEntities(entity);
+    return entity;
   }
 
   public function clear()
