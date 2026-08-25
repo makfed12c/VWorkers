@@ -17,6 +17,7 @@ class Entity {
     _add(component);
     engine.matchSystems(this);
   }
+  
 
   public function addMany(components : Array<{}>) {
     components.pluck(_add(_));

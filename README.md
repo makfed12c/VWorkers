@@ -38,21 +38,21 @@ class Game {
         world = new World();
 
     for(i in 0...300)
-      world.engine.add(new Entity([
+      world.engine.create([
           new Position(
             Math.random() * width,
             Math.random() * height),
           new Velocity(
             Math.random() * 2 - 1,
             Math.random() * 2 - 1)
-        ]));
+        ]);
 
     for(i in 0...20)
-      world.engine.add(new Entity([
+      world.engine.create([
           new Position(
             Math.random() * width,
             Math.random() * height)
-        ]));
+        ]);
 
     world.physics.add(new UpdateMovement());
 

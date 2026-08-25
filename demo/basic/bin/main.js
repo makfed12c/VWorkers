@@ -35,12 +35,12 @@ Game.main = function() {
 	var _g = 0;
 	while(_g < 300) {
 		var i = _g++;
-		world.engine.add(new edge.Entity([new Position(Math.random() * Game.width,Math.random() * Game.height),new Velocity(Math.random() * 2 - 1,Math.random() * 2 - 1)]));
+		world.engine.create([new Position(Math.random() * Game.width,Math.random() * Game.height),new Velocity(Math.random() * 2 - 1,Math.random() * 2 - 1)]);
 	}
 	var _g1 = 0;
 	while(_g1 < 20) {
 		var i1 = _g1++;
-		world.engine.add(new edge.Entity([new Position(Math.random() * Game.width,Math.random() * Game.height)]));
+		world.engine.create([new Position(Math.random() * Game.width,Math.random() * Game.height)]);
 	}
 	world.physics.add(new UpdateMovement());
 	world.render.add(new RenderBackground(mini));
@@ -179,9 +179,6 @@ Reflect.field = function(o,field) {
 		return null;
 	}
 };
-Reflect.setField = function(o,field,value) {
-	o[field] = value;
-};
 Reflect.callMethod = function(o,func,args) {
 	return func.apply(o,args);
 };
@@ -226,18 +223,16 @@ edge.Engine = function() {
 	this.listPhases = [];
 };
 edge.Engine.__name__ = ["edge","Engine"];
-edge.Engine.hasField = function(o,field) {
-	return thx.core.Arrays.contains(Type.getInstanceFields(Type.getClass(o)),field);
-};
 edge.Engine.prototype = {
 	mapInfo: null
 	,mapEntities: null
 	,listPhases: null
-	,add: function(entity) {
-		entity.engine = this;
+	,create: function(components) {
+		var entity = new edge.Entity(this,components);
 		this.mapEntities.set(entity,true);
 		this.matchSystems(entity);
 		this.matchEntities(entity);
+		return entity;
 	}
 	,createPhase: function() {
 		var phase = new edge.Phase(this);
@@ -246,8 +241,7 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = { hasComponents : null != system.componentRequirements && system.componentRequirements.length > 0, hasDelta : edge.Engine.hasField(system,"timeDelta"), hasEngine : edge.Engine.hasField(system,"engine"), hasEntity : edge.Engine.hasField(system,"entity"), hasBefore : edge.Engine.hasField(system,"before"), hasEntities : null != system.entityRequirements, update : Reflect.field(system,"update"), phase : phase, before : null, components : new haxe.ds.ObjectMap(), entities : new haxe.ds.ObjectMap()};
-		if(info.hasBefore) info.before = Reflect.field(system,"before");
+		var info = new edge.SystemInfo(system,phase);
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
 			var $it0 = this.mapEntities.keys();
@@ -273,7 +267,7 @@ edge.Engine.prototype = {
 		if(info == null) return;
 		if(info.hasEngine) system.engine = this;
 		if(info.hasDelta) system.timeDelta = t;
-		if(info.hasEntities) Reflect.setField(system,"entities",info.entities.iterator());
+		if(info.hasEntities) system.entities = info.entities;
 		if(info.hasComponents) {
 			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);
 			var $it0 = info.components.keys();
@@ -325,7 +319,7 @@ edge.Engine.prototype = {
 				o1[system.entityRequirements[i].name] = components[i];
 			}
 			o1.entity = entity;
-			info.entities.set(entity,o1);
+			info.entities.add(entity,o1);
 		}
 	}
 	,matchRequirements: function(entity,requirements) {
@@ -347,7 +341,8 @@ edge.Engine.prototype = {
 	}
 	,__class__: edge.Engine
 };
-edge.Entity = function(components) {
+edge.Entity = function(engine,components) {
+	this.engine = engine;
 	this.map = new haxe.ds.StringMap();
 	if(null != components) this.addMany(components);
 };
@@ -361,11 +356,11 @@ edge.Entity.prototype = {
 			_g._add(_);
 			return;
 		});
-		if(null != this.engine) this.engine.matchSystems(this);
+		this.engine.matchSystems(this);
 	}
 	,remove: function(component) {
 		this._remove(component);
-		if(null != this.engine) this.engine.matchSystems(this);
+		this.engine.matchSystems(this);
 	}
 	,_add: function(component) {
 		var type = Type.getClassName(Type.getClass(component));
@@ -473,6 +468,60 @@ edge.NodeSystemIterator.prototype = {
 	}
 	,__class__: edge.NodeSystemIterator
 };
+edge.SystemInfo = function(system,phase) {
+	this.system = system;
+	this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
+	this.hasDelta = edge.SystemInfo.hasField(system,"timeDelta");
+	this.hasEngine = edge.SystemInfo.hasField(system,"engine");
+	this.hasEntity = edge.SystemInfo.hasField(system,"entity");
+	this.hasBefore = edge.SystemInfo.hasField(system,"before");
+	this.hasEntities = null != system.entityRequirements;
+	this.update = Reflect.field(system,"update");
+	this.phase = phase;
+	this.before = null;
+	this.components = new haxe.ds.ObjectMap();
+	this.entities = new edge.View();
+	if(this.hasBefore) this.before = Reflect.field(system,"before");
+};
+edge.SystemInfo.__name__ = ["edge","SystemInfo"];
+edge.SystemInfo.hasField = function(o,field) {
+	return thx.core.Arrays.contains(Type.getInstanceFields(Type.getClass(o)),field);
+};
+edge.SystemInfo.prototype = {
+	hasComponents: null
+	,hasDelta: null
+	,hasEngine: null
+	,hasEntity: null
+	,hasEntities: null
+	,hasBefore: null
+	,phase: null
+	,before: null
+	,update: null
+	,components: null
+	,entities: null
+	,system: null
+	,__class__: edge.SystemInfo
+};
+edge.View = function() {
+	this.map = new haxe.ds.ObjectMap();
+	this.count = 0;
+};
+edge.View.__name__ = ["edge","View"];
+edge.View.prototype = {
+	count: null
+	,map: null
+	,add: function(entity,data) {
+		if(this.map.h.__keys__[entity.__id__] != null) return;
+		this.map.set(entity,data);
+		this.count++;
+	}
+	,remove: function(entity) {
+		if(!(this.map.h.__keys__[entity.__id__] != null)) return;
+		this.map.remove(entity);
+		this.count--;
+	}
+	,__class__: edge.View
+};
 edge.World = function(delta,schedule) {
 	if(delta == null) delta = 16;
 	this.engine = new edge.Engine();
@@ -542,14 +591,6 @@ haxe.ds.ObjectMap.prototype = {
 		if(this.h.hasOwnProperty(key)) a.push(this.h.__keys__[key]);
 		}
 		return HxOverrides.iter(a);
-	}
-	,iterator: function() {
-		return { ref : this.h, it : this.keys(), hasNext : function() {
-			return this.it.hasNext();
-		}, next : function() {
-			var i = this.it.next();
-			return this.ref[i.__id__];
-		}};
 	}
 	,__class__: haxe.ds.ObjectMap
 };
