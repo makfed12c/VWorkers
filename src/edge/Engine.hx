@@ -27,7 +27,7 @@ class Engine {
     for(entity in mapEntities.keys())
       remove(entity);
 
-  public function remove(entity : Entity) {
+  function remove(entity : Entity) {
     for(system in mapInfo.keys())
       mapInfo.get(system).components.remove(entity);
     for(system in mapInfo.keys())

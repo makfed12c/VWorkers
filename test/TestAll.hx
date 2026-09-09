@@ -40,7 +40,7 @@ class TestAll {
     Assert.equals(engine, entity.engine);
     phase.update(0);
     Assert.equals(1, system.count);
-    engine.remove(entity);
+    entity.destroy();
     Assert.isNull(entity.engine);
     phase.update(0);
     Assert.equals(1, system.count);
@@ -63,7 +63,7 @@ class TestAll {
     var entity = engine.create([new B()]);
     phase.update(0);
     Assert.equals(1, system.count);
-    engine.remove(entity);
+    entity.destroy();
     phase.update(0);
     Assert.equals(1, system.count);
     entity = engine.create([new B()]);
@@ -85,7 +85,7 @@ class TestAll {
     var entity = engine.create([new A()]);
     phase.update(0);
     Assert.equals(0, system.count);
-    engine.remove(entity);
+    entity.destroy();
     phase.update(0);
     Assert.equals(0, system.count);
   }
@@ -133,11 +133,11 @@ class TestAll {
     assertNumberOfSystems(engine, 0);
     var e2 = engine.create();
     assertNumberOfEntities(engine, 2);
-    engine.remove(e1);
+    e1.destroy();
     assertNumberOfEntities(engine, 1);
-    engine.remove(e1);
+    e1.destroy();
     assertNumberOfEntities(engine, 1);
-    engine.remove(e2);
+    e2.destroy();
     assertNumberOfEntities(engine, 0);
   }
 

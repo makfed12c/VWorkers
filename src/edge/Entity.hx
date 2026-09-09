@@ -14,14 +14,21 @@ class Entity {
   }
 
   public function add(component : {}) {
+    if(null == engine) return;
     _add(component);
     engine.matchSystems(this);
   }
-  
 
   public function addMany(components : Array<{}>) {
+    if(null == engine) return;
     components.pluck(_add(_));
     engine.matchSystems(this);
+  }
+
+  public function destroy() {
+    if(null == engine) return;
+    engine.remove(this);
+    map = new Map();
   }
 
   public function exists(component : {})
