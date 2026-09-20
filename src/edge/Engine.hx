@@ -31,7 +31,8 @@ class Engine {
     for(system in mapInfo.keys())
       mapInfo.get(system).components.remove(entity);
     for(system in mapInfo.keys())
-      mapInfo.get(system).entities.remove(entity);
+      for(collection in mapInfo.get(system).collections)
+        collection.view.remove(entity);
     mapEntities.remove(entity);
     entity.engine = null;
   }
@@ -60,7 +61,7 @@ class Engine {
     if(info.hasComponents)
       for(entity in mapEntities.keys())
         matchSystem(entity, system);
-    if(info.hasEntities)
+    if(info.collections.iterator().hasNext())
       for(entity in mapEntities.keys())
         matchEntity(entity, system);
   }
@@ -77,8 +78,8 @@ class Engine {
       Reflect.setField(system, "engine", this);
     if(info.hasDelta)
       Reflect.setField(system, "timeDelta", t);
-    if(info.hasEntities)
-      Reflect.setField(system, "entities", info.entities);
+//    if(info.hasEntities)
+//      Reflect.setField(system, "entities", info.entities);
     if(info.hasComponents) {
       if(info.hasBefore)
         Reflect.callMethod(system, info.update, emptyArgs);
@@ -113,18 +114,21 @@ class Engine {
 
   function matchEntity(entity : Entity, system : ISystem) {
     var info = mapInfo.get(system);
-    if(!info.hasEntities) return;
-    info.entities.remove(entity);
-    var componentRequirements = system.entityRequirements.map(function(o) return o.cls),
-        components = matchRequirements(entity, componentRequirements),
-        o;
-    if(null != components) {
-      o = {};
-      for(i in 0...components.length) {
-        Reflect.setField(o, system.entityRequirements[i].name, components[i]);
+    if(!info.collections.iterator().hasNext()) return;
+    for(name in info.collections.keys()) {
+      var collection = info.collections.get(name);
+      collection.view.remove(entity);
+      var componentRequirements = system.entityRequirements.map(function(o) return o.cls),
+          components = matchRequirements(entity, componentRequirements),
+          o;
+      if(null != components) {
+        o = {};
+        for(i in 0...components.length) {
+          Reflect.setField(o, system.entityRequirements[i].name, components[i]);
+        }
+        Reflect.setField(o, "entity", entity);
+        collection.view.add(entity, o);
       }
-      Reflect.setField(o, "entity", entity);
-      info.entities.add(entity, o);
     }
   }
 
