@@ -1,5 +1,4 @@
 (function (console) { "use strict";
-var $estr = function() { return js.Boot.__string_rec(this,''); };
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
@@ -546,27 +545,20 @@ B.prototype = {
 };
 var ValueType = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] };
 ValueType.TNull = ["TNull",0];
-ValueType.TNull.toString = $estr;
 ValueType.TNull.__enum__ = ValueType;
 ValueType.TInt = ["TInt",1];
-ValueType.TInt.toString = $estr;
 ValueType.TInt.__enum__ = ValueType;
 ValueType.TFloat = ["TFloat",2];
-ValueType.TFloat.toString = $estr;
 ValueType.TFloat.__enum__ = ValueType;
 ValueType.TBool = ["TBool",3];
-ValueType.TBool.toString = $estr;
 ValueType.TBool.__enum__ = ValueType;
 ValueType.TObject = ["TObject",4];
-ValueType.TObject.toString = $estr;
 ValueType.TObject.__enum__ = ValueType;
 ValueType.TFunction = ["TFunction",5];
-ValueType.TFunction.toString = $estr;
 ValueType.TFunction.__enum__ = ValueType;
-ValueType.TClass = function(c) { var $x = ["TClass",6,c]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; };
-ValueType.TEnum = function(e) { var $x = ["TEnum",7,e]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; };
+ValueType.TClass = function(c) { var $x = ["TClass",6,c]; $x.__enum__ = ValueType; return $x; };
+ValueType.TEnum = function(e) { var $x = ["TEnum",7,e]; $x.__enum__ = ValueType; return $x; };
 ValueType.TUnknown = ["TUnknown",8];
-ValueType.TUnknown.toString = $estr;
 ValueType.TUnknown.__enum__ = ValueType;
 var Type = function() { };
 Type.__name__ = ["Type"];
@@ -667,7 +659,16 @@ edge.Engine.prototype = {
 		var $it1 = this.mapInfo.keys();
 		while( $it1.hasNext() ) {
 			var system1 = $it1.next();
-			this.mapInfo.h[system1.__id__].entities.remove(entity);
+			var $it2 = (function($this) {
+				var $r;
+				var this11 = $this.mapInfo.h[system1.__id__].collections;
+				$r = this11.iterator();
+				return $r;
+			}(this));
+			while( $it2.hasNext() ) {
+				var collection = $it2.next();
+				collection.view.remove(entity);
+			}
 		}
 		this.mapEntities.remove(entity);
 		entity.engine = null;
@@ -697,7 +698,7 @@ edge.Engine.prototype = {
 				this.matchSystem(entity,system);
 			}
 		}
-		if(info.hasEntities) {
+		if(info.collections.iterator().hasNext()) {
 			var $it1 = this.mapEntities.keys();
 			while( $it1.hasNext() ) {
 				var entity1 = $it1.next();
@@ -714,7 +715,6 @@ edge.Engine.prototype = {
 		if(info == null) return;
 		if(info.hasEngine) system.engine = this;
 		if(info.hasDelta) system.timeDelta = t;
-		if(info.hasEntities) system.entities = info.entities;
 		if(info.hasComponents) {
 			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);
 			var $it0 = info.components.keys();
@@ -750,23 +750,28 @@ edge.Engine.prototype = {
 	}
 	,matchEntity: function(entity,system) {
 		var info = this.mapInfo.h[system.__id__];
-		if(!info.hasEntities) return;
-		info.entities.remove(entity);
-		var componentRequirements = system.entityRequirements.map(function(o) {
-			return o.cls;
-		});
-		var components = this.matchRequirements(entity,componentRequirements);
-		var o1;
-		if(null != components) {
-			o1 = { };
-			var _g1 = 0;
-			var _g = components.length;
-			while(_g1 < _g) {
-				var i = _g1++;
-				o1[system.entityRequirements[i].name] = components[i];
+		if(!info.collections.iterator().hasNext()) return;
+		var $it0 = info.collections.keys();
+		while( $it0.hasNext() ) {
+			var name = $it0.next();
+			var collection = info.collections.get(name);
+			collection.view.remove(entity);
+			var componentRequirements = system.entityRequirements.map(function(o) {
+				return o.cls;
+			});
+			var components = this.matchRequirements(entity,componentRequirements);
+			var o1;
+			if(null != components) {
+				o1 = { };
+				var _g1 = 0;
+				var _g = components.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					o1[system.entityRequirements[i].name] = components[i];
+				}
+				o1.entity = entity;
+				collection.view.add(entity,o1);
 			}
-			o1.entity = entity;
-			info.entities.add(entity,o1);
 		}
 	}
 	,matchRequirements: function(entity,requirements) {
@@ -1012,12 +1017,21 @@ edge.SystemInfo = function(system,phase) {
 	this.hasEngine = edge.SystemInfo.hasField(system,"engine");
 	this.hasEntity = edge.SystemInfo.hasField(system,"entity");
 	this.hasBefore = edge.SystemInfo.hasField(system,"before");
-	this.hasEntities = null != system.entityRequirements;
 	this.update = Reflect.field(system,"update");
 	this.phase = phase;
 	this.before = null;
 	this.components = new haxe.ds.ObjectMap();
-	this.entities = new edge.View();
+	this.collections = new haxe.ds.StringMap();
+	if(null != system.entityRequirements) {
+		var view = new edge.View();
+		var value = { classes : system.entityRequirements.map(function(_) {
+			return _.cls;
+		}), fields : system.entityRequirements.map(function(_1) {
+			return _1.name;
+		}), view : view};
+		this.collections.set("entities",value);
+		system.entities = view;
+	}
 	if(this.hasBefore) this.before = Reflect.field(system,"before");
 };
 edge.SystemInfo.__name__ = ["edge","SystemInfo"];
@@ -1029,14 +1043,13 @@ edge.SystemInfo.prototype = {
 	,hasDelta: null
 	,hasEngine: null
 	,hasEntity: null
-	,hasEntities: null
 	,hasBefore: null
 	,phase: null
 	,before: null
 	,update: null
 	,components: null
-	,entities: null
 	,system: null
+	,collections: null
 	,__class__: edge.SystemInfo
 };
 edge.View = function() {
@@ -1079,12 +1092,11 @@ edge.View.prototype = {
 var haxe = {};
 haxe.StackItem = { __ename__ : ["haxe","StackItem"], __constructs__ : ["CFunction","Module","FilePos","Method","LocalFunction"] };
 haxe.StackItem.CFunction = ["CFunction",0];
-haxe.StackItem.CFunction.toString = $estr;
 haxe.StackItem.CFunction.__enum__ = haxe.StackItem;
-haxe.StackItem.Module = function(m) { var $x = ["Module",1,m]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; };
-haxe.StackItem.FilePos = function(s,file,line) { var $x = ["FilePos",2,s,file,line]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; };
-haxe.StackItem.Method = function(classname,method) { var $x = ["Method",3,classname,method]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; };
-haxe.StackItem.LocalFunction = function(v) { var $x = ["LocalFunction",4,v]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; };
+haxe.StackItem.Module = function(m) { var $x = ["Module",1,m]; $x.__enum__ = haxe.StackItem; return $x; };
+haxe.StackItem.FilePos = function(s,file,line) { var $x = ["FilePos",2,s,file,line]; $x.__enum__ = haxe.StackItem; return $x; };
+haxe.StackItem.Method = function(classname,method) { var $x = ["Method",3,classname,method]; $x.__enum__ = haxe.StackItem; return $x; };
+haxe.StackItem.LocalFunction = function(v) { var $x = ["LocalFunction",4,v]; $x.__enum__ = haxe.StackItem; return $x; };
 haxe.CallStack = function() { };
 haxe.CallStack.__name__ = ["haxe","CallStack"];
 haxe.CallStack.callStack = function() {
@@ -1184,6 +1196,7 @@ haxe.IMap.prototype = {
 	get: null
 	,remove: null
 	,keys: null
+	,iterator: null
 	,__class__: haxe.IMap
 };
 haxe.Log = function() { };
@@ -1250,6 +1263,14 @@ haxe.ds.ObjectMap.prototype = {
 		if(this.h.hasOwnProperty(key)) a.push(this.h.__keys__[key]);
 		}
 		return HxOverrides.iter(a);
+	}
+	,iterator: function() {
+		return { ref : this.h, it : this.keys(), hasNext : function() {
+			return this.it.hasNext();
+		}, next : function() {
+			var i = this.it.next();
+			return this.ref[i.__id__];
+		}};
 	}
 	,__class__: haxe.ds.ObjectMap
 };
@@ -2322,7 +2343,6 @@ thx.core.Iterators.toArray = function(it) {
 };
 thx.core.Nil = { __ename__ : ["thx","core","Nil"], __constructs__ : ["nil"] };
 thx.core.Nil.nil = ["nil",0];
-thx.core.Nil.nil.toString = $estr;
 thx.core.Nil.nil.__enum__ = thx.core.Nil;
 thx.core.Strings = function() { };
 thx.core.Strings.__name__ = ["thx","core","Strings"];
@@ -3227,18 +3247,17 @@ utest.Assert.typeToString = function(t) {
 	return "<unable to retrieve type name>";
 };
 utest.Assertation = { __ename__ : ["utest","Assertation"], __constructs__ : ["Success","Failure","Error","SetupError","TeardownError","TimeoutError","AsyncError","Warning"] };
-utest.Assertation.Success = function(pos) { var $x = ["Success",0,pos]; $x.__enum__ = utest.Assertation; $x.toString = $estr; return $x; };
-utest.Assertation.Failure = function(msg,pos) { var $x = ["Failure",1,msg,pos]; $x.__enum__ = utest.Assertation; $x.toString = $estr; return $x; };
-utest.Assertation.Error = function(e,stack) { var $x = ["Error",2,e,stack]; $x.__enum__ = utest.Assertation; $x.toString = $estr; return $x; };
-utest.Assertation.SetupError = function(e,stack) { var $x = ["SetupError",3,e,stack]; $x.__enum__ = utest.Assertation; $x.toString = $estr; return $x; };
-utest.Assertation.TeardownError = function(e,stack) { var $x = ["TeardownError",4,e,stack]; $x.__enum__ = utest.Assertation; $x.toString = $estr; return $x; };
-utest.Assertation.TimeoutError = function(missedAsyncs,stack) { var $x = ["TimeoutError",5,missedAsyncs,stack]; $x.__enum__ = utest.Assertation; $x.toString = $estr; return $x; };
-utest.Assertation.AsyncError = function(e,stack) { var $x = ["AsyncError",6,e,stack]; $x.__enum__ = utest.Assertation; $x.toString = $estr; return $x; };
-utest.Assertation.Warning = function(msg) { var $x = ["Warning",7,msg]; $x.__enum__ = utest.Assertation; $x.toString = $estr; return $x; };
+utest.Assertation.Success = function(pos) { var $x = ["Success",0,pos]; $x.__enum__ = utest.Assertation; return $x; };
+utest.Assertation.Failure = function(msg,pos) { var $x = ["Failure",1,msg,pos]; $x.__enum__ = utest.Assertation; return $x; };
+utest.Assertation.Error = function(e,stack) { var $x = ["Error",2,e,stack]; $x.__enum__ = utest.Assertation; return $x; };
+utest.Assertation.SetupError = function(e,stack) { var $x = ["SetupError",3,e,stack]; $x.__enum__ = utest.Assertation; return $x; };
+utest.Assertation.TeardownError = function(e,stack) { var $x = ["TeardownError",4,e,stack]; $x.__enum__ = utest.Assertation; return $x; };
+utest.Assertation.TimeoutError = function(missedAsyncs,stack) { var $x = ["TimeoutError",5,missedAsyncs,stack]; $x.__enum__ = utest.Assertation; return $x; };
+utest.Assertation.AsyncError = function(e,stack) { var $x = ["AsyncError",6,e,stack]; $x.__enum__ = utest.Assertation; return $x; };
+utest.Assertation.Warning = function(msg) { var $x = ["Warning",7,msg]; $x.__enum__ = utest.Assertation; return $x; };
 utest._Dispatcher = {};
 utest._Dispatcher.EventException = { __ename__ : ["utest","_Dispatcher","EventException"], __constructs__ : ["StopPropagation"] };
 utest._Dispatcher.EventException.StopPropagation = ["StopPropagation",0];
-utest._Dispatcher.EventException.StopPropagation.toString = $estr;
 utest._Dispatcher.EventException.StopPropagation.__enum__ = utest._Dispatcher.EventException;
 utest.Dispatcher = function() {
 	this.handlers = [];
@@ -3730,23 +3749,17 @@ utest.ui.common.FixtureResult.prototype = {
 };
 utest.ui.common.HeaderDisplayMode = { __ename__ : ["utest","ui","common","HeaderDisplayMode"], __constructs__ : ["AlwaysShowHeader","NeverShowHeader","ShowHeaderWithResults"] };
 utest.ui.common.HeaderDisplayMode.AlwaysShowHeader = ["AlwaysShowHeader",0];
-utest.ui.common.HeaderDisplayMode.AlwaysShowHeader.toString = $estr;
 utest.ui.common.HeaderDisplayMode.AlwaysShowHeader.__enum__ = utest.ui.common.HeaderDisplayMode;
 utest.ui.common.HeaderDisplayMode.NeverShowHeader = ["NeverShowHeader",1];
-utest.ui.common.HeaderDisplayMode.NeverShowHeader.toString = $estr;
 utest.ui.common.HeaderDisplayMode.NeverShowHeader.__enum__ = utest.ui.common.HeaderDisplayMode;
 utest.ui.common.HeaderDisplayMode.ShowHeaderWithResults = ["ShowHeaderWithResults",2];
-utest.ui.common.HeaderDisplayMode.ShowHeaderWithResults.toString = $estr;
 utest.ui.common.HeaderDisplayMode.ShowHeaderWithResults.__enum__ = utest.ui.common.HeaderDisplayMode;
 utest.ui.common.SuccessResultsDisplayMode = { __ename__ : ["utest","ui","common","SuccessResultsDisplayMode"], __constructs__ : ["AlwaysShowSuccessResults","NeverShowSuccessResults","ShowSuccessResultsWithNoErrors"] };
 utest.ui.common.SuccessResultsDisplayMode.AlwaysShowSuccessResults = ["AlwaysShowSuccessResults",0];
-utest.ui.common.SuccessResultsDisplayMode.AlwaysShowSuccessResults.toString = $estr;
 utest.ui.common.SuccessResultsDisplayMode.AlwaysShowSuccessResults.__enum__ = utest.ui.common.SuccessResultsDisplayMode;
 utest.ui.common.SuccessResultsDisplayMode.NeverShowSuccessResults = ["NeverShowSuccessResults",1];
-utest.ui.common.SuccessResultsDisplayMode.NeverShowSuccessResults.toString = $estr;
 utest.ui.common.SuccessResultsDisplayMode.NeverShowSuccessResults.__enum__ = utest.ui.common.SuccessResultsDisplayMode;
 utest.ui.common.SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors = ["ShowSuccessResultsWithNoErrors",2];
-utest.ui.common.SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors.toString = $estr;
 utest.ui.common.SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors.__enum__ = utest.ui.common.SuccessResultsDisplayMode;
 utest.ui.common.IReport = function() { };
 utest.ui.common.IReport.__name__ = ["utest","ui","common","IReport"];
