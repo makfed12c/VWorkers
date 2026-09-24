@@ -756,21 +756,19 @@ edge.Engine.prototype = {
 			var name = $it0.next();
 			var collection = info.collections.get(name);
 			collection.view.remove(entity);
-			var componentRequirements = system.entityRequirements.map(function(o) {
-				return o.cls;
-			});
+			var componentRequirements = collection.classes;
 			var components = this.matchRequirements(entity,componentRequirements);
-			var o1;
+			var o;
 			if(null != components) {
-				o1 = { };
+				o = { };
 				var _g1 = 0;
 				var _g = components.length;
 				while(_g1 < _g) {
 					var i = _g1++;
-					o1[system.entityRequirements[i].name] = components[i];
+					o[collection.fields[i]] = components[i];
 				}
-				o1.entity = entity;
-				collection.view.add(entity,o1);
+				o.entity = entity;
+				collection.view.add(entity,o);
 			}
 		}
 	}

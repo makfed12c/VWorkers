@@ -116,13 +116,13 @@ class Engine {
     for(name in info.collections.keys()) {
       var collection = info.collections.get(name);
       collection.view.remove(entity);
-      var componentRequirements = system.entityRequirements.map(function(o) return o.cls),
+      var componentRequirements = collection.classes,
           components = matchRequirements(entity, componentRequirements),
           o;
       if(null != components) {
         o = {};
         for(i in 0...components.length) {
-          Reflect.setField(o, system.entityRequirements[i].name, components[i]);
+          Reflect.setField(o, collection.fields[i], components[i]);
         }
         Reflect.setField(o, "entity", entity);
         collection.view.add(entity, o);
