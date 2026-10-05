@@ -1,5 +1,4 @@
 (function (console) { "use strict";
-var $estr = function() { return js.Boot.__string_rec(this,''); };
 function $extend(from, fields) {
 	function Inherit() {} Inherit.prototype = from; var proto = new Inherit();
 	for (var name in fields) proto[name] = fields[name];
@@ -250,7 +249,7 @@ edge.Engine.prototype = {
 				this.matchSystem(entity,system);
 			}
 		}
-		if(info.hasEntities) {
+		if(info.collections.iterator().hasNext()) {
 			var $it1 = this.mapEntities.keys();
 			while( $it1.hasNext() ) {
 				var entity1 = $it1.next();
@@ -267,7 +266,6 @@ edge.Engine.prototype = {
 		if(info == null) return;
 		if(info.hasEngine) system.engine = this;
 		if(info.hasDelta) system.timeDelta = t;
-		if(info.hasEntities) system.entities = info.entities;
 		if(info.hasComponents) {
 			if(info.hasBefore) Reflect.callMethod(system,info.update,this.emptyArgs);
 			var $it0 = info.components.keys();
@@ -303,23 +301,26 @@ edge.Engine.prototype = {
 	}
 	,matchEntity: function(entity,system) {
 		var info = this.mapInfo.h[system.__id__];
-		if(!info.hasEntities) return;
-		info.entities.remove(entity);
-		var componentRequirements = system.entityRequirements.map(function(o) {
-			return o.cls;
-		});
-		var components = this.matchRequirements(entity,componentRequirements);
-		var o1;
-		if(null != components) {
-			o1 = { };
-			var _g1 = 0;
-			var _g = components.length;
-			while(_g1 < _g) {
-				var i = _g1++;
-				o1[system.entityRequirements[i].name] = components[i];
+		if(!info.collections.iterator().hasNext()) return;
+		var $it0 = info.collections.keys();
+		while( $it0.hasNext() ) {
+			var name = $it0.next();
+			var collection = info.collections.get(name);
+			collection.view.remove(entity);
+			var componentRequirements = collection.classes;
+			var components = this.matchRequirements(entity,componentRequirements);
+			var o;
+			if(null != components) {
+				o = { };
+				var _g1 = 0;
+				var _g = components.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					o[collection.fields[i]] = components[i];
+				}
+				o.entity = entity;
+				collection.view.add(entity,o);
 			}
-			o1.entity = entity;
-			info.entities.add(entity,o1);
 		}
 	}
 	,matchRequirements: function(entity,requirements) {
@@ -352,6 +353,7 @@ edge.Entity.prototype = {
 	,engine: null
 	,addMany: function(components) {
 		var _g = this;
+		if(null == this.engine) return;
 		components.map(function(_) {
 			_g._add(_);
 			return;
@@ -475,12 +477,21 @@ edge.SystemInfo = function(system,phase) {
 	this.hasEngine = edge.SystemInfo.hasField(system,"engine");
 	this.hasEntity = edge.SystemInfo.hasField(system,"entity");
 	this.hasBefore = edge.SystemInfo.hasField(system,"before");
-	this.hasEntities = null != system.entityRequirements;
 	this.update = Reflect.field(system,"update");
 	this.phase = phase;
 	this.before = null;
 	this.components = new haxe.ds.ObjectMap();
-	this.entities = new edge.View();
+	this.collections = new haxe.ds.StringMap();
+	if(null != system.entityRequirements) {
+		var view = new edge.View();
+		var value = { classes : system.entityRequirements.map(function(_) {
+			return _.cls;
+		}), fields : system.entityRequirements.map(function(_1) {
+			return _1.name;
+		}), view : view};
+		this.collections.set("entities",value);
+		system.entities = view;
+	}
 	if(this.hasBefore) this.before = Reflect.field(system,"before");
 };
 edge.SystemInfo.__name__ = ["edge","SystemInfo"];
@@ -492,14 +503,13 @@ edge.SystemInfo.prototype = {
 	,hasDelta: null
 	,hasEngine: null
 	,hasEntity: null
-	,hasEntities: null
 	,hasBefore: null
 	,phase: null
 	,before: null
 	,update: null
 	,components: null
-	,entities: null
 	,system: null
+	,collections: null
 	,__class__: edge.SystemInfo
 };
 edge.View = function() {
@@ -656,6 +666,10 @@ haxe.ds.StringMap.prototype = {
 			delete(this.h[key]);
 			return true;
 		}
+	}
+	,keys: function() {
+		var _this = this.arrayKeys();
+		return HxOverrides.iter(_this);
 	}
 	,arrayKeys: function() {
 		var out = [];
@@ -846,12 +860,10 @@ minicanvas.MiniCanvas.prototype = {
 };
 minicanvas.ScaleMode = { __ename__ : true, __constructs__ : ["NoScale","Auto","Scaled"] };
 minicanvas.ScaleMode.NoScale = ["NoScale",0];
-minicanvas.ScaleMode.NoScale.toString = $estr;
 minicanvas.ScaleMode.NoScale.__enum__ = minicanvas.ScaleMode;
 minicanvas.ScaleMode.Auto = ["Auto",1];
-minicanvas.ScaleMode.Auto.toString = $estr;
 minicanvas.ScaleMode.Auto.__enum__ = minicanvas.ScaleMode;
-minicanvas.ScaleMode.Scaled = function(v) { var $x = ["Scaled",2,v]; $x.__enum__ = minicanvas.ScaleMode; $x.toString = $estr; return $x; };
+minicanvas.ScaleMode.Scaled = function(v) { var $x = ["Scaled",2,v]; $x.__enum__ = minicanvas.ScaleMode; return $x; };
 minicanvas.BrowserCanvas = function(width,height,scaleMode) {
 	this.isNode = false;
 	this.isBrowser = true;
@@ -1238,12 +1250,12 @@ thx.color.parse.ColorInfo.prototype = {
 	,__class__: thx.color.parse.ColorInfo
 };
 thx.color.parse.ChannelInfo = { __ename__ : true, __constructs__ : ["CIPercent","CIFloat","CIDegree","CIInt8","CIInt","CIBool"] };
-thx.color.parse.ChannelInfo.CIPercent = function(value) { var $x = ["CIPercent",0,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
-thx.color.parse.ChannelInfo.CIFloat = function(value) { var $x = ["CIFloat",1,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
-thx.color.parse.ChannelInfo.CIDegree = function(value) { var $x = ["CIDegree",2,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
-thx.color.parse.ChannelInfo.CIInt8 = function(value) { var $x = ["CIInt8",3,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
-thx.color.parse.ChannelInfo.CIInt = function(value) { var $x = ["CIInt",4,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
-thx.color.parse.ChannelInfo.CIBool = function(value) { var $x = ["CIBool",5,value]; $x.__enum__ = thx.color.parse.ChannelInfo; $x.toString = $estr; return $x; };
+thx.color.parse.ChannelInfo.CIPercent = function(value) { var $x = ["CIPercent",0,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
+thx.color.parse.ChannelInfo.CIFloat = function(value) { var $x = ["CIFloat",1,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
+thx.color.parse.ChannelInfo.CIDegree = function(value) { var $x = ["CIDegree",2,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
+thx.color.parse.ChannelInfo.CIInt8 = function(value) { var $x = ["CIInt8",3,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
+thx.color.parse.ChannelInfo.CIInt = function(value) { var $x = ["CIInt",4,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
+thx.color.parse.ChannelInfo.CIBool = function(value) { var $x = ["CIBool",5,value]; $x.__enum__ = thx.color.parse.ChannelInfo; return $x; };
 thx.core = {};
 thx.core.Arrays = function() { };
 thx.core.Arrays.__name__ = ["thx","core","Arrays"];
