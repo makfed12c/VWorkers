@@ -8,7 +8,6 @@ class SystemInfo {
   public var hasEngine(default, null) : Bool;
   public var hasEntity(default, null) : Bool;
   public var hasBefore(default, null) : Bool;
-  public var phase(default, null) : Phase;
   public var before(default, null) : Dynamic;
   public var update(default, null) : Dynamic;
   public var components(default, null) : Map<Entity, Array<Dynamic>>;
@@ -20,7 +19,7 @@ class SystemInfo {
     view : View<Dynamic>
   }>;
 
-  public function new(system : ISystem, phase : Phase) {
+  public function new(system : ISystem) {
     this.system        = system;
     this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
     this.hasDelta      = hasField(system, "timeDelta");
@@ -28,7 +27,6 @@ class SystemInfo {
     this.hasEntity     = hasField(system, "entity");
     this.hasBefore     = hasField(system, "before");
     this.update        = Reflect.field(system, "update");
-    this.phase         = phase;
     this.before        = null;
     this.components    = new Map();
 

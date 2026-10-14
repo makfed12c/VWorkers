@@ -56,7 +56,7 @@ class Engine {
   function addSystem(phase : Phase, system : ISystem) {
     if(mapInfo.exists(system))
       throw 'System "$system" already exists in Engine';
-    var info = new SystemInfo(system, phase);
+    var info = new SystemInfo(system);
     mapInfo.set(system, info);
     if(info.hasComponents)
       for(entity in mapEntities.keys())

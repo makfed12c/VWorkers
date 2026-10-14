@@ -689,7 +689,7 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = new edge.SystemInfo(system,phase);
+		var info = new edge.SystemInfo(system);
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
 			var $it0 = this.mapEntities.keys();
@@ -1008,7 +1008,7 @@ edge.NodeSystemIterator.prototype = {
 	}
 	,__class__: edge.NodeSystemIterator
 };
-edge.SystemInfo = function(system,phase) {
+edge.SystemInfo = function(system) {
 	this.system = system;
 	this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
 	this.hasDelta = edge.SystemInfo.hasField(system,"timeDelta");
@@ -1016,7 +1016,6 @@ edge.SystemInfo = function(system,phase) {
 	this.hasEntity = edge.SystemInfo.hasField(system,"entity");
 	this.hasBefore = edge.SystemInfo.hasField(system,"before");
 	this.update = Reflect.field(system,"update");
-	this.phase = phase;
 	this.before = null;
 	this.components = new haxe.ds.ObjectMap();
 	this.collections = new haxe.ds.StringMap();
@@ -1042,7 +1041,6 @@ edge.SystemInfo.prototype = {
 	,hasEngine: null
 	,hasEntity: null
 	,hasBefore: null
-	,phase: null
 	,before: null
 	,update: null
 	,components: null

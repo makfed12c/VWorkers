@@ -478,7 +478,6 @@ edge.SystemInfo = function(system,phase) {
 	this.hasEntity = edge.SystemInfo.hasField(system,"entity");
 	this.hasBefore = edge.SystemInfo.hasField(system,"before");
 	this.update = Reflect.field(system,"update");
-	this.phase = phase;
 	this.before = null;
 	this.components = new haxe.ds.ObjectMap();
 	this.collections = new haxe.ds.StringMap();
@@ -504,7 +503,6 @@ edge.SystemInfo.prototype = {
 	,hasEngine: null
 	,hasEntity: null
 	,hasBefore: null
-	,phase: null
 	,before: null
 	,update: null
 	,components: null
