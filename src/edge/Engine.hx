@@ -8,7 +8,6 @@ class Engine {
   var mapInfo : Map<ISystem, SystemInfo>;
   var mapEntities : Map<Entity, Bool>;
   var listPhases : Array<Phase>;
-
   public function new() {
     mapInfo = new Map();
     mapEntities = new Map();

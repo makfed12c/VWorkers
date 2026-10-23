@@ -9,6 +9,8 @@ using thx.macro.MacroFields;
 using thx.macro.MacroTypes;
 
 class BuildSystem {
+  public inline static var PROCESS_SUFFIX = "_SystemProcess";
+
   macro public static function complete() : Array<Field> {
     var fields = Context.getBuildFields();
     checkUpdate(fields);
@@ -16,7 +18,46 @@ class BuildSystem {
     injectEntityRequirements(fields);
     injectToString(fields);
     injectConstructor(fields);
+    injectSystemProcess(fields);
+    injectSystemProcessConstructor(fields, Context.getLocalClass());
     return fields;
+  }
+
+  static function injectSystemProcessConstructor(fields : Array<Field>, cls : Ref<ClassType>) {
+    var s = cls.toString(),
+        p = '$s${PROCESS_SUFFIX}',
+        field = findField(fields, "new");
+
+    //BuildSystemProcess.createProcessType(s, p, fields);
+
+    switch field.kind {
+      case FFun(o):
+        var orig = o.expr.expr,
+            expr = Context.parse('new $p()', Context.currentPos()),
+            e    = [o.expr, expr];
+        o.expr = macro $b{e};
+      case _: // do nothing
+    }
+  }
+
+  static function injectSystemProcess(fields : Array<Field>) {
+    var field = findField(fields, "__systemProcess");
+    if(null != field) return;
+    fields.push({
+        name: "__systemProcess",
+        doc: null,
+        meta: [{
+          name : ":noCompletion",
+          params : [],
+          pos : Context.currentPos()
+        }],
+        access: [APublic],
+        kind: FVar(
+          macro : edge.SystemProcess,
+          macro null
+        ),
+        pos: Context.currentPos()
+    });
   }
 
   static function injectEntityRequirements(fields : Array<Field>) {
