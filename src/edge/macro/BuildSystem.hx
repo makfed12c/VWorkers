@@ -28,7 +28,7 @@ class BuildSystem {
         p = '$s${PROCESS_SUFFIX}',
         field = findField(fields, "new");
 
-    //BuildSystemProcess.createProcessType(s, p, fields);
+    BuildSystemProcess.createProcessType(s, p, fields);
 
     switch field.kind {
       case FFun(o):

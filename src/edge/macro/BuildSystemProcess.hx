@@ -10,8 +10,44 @@ using thx.macro.MacroTypes;
 using thx.core.Strings;
 
 class BuildSystemProcess {
-  public static function createProcessType(systemName, processName, fields) {
-    //Context.defineType();
+  public static function createProcessType(systemName : String, processName : String, systemFields : Array<Field>) {
+    var pack = processName.split('.'),
+        name = pack.pop(),
+        fields = [],
+        kind = TDClass(
+          null, // superClass:TypePath,
+          [], // interfaces:Array<TypePath>
+          false
+        );
+
+    injectConstructor(systemName, fields);
+
+    Context.defineType({
+      pos : Context.currentPos(),
+      params : [],
+      pack : pack,
+      name : name,
+      meta : null,
+      kind : kind,
+      isExtern : false,
+      fields : fields
+    });
+  }
+
+  static function injectConstructor(systemName : String, fields : Array<Field>) {
+    fields.push({
+      name: "new",
+      doc: null,
+      meta: [],
+      access: [APublic],
+      kind: FFun({
+        ret : macro : Void,
+        params : null,
+        expr : macro {},
+        args : []
+      }),
+      pos: Context.currentPos()
+    });
   }
 /*
   static function onTypeNotFound(name : String) {
