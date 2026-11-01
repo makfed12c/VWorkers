@@ -33,7 +33,7 @@ class BuildSystem {
     switch field.kind {
       case FFun(o):
         var orig = o.expr.expr,
-            expr = Context.parse('new $p()', Context.currentPos()),
+            expr = Context.parse('new $p(this)', Context.currentPos()),
             e    = [o.expr, expr];
         o.expr = macro $b{e};
       case _: // do nothing

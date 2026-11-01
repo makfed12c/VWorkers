@@ -15,7 +15,7 @@ class BuildSystemProcess {
         name = pack.pop(),
         fields = [],
         kind = TDClass(
-          null, // superClass:TypePath,
+          { pack : ['edge'], name : 'SystemProcess' }, // null, // superClass:TypePath,
           [], // interfaces:Array<TypePath>
           false
         );
@@ -43,8 +43,13 @@ class BuildSystemProcess {
       kind: FFun({
         ret : macro : Void,
         params : null,
-        expr : macro {},
-        args : []
+        expr : macro {
+          super();
+        },
+        args : [{
+          name : "system",
+          type : Context.getType(systemName).toComplexType()
+        }]
       }),
       pos: Context.currentPos()
     });
