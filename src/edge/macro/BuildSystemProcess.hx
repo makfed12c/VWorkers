@@ -13,6 +13,7 @@ class BuildSystemProcess {
   public static function createProcessType(systemName : String, processName : String, systemFields : Array<Field>) {
     var pack = processName.split('.'),
         name = pack.pop(),
+        system = Context.getType(systemName).toComplexType(),
         fields = [],
         kind = TDClass(
           { pack : ['edge'], name : 'SystemProcess' }, // null, // superClass:TypePath,
@@ -20,7 +21,8 @@ class BuildSystemProcess {
           false
         );
 
-    injectConstructor(systemName, fields);
+    injectConstructor(system, fields);
+    injectSystemField(system, fields);
 
     Context.defineType({
       pos : Context.currentPos(),
@@ -34,21 +36,28 @@ class BuildSystemProcess {
     });
   }
 
-  static function injectConstructor(systemName : String, fields : Array<Field>) {
+  static function injectSystemField(system : ComplexType, fields : Array<Field>) {
+    fields.push({
+      name : "system",
+      kind: FVar(system, null),
+      pos: Context.currentPos()
+    });
+  }
+
+  static function injectConstructor(system : ComplexType, fields : Array<Field>) {
     fields.push({
       name: "new",
-      doc: null,
-      meta: [],
       access: [APublic],
       kind: FFun({
         ret : macro : Void,
         params : null,
         expr : macro {
           super();
+          this.system = system;
         },
         args : [{
           name : "system",
-          type : Context.getType(systemName).toComplexType()
+          type : system
         }]
       }),
       pos: Context.currentPos()

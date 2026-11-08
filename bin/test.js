@@ -14,27 +14,33 @@ edge.SystemProcess.prototype = {
 };
 var Components1System_SystemProcess = function(system) {
 	edge.SystemProcess.call(this);
+	this.system = system;
 };
 Components1System_SystemProcess.__name__ = ["Components1System_SystemProcess"];
 Components1System_SystemProcess.__super__ = edge.SystemProcess;
 Components1System_SystemProcess.prototype = $extend(edge.SystemProcess.prototype,{
-	__class__: Components1System_SystemProcess
+	system: null
+	,__class__: Components1System_SystemProcess
 });
 var Components2System_SystemProcess = function(system) {
 	edge.SystemProcess.call(this);
+	this.system = system;
 };
 Components2System_SystemProcess.__name__ = ["Components2System_SystemProcess"];
 Components2System_SystemProcess.__super__ = edge.SystemProcess;
 Components2System_SystemProcess.prototype = $extend(edge.SystemProcess.prototype,{
-	__class__: Components2System_SystemProcess
+	system: null
+	,__class__: Components2System_SystemProcess
 });
 var ComponentsEntitiesSystem_SystemProcess = function(system) {
 	edge.SystemProcess.call(this);
+	this.system = system;
 };
 ComponentsEntitiesSystem_SystemProcess.__name__ = ["ComponentsEntitiesSystem_SystemProcess"];
 ComponentsEntitiesSystem_SystemProcess.__super__ = edge.SystemProcess;
 ComponentsEntitiesSystem_SystemProcess.prototype = $extend(edge.SystemProcess.prototype,{
-	__class__: ComponentsEntitiesSystem_SystemProcess
+	system: null
+	,__class__: ComponentsEntitiesSystem_SystemProcess
 });
 var EReg = function(r,opt) {
 	opt = opt.split("u").join("");
@@ -217,11 +223,13 @@ _List.ListIterator.prototype = {
 Math.__name__ = ["Math"];
 var NoComponentsSystem_SystemProcess = function(system) {
 	edge.SystemProcess.call(this);
+	this.system = system;
 };
 NoComponentsSystem_SystemProcess.__name__ = ["NoComponentsSystem_SystemProcess"];
 NoComponentsSystem_SystemProcess.__super__ = edge.SystemProcess;
 NoComponentsSystem_SystemProcess.prototype = $extend(edge.SystemProcess.prototype,{
-	__class__: NoComponentsSystem_SystemProcess
+	system: null
+	,__class__: NoComponentsSystem_SystemProcess
 });
 var Reflect = function() { };
 Reflect.__name__ = ["Reflect"];
