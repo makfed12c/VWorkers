@@ -496,11 +496,9 @@ edge.ISystem.prototype = {
 	,__class__: edge.ISystem
 };
 var NoComponentsSystem = function() {
-	this.__systemProcess = null;
 	this.entityRequirements = null;
 	this.componentRequirements = [];
 	this.count = 0;
-	new NoComponentsSystem_SystemProcess(this);
 };
 NoComponentsSystem.__name__ = ["NoComponentsSystem"];
 NoComponentsSystem.__interfaces__ = [edge.ISystem];
@@ -514,15 +512,15 @@ NoComponentsSystem.prototype = {
 	,toString: function() {
 		return "NoComponentsSystem";
 	}
-	,__systemProcess: null
+	,__getSystemProcess: function() {
+		return new NoComponentsSystem_SystemProcess(this);
+	}
 	,__class__: NoComponentsSystem
 };
 var Components2System = function() {
-	this.__systemProcess = null;
 	this.entityRequirements = null;
 	this.componentRequirements = [B,A];
 	this.count = 0;
-	new Components2System_SystemProcess(this);
 };
 Components2System.__name__ = ["Components2System"];
 Components2System.__interfaces__ = [edge.ISystem];
@@ -538,15 +536,15 @@ Components2System.prototype = {
 	,toString: function() {
 		return "Components2System";
 	}
-	,__systemProcess: null
+	,__getSystemProcess: function() {
+		return new Components2System_SystemProcess(this);
+	}
 	,__class__: Components2System
 };
 var Components1System = function() {
-	this.__systemProcess = null;
 	this.entityRequirements = null;
 	this.componentRequirements = [B];
 	this.count = 0;
-	new Components1System_SystemProcess(this);
 };
 Components1System.__name__ = ["Components1System"];
 Components1System.__interfaces__ = [edge.ISystem];
@@ -562,15 +560,15 @@ Components1System.prototype = {
 	,toString: function() {
 		return "Components1System";
 	}
-	,__systemProcess: null
+	,__getSystemProcess: function() {
+		return new Components1System_SystemProcess(this);
+	}
 	,__class__: Components1System
 };
 var ComponentsEntitiesSystem = function() {
-	this.__systemProcess = null;
 	this.entityRequirements = [{ name : "a", cls : A}];
 	this.componentRequirements = [B];
 	this.count = 0;
-	new ComponentsEntitiesSystem_SystemProcess(this);
 };
 ComponentsEntitiesSystem.__name__ = ["ComponentsEntitiesSystem"];
 ComponentsEntitiesSystem.__interfaces__ = [edge.ISystem];
@@ -586,7 +584,9 @@ ComponentsEntitiesSystem.prototype = {
 	,toString: function() {
 		return "ComponentsEntitiesSystem";
 	}
-	,__systemProcess: null
+	,__getSystemProcess: function() {
+		return new ComponentsEntitiesSystem_SystemProcess(this);
+	}
 	,__class__: ComponentsEntitiesSystem
 };
 var A = function() {

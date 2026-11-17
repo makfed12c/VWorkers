@@ -18,45 +18,30 @@ class BuildSystem {
     injectEntityRequirements(fields);
     injectToString(fields);
     injectConstructor(fields);
-    injectSystemProcess(fields);
-    injectSystemProcessConstructor(fields, Context.getLocalClass());
+    var cls = Context.getLocalClass();
+    injectSystemProcess(fields, cls);
     return fields;
   }
 
-  static function injectSystemProcessConstructor(fields : Array<Field>, cls : Ref<ClassType>) {
+  static function injectSystemProcess(fields : Array<Field>, cls : Ref<ClassType>) {
+    var field = findField(fields, "__getSystemProcess");
+    if(null != field) return;
+
     var s = cls.toString(),
-        p = '$s${PROCESS_SUFFIX}',
-        field = findField(fields, "new");
+        p = '$s${PROCESS_SUFFIX}';
 
     BuildSystemProcess.createProcessType(s, p, fields);
 
-    switch field.kind {
-      case FFun(o):
-        var orig = o.expr.expr,
-            expr = Context.parse('new $p(this)', Context.currentPos()),
-            e    = [o.expr, expr];
-        o.expr = macro $b{e};
-      case _: // do nothing
-    }
-  }
-
-  static function injectSystemProcess(fields : Array<Field>) {
-    var field = findField(fields, "__systemProcess");
-    if(null != field) return;
     fields.push({
-        name: "__systemProcess",
-        doc: null,
-        meta: [{
-          name : ":noCompletion",
-          params : [],
-          pos : Context.currentPos()
-        }],
-        access: [APublic],
-        kind: FVar(
-          macro : edge.SystemProcess,
-          macro null
-        ),
-        pos: Context.currentPos()
+      name: "__getSystemProcess",
+      access: [APublic],
+      kind: FFun({
+        ret : macro : edge.SystemProcess,
+        params : null,
+        expr : Context.parse('return new $p(this)', Context.currentPos()),
+        args : []
+      }),
+      pos: Context.currentPos()
     });
   }
 
