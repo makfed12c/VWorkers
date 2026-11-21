@@ -16,8 +16,8 @@ class BuildSystemProcess {
         system = Context.getType(systemName).toComplexType(),
         fields = [],
         kind = TDClass(
-          { pack : ['edge'], name : 'SystemProcess' }, // null, // superClass:TypePath,
-          [], // interfaces:Array<TypePath>
+          { pack : ['edge'], name : 'SystemProcess' },
+          [],
           false
         );
 
@@ -63,26 +63,4 @@ class BuildSystemProcess {
       pos: Context.currentPos()
     });
   }
-/*
-  static function onTypeNotFound(name : String) {
-    if(!isSystemProcess(name)) return null;
-    return buildProcessClass(name);
-  }
-
-  static function buildProcessClass(name : String) {
-    var system = systemName(name);
-    trace(name);
-    var type = try Context.getType(system) catch(_: Dynamic) null;
-    trace(type);
-    trace(system);
-    return null;
-  }
-
-  static function isSystemProcess(processName : String) {
-    return processName.endsWith(PROCESS_SUFFIX);
-  }
-
-  static function systemName(processName : String)
-    return processName.substring(0, processName.length - PROCESS_SUFFIX.length);
-*/
 }
