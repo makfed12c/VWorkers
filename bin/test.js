@@ -491,7 +491,8 @@ TestAll.prototype = {
 edge.ISystem = function() { };
 edge.ISystem.__name__ = ["edge","ISystem"];
 edge.ISystem.prototype = {
-	componentRequirements: null
+	__getSystemProcess: null
+	,componentRequirements: null
 	,entityRequirements: null
 	,__class__: edge.ISystem
 };
@@ -719,8 +720,8 @@ edge.Engine.prototype = {
 			var system1 = $it1.next();
 			var $it2 = (function($this) {
 				var $r;
-				var this2 = $this.mapInfo.h[system1.__id__].collections;
-				$r = this2.iterator();
+				var this11 = $this.mapInfo.h[system1.__id__].collections;
+				$r = this11.iterator();
 				return $r;
 			}(this));
 			while( $it2.hasNext() ) {
@@ -747,7 +748,7 @@ edge.Engine.prototype = {
 	}
 	,addSystem: function(phase,system) {
 		if(this.mapInfo.h.__keys__[system.__id__] != null) throw "System \"" + Std.string(system) + "\" already exists in Engine";
-		var info = new edge.SystemInfo(system);
+		var info = new edge.SystemInfo(system,system.__getSystemProcess());
 		this.mapInfo.set(system,info);
 		if(info.hasComponents) {
 			var $it0 = this.mapEntities.keys();
@@ -1066,7 +1067,8 @@ edge.NodeSystemIterator.prototype = {
 	}
 	,__class__: edge.NodeSystemIterator
 };
-edge.SystemInfo = function(system) {
+edge.SystemInfo = function(system,process) {
+	this.process = process;
 	this.system = system;
 	this.hasComponents = null != system.componentRequirements && system.componentRequirements.length > 0;
 	this.hasDelta = edge.SystemInfo.hasField(system,"timeDelta");
@@ -1103,6 +1105,7 @@ edge.SystemInfo.prototype = {
 	,update: null
 	,components: null
 	,system: null
+	,process: null
 	,collections: null
 	,__class__: edge.SystemInfo
 };

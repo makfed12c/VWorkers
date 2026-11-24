@@ -34,7 +34,7 @@ class BuildSystem {
 
     fields.push({
       name: "__getSystemProcess",
-      access: [APublic],
+      access: [],
       kind: FFun({
         ret : macro : edge.SystemProcess,
         params : null,

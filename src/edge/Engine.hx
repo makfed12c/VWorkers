@@ -4,6 +4,7 @@ import edge.Entity;
 
 @:access(edge.Entity)
 @:access(edge.View)
+@:access(edge.ISystem)
 class Engine {
   var mapInfo : Map<ISystem, SystemInfo>;
   var mapEntities : Map<Entity, Bool>;
@@ -55,7 +56,7 @@ class Engine {
   function addSystem(phase : Phase, system : ISystem) {
     if(mapInfo.exists(system))
       throw 'System "$system" already exists in Engine';
-    var info = new SystemInfo(system);
+    var info = new SystemInfo(system, system.__getSystemProcess());
     mapInfo.set(system, info);
     if(info.hasComponents)
       for(entity in mapEntities.keys())
